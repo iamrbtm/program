@@ -19,6 +19,8 @@ mail = Mail()
 def create_app():
     app = Flask(__name__)
 
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
     # Flask-Uploads & Static
     if os.environ.get("UPLOADS_USE") == "True":
         app.config["UPLOADED_PHOTOS_DEST"] = "printing/static/images"
@@ -36,7 +38,8 @@ def create_app():
     # Database Setup
     result = choose_database(app)
     if result[0]:
-        print("Created database!")
+        print("Connected to database!")
+        app.config["SQLALCHEMY_DATABASE_URI"] = result[2]
     else:
         print(result[1])
         abort(403)
@@ -62,13 +65,12 @@ def create_app():
 
     app.register_blueprint(base, url_prefix="/")
     app.register_blueprint(auth, url_prefix="/")
-    
 
     from printing.models import User
 
     db.create_all(app=app)
+    
     # User Manager
-
     login_manager = LoginManager()
     login_manager.login_view = "auth.login"
     login_manager.init_app(app)
@@ -96,9 +98,7 @@ def choose_database(app):
                 errorlist.append(msg)
                 stopper = False
         if stopper:
-            app.config[
-                "SQLALCHEMY_DATABASE_URI"
-            ] = f'sqlite:///{os.environ.get("DB_SQLLIGHT_NAME")}'
+            connectstring = f'sqlite:///{os.environ.get("DB_SQLLIGHT_NAME")}'
 
     elif os.environ.get("DB_MYSQL") == "True":
         fields = [
@@ -119,10 +119,9 @@ def choose_database(app):
                 errorlist.append(msg)
                 stopper = False
         if stopper:
-            app.config[
-                "SQLALCHEMY_DATABASE_URI"
-            ] = f"mysql://{os.environ.get('DB_USERNAME')}:{os.environ.get('DB_PASSWORD')}@{os.environ.get('DB_HOST')}/{os.environ.get('DB_NAME')}"
-    return [stopper, errorlist]
+            connectstring = f"mysql://{os.environ.get('DB_USERNAME')}:{os.environ.get('DB_PASSWORD')}@{os.environ.get('DB_HOST')}/{os.environ.get('DB_NAME')}"
+
+    return [stopper, errorlist, connectstring]
 
 
 def config_mail(app):
