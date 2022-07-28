@@ -1,0 +1,132 @@
+{% extends "types/type_submenu.html" %}
+{% from "_utilities.html" import render_field, render_select, render_submit %}
+
+
+<!-- Title of the page (what goes on the tab when rendered) -->
+{% block title %}
+{% endblock %}
+
+<!-- Specific Style to this page -->
+{% block style %}
+{% endblock %}
+
+<!-- Any Page Menu Item go here -->
+{% block extra_menu_items %}  <!--class="nav-link"-->
+{% endblock extra_menu_items %}
+
+<!-- Any Action items go here -->
+{% block action_items %}  <!--class="dropdown-item"-->
+<a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#new_fil_Modal">Add New Type</a>
+{% endblock action_items %}
+
+<!-- Main Content -->
+{% block content %}
+<div class="d-flex align-items-start">
+    <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+        <table class="table table-bordered table-hover row">
+            <thead class="table-primary">
+                <tr>
+                    <th>Type</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in types %}
+                <tr onclick="window.location='{{ url_for("type.type_edit", id=item.id) }}';">
+                    <td class="col">{{item.type}}</td>
+                    <td class="col">{{item.densitygcm3}}</td>
+                    <td class="col">{{item.m_in_1kg_175}}</td>
+                    <td class="col">{{item.m_in_1kg_3}}</td>
+                </tr>
+                {% endfor%}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="new_fil_Modal" tabindex="-1" aria-labelledby="new_fil_ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="new_fil_ModalLabel">Add New Type</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method=POST enctype=multipart/form-data action="{{url_for('type.type_main')}}">
+                    {{ form.csrf_token }}
+                    <fieldset class="form-field row">
+                        <div class="col-md-6">
+                            {{ render_field(form.type) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ render_field(form.properties) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ render_field(form.useage) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ render_select(form.diameter) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ render_select(form.extruder_temp_from) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ render_select(form.extruder_temp_to) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ render_select(form.bed_temp_from) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ render_select(form.bed_temp_to) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ render_field(form.bed_adhesion) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ render_field(form.densitygcm3) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ render_field(form.m_in_1kg_175) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ render_field(form.m_in_1kg_3) }}
+                        </div>
+                    </fieldset>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                {{ render_submit(form.submit) }}
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+<!-- Scripts needed for this page -->
+{% block scripts %}
+
+<script>
+    var formErrors = {
+        %
+        if form.errors %
+    }
+    true {
+        %
+        else %
+    }
+    false {
+        %
+        endif %
+    };
+
+    $(document).ready(function () {
+        if (formErrors) {
+            $('.modal').modal('show');
+        }
+    });
+</script>
+{% endblock %}

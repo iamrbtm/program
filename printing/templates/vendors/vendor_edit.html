@@ -1,0 +1,51 @@
+{% extends "vendors/vendor_submenu.html" %}
+{% from "_utilities.html" import render_field, render_select, render_submit %}
+
+
+<!-- Title of the page (what goes on the tab when rendered) -->
+{% block title %}
+{% endblock %}
+
+<!-- Specific Style to this page -->
+{% block style %}
+{% endblock %}
+
+<!-- Any Page Menu Item go here -->
+{% block extra_menu_items %}
+{% endblock extra_menu_items %}
+
+<!-- Any Action items go here -->
+{% block action_items %}
+{% endblock action_items %}
+
+<!-- Main Content -->
+{% block content %}
+<br>
+<form method=POST encvendor=multipart/form-data action="{{url_for('vendor.vendor_edit', id=vendor.id)}}">
+    {{ form.csrf_token }}
+    <fieldset class="form-field row">
+        <div class="col-md-6">
+            {{ render_field(form.name) }}
+        </div>
+        <div class="col-md-6">
+            {{ render_field(form.url) }}
+        </div>
+        <div class="col-md-6">
+            {{ render_field(form.address) }}
+        </div>
+        <div class="col-md-6">
+            {{ render_field(form.city) }}
+        </div>
+        <div class="col-md-6">
+            {{ render_select(form.state) }}
+        </div>
+        <div class="col-md-6">
+            {{ render_field(form.zipcode) }}
+        </div>
+        <div class="col-md-6">
+            {{form.referer}}
+            {{ render_submit(form.submit) }}
+        </div>
+    </fieldset>
+</form>
+{% endblock %}

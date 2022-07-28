@@ -1,0 +1,132 @@
+{% extends "vendors/vendor_submenu.html" %}
+{% from "_utilities.html" import render_field, render_select, render_submit %}
+
+
+<!-- Title of the page (what goes on the tab when rendered) -->
+{% block title %}
+{% endblock %}
+
+<!-- Specific Style to this page -->
+{% block style %}
+{% endblock %}
+
+<!-- Any Page Menu Item go here -->
+{% block extra_menu_items %}
+<!--class="nav-link"-->
+{% endblock extra_menu_items %}
+
+<!-- Any Action items go here -->
+{% block action_items %}
+<!--class="dropdown-item"-->
+<a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#new_vendor_Modal">Add Vendor</a>
+{% endblock action_items %}
+
+<!-- Main Content -->
+{% block content %}
+<table class="table table-hover table-responsive table-sm">
+    <thead>
+        <tr>
+            <th>Vendor Name</th>
+            <th>Website / Address</th>
+            <th colspan="2">Filaments that use this vendor</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in vendors %}
+        <tr onclick="window.location='{{ url_for("vendor.vendor_edit", id=item.id) }}';">
+            <td>{{item.name}}</td>
+            <td>{{item.url}}<br>
+                {% if item.address %}
+                {{item.address}} {{item.city}}, {{item.state}} {{item.zipcode}}</td>
+                {% endif %}
+            <td width=150px>
+                {% for fil in item.filament %}
+                {% if loop.index % 2 != 0%}
+                <a href="{{url_for('filament.filament_edit', id=fil.id)}}" class="btn my-1"
+                    style="background-color: {{fil.colorhex}}60; border: thin solid; width: 150px;">{{fil.name}}<br><span
+                        class="small muted">{{fil.type_rel.type}}</span></a>
+                <br>
+                {% endif %}
+                {% endfor %}
+            </td>
+            <td width=150px>
+                {% for fil in item.filament %}
+                {% if loop.index % 2 == 0%}
+                <a href="{{url_for('filament.filament_edit', id=fil.id)}}" class="btn my-1"
+                    style="background-color: {{fil.colorhex}}60; border: thin solid; width: 150px;">{{fil.name}}<br><span
+                        class="small muted">{{fil.type_rel.type}}</span></a>
+                <br>
+                {% endif %}
+                {% endfor %}
+            </td>
+        </tr>
+        {% endfor%}
+    </tbody>
+</table>
+
+<!-- Modal -->
+<div class="modal fade" id="new_vendor_Modal" tabindex="-1" aria-labelledby="new_vendor_ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="new_vendor_ModalLabel">Add Vendor</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method=POST enctype=multipart/form-data action="{{url_for('vendor.vendor_main')}}">
+                    {{ form.csrf_token }}
+                    <fieldset class="form-field row">
+                        <div class="col-md-6">
+                            {{ render_field(form.name) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ render_field(form.url) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ render_field(form.address) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ render_field(form.city) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ render_select(form.state) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ render_field(form.zipcode) }}
+                        </div>
+                    </fieldset>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                {{ render_submit(form.submit) }}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+<!-- Scripts needed for this page -->
+{% block scripts %}
+
+<script>
+    var formErrors = {
+        %
+        if form.errors %
+    }
+    true {
+        %
+        else %
+    }
+    false {
+        %
+        endif %
+    };
+
+    $(document).ready(function () {
+        if (formErrors) {
+            $('.modal').modal('show');
+        }
+    });
+</script>
+{% endblock %}

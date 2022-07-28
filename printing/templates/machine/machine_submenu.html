@@ -1,0 +1,43 @@
+{% extends "base/base.html" %}
+
+{% block title %} Machine {% endblock %}
+{% block style %}
+{% endblock style %}
+
+{% block submenu %}
+<nav class="navbar navbar-sub-customclass sticky-top navbar-expand-md" style="z-index: 99">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Machine</a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarType"
+      aria-controls="navbarType" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarType">
+      <ul class="navbar-nav me-auto mb-2 mb-md-0">
+        <li>
+          <a class="nav-link" href="{{ url_for('machine.machine_main') }}">Machine List</a>
+        </li>
+        <li>
+          {% block extra_menu_items %}
+          {% endblock extra_menu_items %}
+        </li>
+      </ul>
+
+
+      <div class="nav-item dropstart open">
+        <div class="nav-link d-block link-dark text-decoration-none dropdown-toggle text-light" id="actionmenu"
+          data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">&#8942; Action Menu</div>
+        <div class="dropdown-menu" aria-labelledby="actionmenu">
+          {# <a class="dropdown-item" href="{{ url_for('type.type_main') }}">Types</a> #}
+          {% block action_items %} {% endblock action_items %}
+          <div class="dropdown-divider"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+{% endblock %}
+{% block content %} {% endblock %}
+{% block scripts %} {% endblock %}

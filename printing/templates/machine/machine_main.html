@@ -1,0 +1,132 @@
+{% extends "machine/machine_submenu.html" %}
+{% from "_utilities.html" import render_field, render_select %}
+
+
+<!-- Title of the page (what goes on the tab when rendered) -->
+{% block title %}
+{% endblock %}
+
+<!-- Specific Style to this page -->
+{% block style %}
+{% endblock %}
+
+<!-- Any Page Menu Item go here -->
+{% block extra_menu_items %}
+<!--class="nav-link"-->
+{% endblock extra_menu_items %}
+
+<!-- Any Action items go here -->
+{% block action_items %}
+<!--class="dropdown-item"-->
+<a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#new_machine_Modal">Add New Machine</a>
+{% endblock action_items %}
+
+<!-- Main Content -->
+{% block content %}
+<br>
+<table class="table table-bordered table-hover">
+    <thead class="table-secondary">
+        <tr>
+            <th></th>
+            <th>Name</th>
+            <th>Date<span class="small">Purchased</span></th>
+            <th>Cost</th>
+            <th>URLS</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in machines %}
+        <tr onclick="window.location='{{ url_for("machine.machine_edit", id=item.id) }}';">
+            {% set fn = '/images/' + item.mach_icon %}
+            <td><img src="{{ url_for('static', filename=fn) }}" alt=""></td>
+            <td>{{item.name}}</td>
+            <td>{{item.purchase_date.strftime('%b %d, %Y')}}</td>
+            <td>{{"$%.2f"|format(item.purchase_price)}}</td>
+            <td>
+                {% for url in item.infourl_rel %}
+                    {{url.url}}
+                    {% if not loop.last %}
+                        <br>
+                    {% endif %}
+                {% endfor %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+<!-- Modal -->
+<div class="modal fade" id="new_machine_Modal" tabindex="-1" aria-labelledby="new_machine_ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="new_machine_ModalLabel">Add New Machine</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method=POST enctype=multipart/form-data action="{{url_for('machine.machine_main')}}">
+                    {{ form.csrf_token }}
+                    <fieldset class="form-field row">
+                        <div class="col-md-12">
+                            {{ render_field(form.name) }}
+                        </div>
+                        <div class="row"></div>
+                        <div class="col-md-3">
+                            {{ render_field(form.purchase_date) }}
+                        </div>
+                        <div class="col-md-3">
+                            {{ render_field(form.purchase_price) }}
+                        </div>
+                        <div class="col-md-3">
+                            {{ render_field(form.make) }}
+                        </div>
+                        <div class="col-md-3">
+                            {{ render_field(form.model) }}
+                        </div>
+                        <div class="row"></div>
+                        <div class="col-md-4">
+                            {{ render_field(form.serial_number) }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ render_field(form.picture) }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ render_field(form.mach_icon) }}
+                        </div>                
+                    </fieldset>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <input class="btn btn-primary" type="submit" value="Add Machine">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+<!-- Scripts needed for this page -->
+{% block scripts %}
+
+<script>
+    var formErrors = {
+        %
+        if form.errors %
+    }
+    true {
+        %
+        else %
+    }
+    false {
+        %
+        endif %
+    };
+
+    $(document).ready(function () {
+        if (formErrors) {
+            $('.modal').modal('show');
+        }
+    });
+</script>
+{% endblock %}

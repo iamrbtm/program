@@ -1,0 +1,63 @@
+{% extends "machine/machine_submenu.html" %}
+{% from "_utilities.html" import render_field, render_select, render_submit %}
+
+{% block action_items %}
+<!--class="dropdown-item"-->
+<!-- <a href="{{ url_for('machine.machine_delete', id=machine.id) }}" class="dropdown-item">Delete {{form.name.data}} Machine</a> -->
+{% endblock action_items %}
+<!-- Main Content -->
+{% block content %}
+<h4 class="display-4 text-center">Machines</h4>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            {% set fnfull = '/images/' + machine.picture %}
+            <img src="{{ url_for('static', filename=fnfull) }}" alt="" width="100%">
+        </div>
+        <div class="col-md-8">
+            <form method=POST enctype=multipart/form-data action="{{url_for('machine.machine_edit', id=machine.id)}}">
+                {{ form.csrf_token }}
+                <fieldset class="form-field row">
+                    <div class="col-md-12">
+                        {{ render_field(form.name) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ render_field(form.purchase_date) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ render_field(form.purchase_price) }}
+                    </div>
+                    <div class="col-md-4">
+                        {{ render_field(form.make) }}
+                    </div>
+                    <div class="col-md-4">
+                        {{ render_field(form.model) }}
+                    </div>
+                    <div class="col-md-4">
+                        {{ render_field(form.serial_number) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ render_field(form.picture) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ render_field(form.mach_icon) }}
+                    </div>
+                    <div class="row"></div>
+                    <h5>URLS</h5>
+                    {% for item in machine.infourl_rel %}
+                    <div class="col-md-12">
+                        {{ item.catagory }} - {{ item.description }} ({{ item.url }})
+                    </div>
+                    {% endfor %}
+                    <div class="row"></div>
+                    <div class="col-md-6">
+                        {{ form.referer}}
+                        {{ render_submit(form.submit) }}
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
