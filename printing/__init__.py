@@ -59,17 +59,10 @@ def create_app():
     # Blueprints
     from printing.templates.base.base import base
     from printing.auth import auth
-    from printing.templates.filament.filament import bp_filament
-    from printing.templates.types.type import bp_type
-    from printing.templates.vendors.vendor import bp_vendor
-    from printing.templates.machine.machine import bp_machine
 
     app.register_blueprint(base, url_prefix="/")
     app.register_blueprint(auth, url_prefix="/")
-    app.register_blueprint(bp_filament, url_prefix="/filament")
-    app.register_blueprint(bp_type, url_prefix="/type")
-    app.register_blueprint(bp_vendor, url_prefix="/vendor")
-    app.register_blueprint(bp_machine, url_prefix="/machine")
+    
 
     from printing.models import User
 

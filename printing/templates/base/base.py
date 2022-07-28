@@ -11,7 +11,6 @@ from flask_login import login_required, current_user
 import flask_login
 from sqlalchemy.orm import session
 from printing.models import *
-from printing.templates.base.base_process import *
 from printing import db, photos
 from printing.forms import *
 from printing.utilities import *
@@ -65,46 +64,6 @@ def profile():
     return render_template(
         "base/profile.html", user=User, usr=usr, states=states, form=form
     )
-
-
-@base.route("/reset_password", methods=["GET", "POST"])
-def reset_request():
-    if request.method == "POST":
-        user = User.query.filter_by(email=request.form.get("email")).first()
-        token = get_reset_token(user.id)
-        send_reset_email(user.email, token)
-        flash(
-            "An email has been sent with instructions to reset your password.", "info"
-        )
-        return redirect(url_for("auth.login"))
-    return render_template("base/reset_request.html", user=User)
-
-
-@base.route("/reset_password/<token>", methods=["GET", "POST"])
-def reset_token(token):
-    if request.method == "POST":
-        user = verify_reset_token(token)
-        password1 = request.form.get("password1")
-        password2 = request.form.get("password2")
-
-        if password1 == password2:
-            if user is None:
-                flash("That is an invalid or expired token", "warning")
-                return redirect(url_for("base.reset_request"))
-            else:
-                hashed_password = generate_password_hash(password1, method="sha256")
-                user.password = hashed_password
-                db.session.commit()
-                flash(
-                    "Your password has been updated! You are now able to log in",
-                    "success",
-                )
-                return redirect(url_for("auth.login"))
-        else:
-            flash("Password don't match!  Try again!", category="error")
-
-    return render_template("base/reset_token.html", title="Reset Password", user=User)
-
 
 @base.route("/stateimport")
 @login_required
