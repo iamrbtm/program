@@ -107,18 +107,25 @@ class Shipping(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     company = db.Column(db.String(50))
     cost = db.Column(db.Float)
+    projectfk = db.Column(db.Integer, db.ForeignKey("project.id", ondelete="CASCADE"), nullable=False)
+    
     
 class Project (db.Model):
-    
-    project_name = 
-    customerfk
-    printerfk
-    filamentfk
-    objectfk
-    shippingfk
-    packaging
-    advertising
-    rent
-    overhead
-    extrafees
-    discount
+    id = db.Column(db.Integer, primary_key=True)
+    project_name = db.Column(db.String(50))
+    customerfk = db.Column(db.Integer)
+    printerfk = db.Column(db.Integer)
+    filamentfk = db.Column(db.Integer)
+    objectfk = db.Column(db.Integer)
+    shippingfk = db.Column(db.Integer)
+    packaging = db.Column(db.Float)
+    advertising = db.Column(db.Float)
+    rent = db.Column(db.Float)
+    overhead = db.Column(db.Float)
+    extrafees = db.Column(db.Float)
+    discount = db.Column(db.Float)
+    customer_rel = db.relationship("Customer", backref="project")
+    printer_rel = db.relationship("Printer", backref="project")
+    filament_rel = db.relationship("Filament", backref="project")
+    object_rel = db.relationship("Printobject", backref="project")
+    shipping_rel = db.relationship("Shipping", backref="project")
