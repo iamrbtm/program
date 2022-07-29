@@ -62,7 +62,6 @@ class Printer(db.Model):
     make = db.Column(db.String(50))
     model = db.Column(db.String(50))
     cost = db.Column(db.Float)
-    cost_kW = db.Column(db.Float)
     purchase_date = db.Column(db.Date)
     picture = db.Column(db.Text)
     
@@ -100,32 +99,35 @@ class Printobject(db.Model):
     file = db.Column(db.String(250))
     h_printtime = db.Column(db.Float)
     kg_weight = db.Column(db.Float)
-    projectfk = db.Column(db.Integer, db.ForeignKey("project.id", ondelete="CASCADE"), nullable=True)
-    project_rel = db.relationship("Project", backref="printobject")
     
 class Shipping(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     company = db.Column(db.String(50))
     cost = db.Column(db.Float)
-    projectfk = db.Column(db.Integer, db.ForeignKey("project.id", ondelete="CASCADE"), nullable=False)
     
     
 class Project (db.Model):
     id = db.Column(db.Integer, primary_key=True)
     project_name = db.Column(db.String(50))
-    customerfk = db.Column(db.Integer)
-    printerfk = db.Column(db.Integer)
-    filamentfk = db.Column(db.Integer)
-    objectfk = db.Column(db.Integer)
-    shippingfk = db.Column(db.Integer)
+    customerfk = db.Column(db.Integer, db.ForeignKey("people.id", ondelete="CASCADE"), nullable=False)
+    printerfk = db.Column(db.Integer, db.ForeignKey("printer.id", ondelete="CASCADE"), nullable=False)
+    filamentfk = db.Column(db.Integer, db.ForeignKey("filament.id", ondelete="CASCADE"), nullable=False)
+    objectfk = db.Column(db.Integer, db.ForeignKey("printobject.id", ondelete="CASCADE"), nullable=False)
+    shippingfk = db.Column(db.Integer, db.ForeignKey("shipping.id", ondelete="CASCADE"), nullable=False)
     packaging = db.Column(db.Float)
     advertising = db.Column(db.Float)
     rent = db.Column(db.Float)
     overhead = db.Column(db.Float)
     extrafees = db.Column(db.Float)
     discount = db.Column(db.Float)
-    customer_rel = db.relationship("Customer", backref="project")
+    people_rel = db.relationship("People", backref="project")
     printer_rel = db.relationship("Printer", backref="project")
     filament_rel = db.relationship("Filament", backref="project")
     object_rel = db.relationship("Printobject", backref="project")
     shipping_rel = db.relationship("Shipping", backref="project")
+
+class Settings(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    cost_kW = db.Column(db.Float)
+    default_markup = db.Column(db.Float)
+    default_discount = db.Column(db.Float)

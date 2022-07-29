@@ -61,10 +61,12 @@ def create_app():
 
     # Blueprints
     from printing.templates.base.base import base
+    from printing.templates.project.project import m_project
     from printing.auth import auth
 
     app.register_blueprint(base, url_prefix="/")
     app.register_blueprint(auth, url_prefix="/")
+    app.register_blueprint(m_project, url_prefix="/project")
 
     from printing.models import User
 
