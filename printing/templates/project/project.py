@@ -23,5 +23,14 @@ m_project = Blueprint("project", __name__)
 @m_project.route("/")
 @login_required
 def project():
-    projects = db.session.query(Project).all()
-    return render_template("project/project.html", user=User, projects=projects)
+    projects = db.session.query(Project).first()
+    
+    timelength = calc_time_length("/Volumes/PTS/program/printing/static/uploads/Califlower.gcode")
+    printtime = timelength[0]
+    materialused = calculate_weight(timelength[1]/1000, projects.filamentfk)
+    
+    costelectricity = timecost(printtime,projects.filamentfk)
+    
+    costfilament = filamentcost(materialused, projects.filamentfk)
+    
+    return render_template("project/project.html", user=User, projects=projects, materialused=materialused, printtime=printtime, timecost=costelectricity, filcost = costfilament)

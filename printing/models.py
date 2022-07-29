@@ -37,6 +37,7 @@ class States(db.Model):
     state = db.Column(db.String(50))
     abr = db.Column(db.String(2))
 
+
 class People(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     fname = db.Column(db.String(50))
@@ -56,6 +57,7 @@ class People(db.Model):
     company_name = db.Column(db.String(50))
     url = db.Column(db.String(250))
 
+
 class Printer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
@@ -64,7 +66,8 @@ class Printer(db.Model):
     cost = db.Column(db.Float)
     purchase_date = db.Column(db.Date)
     picture = db.Column(db.Text)
-    
+
+
 class Type(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.String(50))
@@ -77,6 +80,7 @@ class Type(db.Model):
     bed_adhesion = db.Column(db.Text)
     m_in_1kg_3 = db.Column(db.Float)
     m_in_1kg_175 = db.Column(db.Float)
+    kW_hr = db.Column(db.Float)
     filament_rel = db.relationship("Filament", backref="type", passive_deletes=True)
 
 
@@ -87,33 +91,47 @@ class Filament(db.Model):
     colorhex = db.Column(db.String(20))
     priceperroll = db.Column(db.Float)
     length_spool = db.Column(db.Integer)
-    diameter = db.Column(db.Integer)
+    diameter = db.Column(db.Float)
     url = db.Column(db.String(200))
     purchasedate = db.Column(db.Date)
     picture = db.Column(db.String(100))
-    typefk = db.Column(db.Integer, db.ForeignKey("type.id", ondelete="CASCADE"), nullable=False)
+    typefk = db.Column(
+        db.Integer, db.ForeignKey("type.id", ondelete="CASCADE"), nullable=False
+    )
     type_rel = db.relationship("Type", backref="filament")
+
 
 class Printobject(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     file = db.Column(db.String(250))
     h_printtime = db.Column(db.Float)
     kg_weight = db.Column(db.Float)
-    
+
+
 class Shipping(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     company = db.Column(db.String(50))
     cost = db.Column(db.Float)
-    
-    
-class Project (db.Model):
+
+
+class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     project_name = db.Column(db.String(50))
-    customerfk = db.Column(db.Integer, db.ForeignKey("people.id", ondelete="CASCADE"), nullable=False)
-    printerfk = db.Column(db.Integer, db.ForeignKey("printer.id", ondelete="CASCADE"), nullable=False)
-    filamentfk = db.Column(db.Integer, db.ForeignKey("filament.id", ondelete="CASCADE"), nullable=False)
-    objectfk = db.Column(db.Integer, db.ForeignKey("printobject.id", ondelete="CASCADE"), nullable=False)
-    shippingfk = db.Column(db.Integer, db.ForeignKey("shipping.id", ondelete="CASCADE"), nullable=False)
+    customerfk = db.Column(
+        db.Integer, db.ForeignKey("people.id", ondelete="CASCADE"), nullable=False
+    )
+    printerfk = db.Column(
+        db.Integer, db.ForeignKey("printer.id", ondelete="CASCADE"), nullable=False
+    )
+    filamentfk = db.Column(
+        db.Integer, db.ForeignKey("filament.id", ondelete="CASCADE"), nullable=False
+    )
+    objectfk = db.Column(
+        db.Integer, db.ForeignKey("printobject.id", ondelete="CASCADE"), nullable=False
+    )
+    shippingfk = db.Column(
+        db.Integer, db.ForeignKey("shipping.id", ondelete="CASCADE"), nullable=False
+    )
     packaging = db.Column(db.Float)
     advertising = db.Column(db.Float)
     rent = db.Column(db.Float)
@@ -125,6 +143,7 @@ class Project (db.Model):
     filament_rel = db.relationship("Filament", backref="project")
     object_rel = db.relationship("Printobject", backref="project")
     shipping_rel = db.relationship("Shipping", backref="project")
+
 
 class Settings(db.Model):
     id = db.Column(db.Integer, primary_key=True)

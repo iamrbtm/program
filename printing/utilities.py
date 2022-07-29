@@ -411,5 +411,140 @@ def shorten_url(longurl):
     return link
 
 
-# if __name__ == "__main__":
-#     populate_types()
+def calc_time_length(FileName):
+    Units = "Millimetres"
+
+    import io, os, string, math, sys
+
+    MoveDelay = 0.000014945651469
+    PauseDelay = 0.0006
+
+    f = open(FileName)
+
+    BaseTime = 15
+    FeedRate = 0.0
+    Material = 0.0
+    MatFeed = 0.0
+
+    DeltaX = 0.0
+    DeltaY = 0.0
+    DeltaZ = 0.0
+    LastX = 0.0
+    LastY = 0.0
+    lastz = 0.0
+    x = 0.0
+    y = 0.0
+    z = 0.0
+    m = 0.0
+
+    PauseCount = 0
+    TotalMotion = 0.0
+    Totaltime = 0.0
+    MatTotaltime = 0.0
+    Motion = 0.0
+    gflag = 0
+    MoveCount = 0
+
+    LineCount = 0
+
+    while True:
+
+        flin = f.readline()
+        if flin == "":
+            break
+        array1 = flin.split()
+
+        for item in array1:
+            gg = item[0]
+            if item[0:3] == "G28":
+                break
+            elif item[0:3] == "G84":
+                break
+            elif gg == ";":
+                break
+            elif gg == "X":
+                if item[1:] == "":
+                    break
+                else:
+                    x = float(item[1:])
+            elif gg == "Y":
+                if item[1:] == "":
+                    break
+                else:
+                    y = float(item[1:])
+            elif gg == "Z":
+                if item[1:] == "":
+                    break
+                else:
+                    z = float(item[1:])
+            elif item[0:3] == "G92":
+                if MatFeed > 0:
+                    Material += MatFeed
+                    MatTotaltime += MatFeed / FeedRate * 2
+                    PauseCount += 1
+                break
+            elif gg == "E":
+                MatFeed = m
+                m = float(item[1:])
+            elif gg == "F":
+                FeedRate = float(item[1:])
+            elif item[0:2] == "G1":
+                gflag = 1
+                MoveCount += 1
+
+        if gflag == 1:
+            DeltaX = x - LastX
+            DeltaY = y - LastY
+            DeltaZ = z - lastz
+            Motion = math.sqrt(DeltaX * DeltaX + DeltaY * DeltaY + DeltaZ * DeltaZ)
+            TotalMotion += Motion
+            Totaltime += Motion / FeedRate
+            LastX = x
+            LastY = y
+            lastz = z
+        gflag = 0
+    f.closed
+
+    printtime = float(
+        Totaltime
+        + MoveCount * MoveDelay
+        + BaseTime
+        + PauseCount * PauseDelay
+        + MatTotaltime
+    )
+    materialused = float(Material)
+
+    print("material = " + str(materialused))
+    print("    time = " + str(printtime))
+    
+    return printtime,materialused
+
+def calculate_weight(weightinm, filament):
+    import math
+
+    diameter = db.session.query(Filament.diameter).filter(Filament.id == filament).scalar()
+    density = db.session.query(Filament).filter(Filament.id==filament).first().type_rel.densitygcm3
+    # Volume = (length in m * 100) * pi() * ((diam/2)^2)
+    filcm = weightinm * 100
+    radius = (diameter / 2) / 10
+    csarea = math.pi * (radius) ** 2
+    volume = filcm * csarea
+    weight = volume * density
+    return weight
+
+def timecost(time_in_min, filament):
+    time_in_hr = time_in_min / 60
+    kw_per_hr = db.session.query(Settings).first().cost_kW
+    filament_kw_per_hr = db.session.query(Filament).filter(Filament.id == filament).first().type_rel.kW_hr
+    
+    cost = time_in_hr*kw_per_hr*filament_kw_per_hr
+    if cost < .01: cost = .01
+    return cost
+
+def filamentcost(weight_in_g, filamentfk):
+    fil_cost_per_g = (db.session.query(Filament).filter(Filament.id == filamentfk).first().priceperroll)/1000
+    
+    cost = weight_in_g * fil_cost_per_g
+    if cost < .01: cost = .01
+    
+    return cost
