@@ -64,5 +64,61 @@ class Printer(db.Model):
     cost = db.Column(db.Float)
     cost_kW = db.Column(db.Float)
     purchase_date = db.Column(db.Date)
+    picture = db.Column(db.Text)
     
+class Type(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    type = db.Column(db.String(50))
+    densitygcm3 = db.Column(db.Float)
+    properties = db.Column(db.Text)
+    useage = db.Column(db.Text)
+    diameter = db.Column(db.Float)
+    extruder_temp = db.Column(db.Text)
+    bed_temp = db.Column(db.Text)
+    bed_adhesion = db.Column(db.Text)
+    m_in_1kg_3 = db.Column(db.Float)
+    m_in_1kg_175 = db.Column(db.Float)
+    filament_rel = db.relationship("Filament", backref="type", passive_deletes=True)
+
+
+class Filament(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
+    color = db.Column(db.String(100))
+    colorhex = db.Column(db.String(20))
+    priceperroll = db.Column(db.Float)
+    length_spool = db.Column(db.Integer)
+    diameter = db.Column(db.Integer)
+    url = db.Column(db.String(200))
+    purchasedate = db.Column(db.Date)
+    picture = db.Column(db.String(100))
+    typefk = db.Column(db.Integer, db.ForeignKey("type.id", ondelete="CASCADE"), nullable=False)
+    type_rel = db.relationship("Type", backref="filament")
+
+class Printobject(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    file = db.Column(db.String(250))
+    h_printtime = db.Column(db.Float)
+    kg_weight = db.Column(db.Float)
+    projectfk = db.Column(db.Integer, db.ForeignKey("project.id", ondelete="CASCADE"), nullable=True)
+    project_rel = db.relationship("Project", backref="printobject")
     
+class Shipping(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    company = db.Column(db.String(50))
+    cost = db.Column(db.Float)
+    
+class Project (db.Model):
+    
+    project_name = 
+    customerfk
+    printerfk
+    filamentfk
+    objectfk
+    shippingfk
+    packaging
+    advertising
+    rent
+    overhead
+    extrafees
+    discount

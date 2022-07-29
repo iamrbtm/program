@@ -203,12 +203,12 @@ def populate_types():
             typename = fil["type"]
             cnt = Type.query.filter(Type.type == typename).count()
             if cnt == 0:
-                etemp = list(map(str.strip, fil["extruder_temp"].split("-")))
-                bedtemp = list(map(str.strip, fil["bed_temp"].split("-")))
-                adh = list(map(str.strip, fil["bed_adhesion"].split("/")))
-                diam = list(map(str.strip, fil["diameter"].split("/")))
-                use = list(map(str.strip, fil["useage"].split(",")))
-                prop = list(map(str.strip, fil["properties"].split(",")))
+                etemp = fil["extruder_temp"]
+                bedtemp = fil["bed_temp"]
+                adh = fil["bed_adhesion"]
+                diam = fil["diameter"]
+                use = fil["useage"]
+                prop = fil["properties"]
 
                 new = Type(
                     type=typename,
@@ -220,8 +220,7 @@ def populate_types():
                     diameter=diam,
                     densitygcm3=fil["densitygcm3"],
                     m_in_1kg_3=fil["m_in_1kg_3"],
-                    m_in_1kg_175=fil["m_in_1kg_175"],
-                    userid=1,
+                    m_in_1kg_175=fil["m_in_1kg_175"]
                 )
                 db.session.add(new)
                 db.session.commit()
