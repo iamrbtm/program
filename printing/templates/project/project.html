@@ -8,15 +8,12 @@
 </head>
 <body>
     <ul>
+        {% for project in projects %}
         <li>
-            {{projects.project_name}}</br>
-            {{projects.people_rel.fname}} {{projects.people_rel.lname}}</br>
-            {{projects.printer_rel.name}}</br>
-            {{projects.filament_rel.name}} - {{projects.filament_rel.color}}</br>
-            {{"%.4f"|format(printtime/60)}} hours print time - {{"$%.2f"|format(timecost)}}</br>
-            {{"%.3f"|format(materialused)}} grams - {{"$%.2f"|format(filcost)}}</br>
-            {{projects.shipping_rel.company}} ({{"$%.2f"|format(projects.shipping_rel.cost)}})</br>
+            {{project.project_name}}</br>
+            {{project.people_rel.fname}} {{project.people_rel.lname}}</br>
         </li>
+        {% endfor %}
     </ul>
     
 </body>

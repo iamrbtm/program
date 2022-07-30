@@ -14,23 +14,39 @@ from printing.models import *
 from printing import db, photos
 from printing.forms import *
 from printing.utilities import *
-from werkzeug.security import generate_password_hash, check_password_hash
 import datetime
 
-m_project = Blueprint("project", __name__)
+proj = Blueprint("project", __name__)
 
 
-@m_project.route("/")
+@proj.route("/project/")
 @login_required
 def project():
-    projects = db.session.query(Project).first()
-    
-    timelength = calc_time_length("/Volumes/PTS/program/printing/static/uploads/Califlower.gcode")
+    projects = db.session.query(Project).all()
+    return render_template("project/project.html", user=User, projects=projects)
+
+
+@proj.route("/projectdetails/<int:id>")
+@login_required
+def projectdetails(id):
+    projects = db.session.query(Project).filter(Project.id == id).first()
+
+    timelength = calc_time_length(
+        "/Volumes/PTS/program/printing/static/uploads/Califlower.gcode"
+    )
     printtime = timelength[0]
-    materialused = calculate_weight(timelength[1]/1000, projects.filamentfk)
-    
-    costelectricity = timecost(printtime,projects.filamentfk)
-    
+    materialused = calculate_weight(timelength[1] / 1000, projects.filamentfk)
+
+    costelectricity = timecost(printtime, projects.filamentfk)
+
     costfilament = filamentcost(materialused, projects.filamentfk)
-    
-    return render_template("project/project.html", user=User, projects=projects, materialused=materialused, printtime=printtime, timecost=costelectricity, filcost = costfilament)
+
+    return render_template(
+        "project/project_details.html",
+        user=User,
+        projects=projects,
+        materialused=materialused,
+        printtime=printtime,
+        timecost=costelectricity,
+        filcost=costfilament,
+    )

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects</title>
+</head>
+<body>
+    <ol>
+        <li>
+            {{projects.project_name}}</br>
+            {{projects.people_rel.fname}} {{projects.people_rel.lname}}</br>
+            {% if projects.people_rel.address %}
+                {{projects.people_rel.address}}</br>
+                {{projects.people_rel.city}}, {{projects.people_rel.state}}  {{projects.people_rel.postalcode}}</br>
+            {% endif %}
+            {{projects.printer_rel.name}}</br>
+            {{projects.filament_rel.name}} - {{projects.filament_rel.color}}</br>
+            {{"%.4f"|format(printtime/60)}} hours print time - {{"$%.2f"|format(timecost)}}</br>
+            {{"%.3f"|format(materialused)}} grams - {{"$%.2f"|format(filcost)}}</br>
+            {{projects.shipping_rel.company}} ({{"$%.2f"|format(projects.shipping_rel.cost)}})</br>
+        </li>
+    </ol>
+    
+</body>
+</html>
