@@ -47,6 +47,7 @@ class People(db.Model):
     state = db.Column(db.String(2))
     postalcode = db.Column(db.String(10))
     phone = db.Column(db.String(20))
+    email = db.Column(db.String(100))
     customer = db.Column(db.Boolean, default=True)
     markup_factor = db.Column(db.Float)
     discount_factor = db.Column(db.Float)

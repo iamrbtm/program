@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Customer</title>
+</head>
+<body>
+    {{ form.csrf_token }}
+    <form method="POST">
+    <p>
+        {{ form.fname.label }} {{ form.fname(size=20) }}</br>
+        {{ form.lname.label }} {{ form.lname(size=20) }}</br>
+        {{ form.markup_factor.label }} {{ form.markup_factor }}</br>
+        {{ form.discount_factor.label }} {{ form.discount_factor }}</br>
+        {{ form.active.label }} {{ form.active }}</br>
+        {{ form.submit }}</br>
+    </form>
+    </p>
+
+</body>
+</html>

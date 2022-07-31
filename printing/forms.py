@@ -11,6 +11,7 @@ from wtforms import (
     FloatField,
     FileField,
     HiddenField,
+    BooleanField
 )
 from wtforms.validators import InputRequired, Email, URL, NumberRange
 from wtforms_sqlalchemy.fields import QuerySelectField
@@ -37,6 +38,19 @@ class User_form(FlaskForm):
         super(User_form, self).__init__()
         self.state.choices = [(c.abr, c.state) for c in States.query.all()]
 
+class NewCustomer(FlaskForm):
+    states = lambda: [(c.abr, c.state) for c in States.query.all()]
+    fname = StringField("First Name", [InputRequired()])
+    lname = StringField("Last Name", [InputRequired()])
+    address = StringField("Address")
+    city = StringField("City")
+    state = SelectField("State", choices=states)
+    postalcode = StringField("Postal Code")
+    phone = StringField("Phone Number", [InputRequired()])
+    markup_factor = FloatField("Mark Up", [InputRequired()])
+    discount_factor = FloatField("Discount", [InputRequired()])
+    active = BooleanField("Active", default="checked")
+    submit = SubmitField("Submit")
 
 # class Filament_form(FlaskForm):
 #     vendor = lambda: [(c.id, c.name) for c in Vendors.query.all()]
