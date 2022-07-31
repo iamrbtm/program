@@ -56,6 +56,7 @@ class People(db.Model):
     supplier = db.Column(db.Boolean)
     company_name = db.Column(db.String(50))
     url = db.Column(db.String(250))
+    active = db.Column(db.Boolean)
 
 
 class Printer(db.Model):
@@ -143,6 +144,7 @@ class Project(db.Model):
     filament_rel = db.relationship("Filament", backref="project")
     object_rel = db.relationship("Printobject", backref="project")
     shipping_rel = db.relationship("Shipping", backref="project")
+    active = db.Column(db.Boolean)
 
 
 class Settings(db.Model):

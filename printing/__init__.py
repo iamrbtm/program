@@ -61,17 +61,23 @@ def create_app():
 
     # Blueprints
     from printing.templates.base.base import base
-    from printing.templates.project.project import proj
     from printing.auth import auth
+    from printing.templates.project.project import proj
+    from printing.templates.people.customer import cust
+    from printing.templates.people.employee import emp
+    from printing.templates.people.supplier import vendor
 
-    app.register_blueprint(base, url_prefix="/")
-    app.register_blueprint(auth, url_prefix="/")
-    app.register_blueprint(proj, url_prefix="/project")
+    app.register_blueprint(base, url_prefix='/')
+    app.register_blueprint(auth, url_prefix='/')
+    app.register_blueprint(proj)
+    app.register_blueprint(emp)
+    app.register_blueprint(vendor)
+    app.register_blueprint(cust)
 
     from printing.models import User
 
     db.create_all(app=app)
-    
+
     # User Manager
     login_manager = LoginManager()
     login_manager.login_view = "auth.login"
