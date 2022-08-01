@@ -11,18 +11,20 @@
   <!-- plugins:css -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <link href="{{url_for('static', filename='css/feather.css')}}" rel="stylesheet" />
-  <link href="{{url_for('static', filename='css/themify-icons.css')}}" rel="stylesheet" />
+  <link href="{{url_for('static', filename='css/themify-icons/themify-icons.css')}}" rel="stylesheet" />
   <link href="{{url_for('static', filename='css/vendor.bundle.base.css')}}" rel="stylesheet" />
   <!-- endinject -->
   <!-- Plugin css for this page -->
   <link href="{{url_for('static', filename='css/datatables.net-bs4/dataTables.bootstrap4.css')}}" rel="stylesheet" />
-  <link href="{{url_for('static', filename='css/themify-icons.css')}}" rel="stylesheet" />
+  <link href="{{url_for('static', filename='css/themify-icons/themify-icons.css')}}" rel="stylesheet" />
   <link href="{{url_for('static', filename='css/select.dataTables.min.css')}}">
   <!-- End plugin css for this page -->
   <!-- inject:css -->
   <link href="{{url_for('static', filename='css/vertical-layout-light/style.css')}}" rel="stylesheet" />
   <!-- endinject -->
   <link rel="shortcut icon" href="{{url_for('static', filename='images/favicon.png')}}">
+
+  <script src="https://kit.fontawesome.com/88969fd051.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -58,19 +60,20 @@
     </nav>
 
     <div class="container-fluid page-body-wrapper">
+      
       <!-- SIDEBAR -->
       <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <ul class="nav">
           <li class="nav-item">
-            <a class="nav-link" href="index.html">
-              <i class="icon-grid menu-icon"></i>
-              <span class="menu-title">Dashboard</span>
+            <a class="nav-link" href="{{url_for('base.home')}}">
+              <i class="fa-solid fa-house"></i>
+              <span class="menu-title"> Home</span>
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
-              <i class="icon-layout menu-icon"></i>
-              <span class="menu-title">UI Elements</span>
+              <i class="fa fa-group"> </i>
+              <span class="menu-title">People</span>
               <i class="menu-arrow"></i>
             </a>
             <div class="collapse" id="ui-basic">
@@ -179,20 +182,22 @@
         <!-- partial:partials/_footer.html -->
         <footer class="footer">
           <div class="d-sm-flex justify-content-center justify-content-sm-between">
-            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2021.  Premium <a href="https://www.bootstrapdash.com/" target="_blank">Bootstrap admin template</a> from BootstrapDash. All rights reserved.</span>
-            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i class="ti-heart text-danger ml-1"></i></span>
+            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2022. Print That!!</span>
+            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">A line on the right</span>
           </div>
           <div class="d-sm-flex justify-content-center justify-content-sm-between">
-            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Distributed by <a href="https://www.themewagon.com/" target="_blank">Themewagon</a></span> 
+            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Another line below</a></span> 
           </div>
-        </footer> 
-        <!-- partial -->
+        </footer>
+
       </div>
       <!-- main-panel ends -->
     </div>   
     <!-- page-body-wrapper ends -->
   </div>
   <!-- container-scroller -->
+
+
 
   <!-- plugins:js -->
   <script src="vendors/js/vendor.bundle.base.js"></script>
@@ -211,10 +216,11 @@
   <script src="js/settings.js"></script>
   <script src="js/todolist.js"></script>
   <!-- endinject -->
-  <!-- Custom js for this page-->
-  <script src="js/dashboard.js"></script>
-  <script src="js/Chart.roundedBarCharts.js"></script>
-  <!-- End custom js for this page-->
+
+  <!-- JS for specific pages -->
+  {% block JS %}
+    
+  {% endblock %}
 </body>
 
 </html>
