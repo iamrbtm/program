@@ -35,6 +35,10 @@ def new_customer():
             newcust = People(
                 fname = request.form.get('fname'),
                 lname = request.form.get('lname'),
+                address = request.form.get('address'),
+                city = request.form.get('city'),
+                state = request.form.get('state'),
+                postalcode = request.form.get('postalcode'),
                 active = request.form.get('active'),
                 customer = True,
                 markup_factor = request.form.get('markup_factor'),

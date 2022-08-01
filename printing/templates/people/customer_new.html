@@ -1,23 +1,101 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Customer</title>
-</head>
-<body>
-    {{ form.csrf_token }}
-    <form method="POST">
-    <p>
-        {{ form.fname.label }} {{ form.fname(size=20) }}</br>
-        {{ form.lname.label }} {{ form.lname(size=20) }}</br>
-        {{ form.markup_factor.label }} {{ form.markup_factor }}</br>
-        {{ form.discount_factor.label }} {{ form.discount_factor }}</br>
-        {{ form.active.label }} {{ form.active }}</br>
-        {{ form.submit }}</br>
-    </form>
-    </p>
+{% extends "base/index.html" %}
 
+{% block title %}New Customer{% endblock %}
+
+{% block content %}
+{{ form.csrf_token }}
+<form method="POST">
+    <h4 class="mb-3">Customer</h4>
+
+    <form class="form-inline">
+        <div class="form-group mb-2 mr-2">
+            <div class="form-row align-items-center">
+                <div class="col-md-5 mb-3">
+                    <label for="fname">First Name</label>
+                    <input type="text" class="form-control" name="fname" id="fname" placeholder="First Name">
+                </div>
+
+                <div class="col-md-5 mb-3">
+                    <label for="lname">Last Name</label>
+                    <input type="text" class="form-control" name="lname" id="lname" placeholder="Last Name">
+                </div>
+
+                <div class="col-md-2 mb-3">
+                    <label>Active</label>
+                    <div>
+                        <div class="custom-control custom-switch">
+                            <input class="custom-control-input" type="checkbox" name="active" id="active" value="1"
+                                checked>
+                            <label class="custom-control-label mr-2" for="active">Active</label>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="form-group mb-2 mr-2">
+            <label class="mr-2" for="address">Address</label>
+            <input type="text" class="form-control" name="address" id="address" placeholder="Address">
+        </div>
+
+        <div class="form-group mb-2 mr-2">
+            <div class="row">
+                <div class="col">
+                    <label>City</label>
+                    <input type="text" name="city" id="city" class="form-control" placeholder="City">
+                </div>
+                <div class="col">
+                    <label>State</label>
+                    <input type="select" name="state" id="state" class="form-control" placeholder="State">
+                </div>
+                <div class="col">
+                    <label>Postal Code</label>
+                    <input type="text" name="postalcode" id="postalcode" class="form-control" placeholder="Postal Code">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group mb-2 mr-2">
+            <div class="form-row align-items-center">
+                <div class="col-md-6 mb-3">
+                    <label for="email">Email Address</label>
+                    <input type="email" class="form-control" name="email" id="email" placeholder="Email Address">
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="phone">Phone Number</label>
+                    <input type="text" class="form-control" name="phone" id="phone" placeholder="Phone Number">
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="form-group mb-2 mr-2">
+            <div class="form-row align-items-center">
+                <div class="col-md-6 mb-3">
+                    <label for="markup_factor">Markup Factor</label>
+                    <input type="number" class="form-control" name="markup_factor" id="markup_factor"
+                        placeholder="Markup Factor" required>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="discount_factor">Discount Factor</label>
+                    <input type="number" class="form-control" name="discount_factor" id="discount_factor"
+                        placeholder="Discount Factor" required>
+                </div>
+
+            </div>
+
+        </div>
+
+        <button type="submit" class="btn btn-primary mr-2 mb-2" name="submit" id="submit">Save</button>
+    </form>
+
+</form>
+{% endblock %}
 </body>
+
 </html>
