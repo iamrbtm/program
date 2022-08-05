@@ -30,39 +30,39 @@ def home():
 @base.route("/profile", methods=["GET", "POST"])
 @login_required
 def profile():
-    form = User_form()
-    if form.is_submitted():
-        current_user.firstname = form.fname.data
-        current_user.lastname = form.lname.data
-        current_user.username = form.username.data
-        current_user.email = form.email.data
-        current_user.address = form.address.data
-        current_user.city = form.city.data
-        current_user.state = form.state.data
-        current_user.zip = form.zipcode.data
-        current_user.city = form.city.data
-        current_user.phone = format_tel(form.phone.data)
-        current_user.dob = form.dob.data
+    usr = db.session.query(User).filter(User.id == flask_login.current_user.id).first()
+
+    if request.method == "POST":
+        current_user.firstname = usr.fname.data
+        current_user.lastname = usr.lname.data
+        current_user.username = usr.username.data
+        current_user.email = usr.email.data
+        current_user.address = usr.address.data
+        current_user.city = usr.city.data
+        current_user.state = usr.state.data
+        current_user.zip = usr.zipcode.data
+        current_user.city = usr.city.data
+        current_user.phone = format_tel(usr.phone.data)
+        current_user.dob = usr.dob.data
         db.session.commit()
         return render_template("app/base/base.html")
 
-    elif request.method == "GET":
-        form.fname.data = current_user.firstname
-        form.lname.data = current_user.lastname
-        form.username.data = current_user.username
-        form.email.data = current_user.email
-        form.address.data = current_user.address
-        form.city.data = current_user.city
-        form.state.data = current_user.state
-        form.zipcode.data = current_user.zip
-        form.city.data = current_user.city
-        form.phone.data = current_user.phone
-        form.dob.data = current_user.dob
+    # elif request.method == "GET":
+        # usr.firstname.value = current_user.firstname
+        # usr.lastname.value = current_user.lastname
+        # usr.username.value = current_user.username
+        # usr.email.value = current_user.email
+        # usr.address.value = current_user.address
+        # usr.city.value = current_user.city
+        # usr.state.value = current_user.state
+        # usr.zipcode.value = current_user.zip
+        # usr.city.value = current_user.city
+        # usr.phone.value = current_user.phone
+        # usr.dob.value = current_user.dob
 
     states = db.session.query(States).all()
-    usr = db.session.query(User).filter(User.id == flask_login.current_user.id).first()
     return render_template(
-        "app/base/profile.html", user=User, usr=usr, states=states, form=form
+        "app/base/profile.html", user=User, usr=usr, states=states
     )
 
 
