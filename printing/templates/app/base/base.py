@@ -24,7 +24,7 @@ base = Blueprint("base", __name__)
 @base.route("/home")
 @login_required
 def home():
-    return render_template("base/home.html", user=User)
+    return render_template("app/base/base.html", user=User)
 
 
 @base.route("/profile", methods=["GET", "POST"])
@@ -44,7 +44,7 @@ def profile():
         current_user.phone = format_tel(form.phone.data)
         current_user.dob = form.dob.data
         db.session.commit()
-        return render_template("base/home.html")
+        return render_template("app/base/base.html")
 
     elif request.method == "GET":
         form.fname.data = current_user.firstname
@@ -62,8 +62,9 @@ def profile():
     states = db.session.query(States).all()
     usr = db.session.query(User).filter(User.id == flask_login.current_user.id).first()
     return render_template(
-        "base/profile.html", user=User, usr=usr, states=states, form=form
+        "app/base/profile.html", user=User, usr=usr, states=states, form=form
     )
+
 
 @base.route("/stateimport")
 @login_required

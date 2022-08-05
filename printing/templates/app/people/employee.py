@@ -13,4 +13,4 @@ def employee():
         .filter(People.active == True)
         .all()
     )
-    return render_template("people/employee.html", user=User, employees=employees)
+    return render_template("app/people/employee.html", user=User, employees=employees)

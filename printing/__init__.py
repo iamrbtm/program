@@ -60,15 +60,21 @@ def create_app():
             abort(0)
 
     # Blueprints
-    from printing.templates.base.base import base
+    #website
+    from printing.templates.website.website import site 
     from printing.auth import auth
-    from printing.templates.project.project import proj
-    from printing.templates.people.customer import cust
-    from printing.templates.people.employee import emp
-    from printing.templates.people.supplier import vendor
-
-    app.register_blueprint(base, url_prefix='/')
+    
     app.register_blueprint(auth, url_prefix='/')
+    app.register_blueprint(site, url_prefix='/')
+   
+    #app
+    from printing.templates.app.base.base import base
+    from printing.templates.app.project.project import proj
+    from printing.templates.app.people.customer import cust
+    from printing.templates.app.people.employee import emp
+    from printing.templates.app.people.supplier import vendor
+    
+    app.register_blueprint(base, url_prefix='/app')
     app.register_blueprint(proj)
     app.register_blueprint(emp)
     app.register_blueprint(vendor)

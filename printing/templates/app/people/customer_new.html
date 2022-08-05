@@ -1,9 +1,8 @@
-{% extends "base/index.html" %}
+{% extends "app/app/base/base.html" %}
 
 {% block title %}New Customer{% endblock %}
 
 {% block content %}
-{{ form.csrf_token }}
 <form method="POST">
     <h4 class="mb-3">Customer</h4>
 
@@ -44,15 +43,21 @@
             <div class="row">
                 <div class="col">
                     <label>City</label>
-                    <input type="text" name="city" id="city" class="form-control" placeholder="City">
+                    <input type="text" name="city" id="city" class="form-control" placeholder="City"
+                    hx-trigger="keyup changed delay:500ms" hx-get="/customer/statelist" hx-target="#statelist">
                 </div>
                 <div class="col">
                     <label>State</label>
-                    <input type="select" name="state" id="state" class="form-control" placeholder="State">
+                    <input type="select" name="state" id="state" class="form-control" placeholder="State"
+                    hx-trigger="keyup changed delay:1s" hx-get="/customer/zipcodelist" hx-target="#zipcodes" list="statelist">
+                    <datalist id="statelist" name="statelist">
+                    </datalist>
                 </div>
                 <div class="col">
                     <label>Postal Code</label>
-                    <input type="text" name="postalcode" id="postalcode" class="form-control" placeholder="Postal Code">
+                    <input type="select" name="postalcode" id="postalcode" class="form-control" placeholder="Postal Code" list="zipcodes">
+                    <datalist id="zipcodes" name="zipcodes">
+                      </datalist>
                 </div>
             </div>
         </div>
@@ -77,13 +82,13 @@
             <div class="form-row align-items-center">
                 <div class="col-md-6 mb-3">
                     <label for="markup_factor">Markup Factor</label>
-                    <input type="number" class="form-control" name="markup_factor" id="markup_factor"
+                    <input type="text" class="form-control" name="markup_factor" id="markup_factor" value={{"$%.2f"|format(dmu)}}
                         placeholder="Markup Factor" required>
                 </div>
 
                 <div class="col-md-6 mb-3">
                     <label for="discount_factor">Discount Factor</label>
-                    <input type="number" class="form-control" name="discount_factor" id="discount_factor"
+                    <input type="text" class="form-control" name="discount_factor" id="discount_factor" value={{"$%.2f"|format(dd)}}
                         placeholder="Discount Factor" required>
                 </div>
 

@@ -1,0 +1,11 @@
+{% extends "app/base/base.html" %}
+{% block title %}Suppliers{% endblock %}
+{% block content %}
+    <ol>
+        {% for supplier in suppliers %}
+            <li>
+                {{supplier.fname}} {{supplier.lname}}
+            </li>
+        {% endfor %}
+    </ol>
+{% endblock %}

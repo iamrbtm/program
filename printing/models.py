@@ -34,6 +34,8 @@ class apitoken(db.Model):
 
 class States(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    zipcode = db.Column(db.Integer)
+    city = db.Column(db.String(100))
     state = db.Column(db.String(50))
     abr = db.Column(db.String(2))
 
@@ -153,3 +155,9 @@ class Settings(db.Model):
     cost_kW = db.Column(db.Float)
     default_markup = db.Column(db.Float)
     default_discount = db.Column(db.Float)
+
+class Tempdata(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    textdata = db.Column(db.Text)
+    numberdata = db.Column(db.Integer)
+    floatdata = db.Column(db.Float)

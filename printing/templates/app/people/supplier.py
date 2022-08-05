@@ -14,4 +14,4 @@ def supplier():
         .filter(People.active == True)
         .all()
     )
-    return render_template("people/supplier.html", user=User, suppliers=suppliers)
+    return render_template("app/people/supplier.html", user=User, suppliers=suppliers)

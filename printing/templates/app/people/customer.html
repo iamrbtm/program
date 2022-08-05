@@ -1,0 +1,11 @@
+{% extends "app/base/base.html" %}
+{% block title %}Customers{% endblock %}
+{% block content %}
+    <ol>
+        {% for customer in customers %}
+            <li>
+                {{customer.fname}} {{customer.lname}}
+            </li>
+        {% endfor %}
+    </ol>
+{% endblock %}

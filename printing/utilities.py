@@ -1,10 +1,10 @@
-import re
+import re, os
 from printing import db
 from printing.models import *
 from matplotlib import colors
 from flask import flash
 
-
+filename = 'temp.log'
 def format_tel(phone):
     if phone != "":
         clean_phone = re.sub("[^0-9]+", "", phone)
@@ -548,3 +548,21 @@ def filamentcost(weight_in_g, filamentfk):
     if cost < .01: cost = .01
     
     return cost
+
+def write_td(data):
+    if os.path.exists(filename):
+        os.remove(filename)
+    
+    with open(filename, 'w') as file:
+            file.write(data)
+
+def get_td():
+    if os.path.exists(filename):
+        with open(filename,'r') as file:
+            td = file.read()
+        return td
+    return ''
+
+def flush_td():
+    if os.path.exists(filename):
+      os.remove(filename)
