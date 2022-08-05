@@ -14,10 +14,10 @@ proj = Blueprint("project", __name__, url_prefix='/project')
 @login_required
 def project():
     allactive = db.session.query(Project).all()
-    return render_template("project/project.html", user=User, projects=allactive)
+    return render_template("app/project/project.html", user=User, projects=allactive)
 
 
-@proj.route("/projectdetails/<int:id>")
+@proj.route("/details/<int:id>")
 @login_required
 def projectdetails(id):
     project = db.session.query(Project).filter(Project.id == id).first()
@@ -33,7 +33,7 @@ def projectdetails(id):
     costfilament = filamentcost(materialused, project.filamentfk)
 
     return render_template(
-        "project/project_details.html",
+        "app/project/project_details.html",
         user=User,
         projects=project,
         materialused=materialused,

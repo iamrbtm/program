@@ -1,12 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projects</title>
-</head>
-<body>
+{% extends "app/base/base.html" %}
+{% block title %}Details for {{projects.project_name}} {% endblock %}
+{% block content %}
     <ol>
         <li>
             {{projects.project_name}}</br>
@@ -23,5 +17,4 @@
         </li>
     </ol>
     
-</body>
-</html>
+{% endblock %}

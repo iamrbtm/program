@@ -1,0 +1,3 @@
+removes all __pycache__ and .pyc files in the current directory and subdirectories
+    pyclean -v .
+
