@@ -30,25 +30,23 @@ def new_customer():
     dd = setting.default_discount
 
     if request.method == "POST":
-        if form.is_submitted():
-            print("Form successfully submitted")
-            newcust = People(
-                fname=request.form.get("fname"),
-                lname=request.form.get("lname"),
-                address=request.form.get("address"),
-                city=request.form.get("city"),
-                state=request.form.get("state"),
-                postalcode=request.form.get("postalcode"),
-                phone=request.form.get("phone"),
-                email=request.form.get("email"),
-                active=request.form.get("active"),
-                customer=True,
-                markup_factor=request.form.get("markup_factor"),
-                discount_factor=request.form.get("discount_factor"),
-            )
-            db.session.add(newcust)
-            db.session.commit()
-            return redirect(url_for("customer.customer"))
+        newcust = People(
+            fname=request.form.get("fname"),
+            lname=request.form.get("lname"),
+            address=request.form.get("address"),
+            city=request.form.get("city"),
+            state=request.form.get("state"),
+            postalcode=request.form.get("postalcode"),
+            phone=format_tel(request.form.get("phone")),
+            email=request.form.get("email"),
+            active=request.form.get("active"),
+            customer=True,
+            markup_factor=request.form.get("markup_factor"),
+            discount_factor=request.form.get("discount_factor"),
+        )
+        db.session.add(newcust)
+        db.session.commit()
+        return redirect(url_for("customer.customer"))
 
     content = {"user": User, "dmu": dmu, "dd": dd}
     return render_template("app/people/customer_new.html", **content)

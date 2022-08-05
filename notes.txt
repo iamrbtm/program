@@ -1,3 +1,6 @@
 removes all __pycache__ and .pyc files in the current directory and subdirectories
     pyclean -v .
 
+if powerd is using alot of cpu and fan is going, computer hot
+    sudo pmset schedule cancelall
+
