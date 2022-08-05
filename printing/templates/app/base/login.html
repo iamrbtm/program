@@ -27,7 +27,7 @@
                                     <div class="text-center">
                                         <h4 class="text-dark mb-4">Welcome</h4>
                                     </div>
-                                    <form class="user">
+                                    <form class="user" method="POST">
                                         <div class="mb-3"><input class="form-control form-control-user" type="email"
                                                 id="email" aria-describedby="emailHelp"
                                                 placeholder="Enter Email Address..." name="email"></div>
@@ -47,9 +47,10 @@
                                         <hr>
                                         <hr>
                                     </form>
-                                    <div class="text-center"><a class="small" href="forgot-password.html">Forgot
-                                            Password?</a></div>
-                                    <div class="text-center"><a class="small" href="register.html">Create an
+                                    <!-- TODO: Create forgot password methods and workflow -->
+                                    <!-- <div class="text-center"><a class="small" href="#">Forgot
+                                            Password?</a></div> -->
+                                    <div class="text-center"><a class="small" href="{{url_for('auth.sign_up')}}">Create an
                                             Account!</a></div>
                                 </div>
                             </div>
@@ -59,8 +60,8 @@
             </div>
         </div>
     </div>
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="assets/js/script.min.js"></script>
+    <script src="{{url_for('static', filename='app/bootstrap/js/bootstrap.min.js')}}"></script>
+    <script src="{{url_for('static', filename='app//js/script.min.js')}}"></script>
 </body>
 
 </html>
