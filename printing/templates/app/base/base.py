@@ -33,37 +33,26 @@ def profile():
     usr = db.session.query(User).filter(User.id == flask_login.current_user.id).first()
 
     if request.method == "POST":
-        current_user.firstname = usr.fname.data
-        current_user.lastname = usr.lname.data
-        current_user.username = usr.username.data
-        current_user.email = usr.email.data
-        current_user.address = usr.address.data
-        current_user.city = usr.city.data
-        current_user.state = usr.state.data
-        current_user.zip = usr.zipcode.data
-        current_user.city = usr.city.data
-        current_user.phone = format_tel(usr.phone.data)
-        current_user.dob = usr.dob.data
-        db.session.commit()
-        return render_template("app/base/base.html")
+        if request.form.get("where") == "contact":
+            current_user.firstname = request.form.get("firstname")
+            current_user.lastname = request.form.get("lastname")
+            current_user.address = request.form.get("address")
+            current_user.city = request.form.get("city")
+            current_user.state = request.form.get("state")
+            current_user.postalcode = request.form.get("postalcode")
+            current_user.phone = format_tel(request.form.get("phone"))
+            current_user.dob = request.form.get("dob")
 
-    # elif request.method == "GET":
-        # usr.firstname.value = current_user.firstname
-        # usr.lastname.value = current_user.lastname
-        # usr.username.value = current_user.username
-        # usr.email.value = current_user.email
-        # usr.address.value = current_user.address
-        # usr.city.value = current_user.city
-        # usr.state.value = current_user.state
-        # usr.zipcode.value = current_user.zip
-        # usr.city.value = current_user.city
-        # usr.phone.value = current_user.phone
-        # usr.dob.value = current_user.dob
+        elif request.form.get("where") == "user":
+            current_user.username = request.form.get('username')
+            current_user.email = request.form.get('email')
+
+        db.session.commit()
+        flash("Information Saved")
+        return render_template("app/dashboard/dashboard.html")
 
     states = db.session.query(States).all()
-    return render_template(
-        "app/base/profile.html", user=User, usr=usr, states=states
-    )
+    return render_template("app/base/profile.html", user=User, states=states)
 
 
 @base.route("/stateimport")
