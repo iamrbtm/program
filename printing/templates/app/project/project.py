@@ -3,13 +3,14 @@ from flask_login import login_required, current_user
 import flask_login
 from sqlalchemy.orm import session
 from printing.models import *
-from printing import db
+from printing import db, uploads
 from printing.utilities import *
 import datetime
 
 proj = Blueprint("project", __name__, url_prefix="/project")
 
 # TODO: new project
+# TODO: from open projects, click on the name of the project to take to details page
 
 
 @proj.route("/")
@@ -22,26 +23,21 @@ def project():
 @proj.route("/details/<int:id>")
 @login_required
 def projectdetails(id):
+    project1 = CalcCost(id)
     project = db.session.query(Project).filter(Project.id == id).first()
 
-    timelength = calc_time_length(
-        "/Volumes/PTS/program/printing/static/uploads/Califlower.gcode"
-    )
-    printtime = timelength[0]
-    materialused = calculate_weight(timelength[1] / 1000, project.filamentfk)
-
-    costelectricity = timecost(printtime, project.filamentfk)
-
-    costfilament = filamentcost(materialused, project.filamentfk)
+    # timelength = calc_time_length(2,id)
 
     return render_template(
         "app/project/project_details.html",
         user=User,
         projects=project,
-        materialused=materialused,
-        printtime=printtime,
-        timecost=costelectricity,
-        filcost=costfilament,
+        newproject=project1,
+        materialused=project1.kg_weight * 1000,
+        printtime=project1.h_printtime,
+        timecost=project1.timecost(),
+        filcost=project1.filcost(),
+        total=project1.total()
     )
 
 

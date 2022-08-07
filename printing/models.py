@@ -155,9 +155,5 @@ class Settings(db.Model):
     cost_kW = db.Column(db.Float)
     default_markup = db.Column(db.Float)
     default_discount = db.Column(db.Float)
-
-class Tempdata(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    textdata = db.Column(db.Text)
-    numberdata = db.Column(db.Integer)
-    floatdata = db.Column(db.Float)
+    padding_time = db.Column(db.Float)
+    padding_filament = db.Column(db.Float)

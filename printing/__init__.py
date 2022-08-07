@@ -22,11 +22,10 @@ def create_app():
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     # Flask-Uploads & Static
-    if os.environ.get("UPLOADS_USE") == "True":
-        app.config["UPLOADED_PHOTOS_DEST"] = "printing/static/images"
-        app.config["UPLOADED_UPLOADS_DEST"] = "printing/static/uploads"
-        configure_uploads(app, photos)
-        configure_uploads(app, uploads)
+    app.config["UPLOADED_PHOTOS_DEST"] = "printing/static/app/images"
+    app.config["UPLOADED_UPLOADS_DEST"] = "printing/static/app/uploads"
+    configure_uploads(app, photos)
+    configure_uploads(app, uploads)
 
     app._static_folder = "static"
 

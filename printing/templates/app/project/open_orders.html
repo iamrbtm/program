@@ -13,7 +13,11 @@
     <tbody>
         {% for project in projects %}
         <tr>
-            <td>{{project.project_name}}</td>
+            <td>
+                <a href="{{url_for('project.projectdetails', id=project.id)}}">
+                    {{project.project_name}}
+                </a>
+            </td>
             <td>{{project.people_rel.fname}} {{project.people_rel.lname}}</td>
             <td>{{project.filament_rel.name}} - {{project.filament_rel.color}}({{project.filament_rel.diameter}})</td>
             <td>{{project.printer_rel.name}}</td>
@@ -38,8 +42,7 @@
         $('#openorders').DataTable({
             colReorder: true,
             responsive: true,
-            columns: [
-                {
+            columns: [{
                     searchable: true
                 },
                 {

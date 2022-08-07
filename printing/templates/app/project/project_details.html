@@ -1,20 +1,177 @@
 {% extends "app/base/base.html" %}
 {% block title %}Details for {{projects.project_name}} {% endblock %}
 {% block content %}
-    <ol>
-        <li>
-            {{projects.project_name}}</br>
-            {{projects.people_rel.fname}} {{projects.people_rel.lname}}</br>
-            {% if projects.people_rel.address %}
-                {{projects.people_rel.address}}</br>
-                {{projects.people_rel.city}}, {{projects.people_rel.state}}  {{projects.people_rel.postalcode}}</br>
-            {% endif %}
-            {{projects.printer_rel.name}}</br>
-            {{projects.filament_rel.name}} - {{projects.filament_rel.color}}</br>
-            {{"%.4f"|format(printtime/60)}} hours print time - {{"$%.2f"|format(timecost)}}</br>
-            {{"%.3f"|format(materialused)}} grams - {{"$%.2f"|format(filcost)}}</br>
-            {{projects.shipping_rel.company}} ({{"$%.2f"|format(projects.shipping_rel.cost)}})</br>
-        </li>
-    </ol>
-    
+<div class="container-fluid">
+    <h3 class="text-dark mb-4">{{projects.project_name.upper()}}</h3>
+    <div class="row mb-3">
+        <div class="col-lg-4">
+            <div class="card mb-3" id="CustInfo">
+                <div class="card shadow mb-3">
+                    <div class="card-header py-3">
+                        <p class="text-primary m-0 fw-bold">Customer Info</p>
+                    </div>
+                    <div class="card-body shadow">
+                        {{projects.people_rel.fname}} {{projects.people_rel.lname}}</br>
+                        {{projects.people_rel.address}}</br>
+                        {{projects.people_rel.city}}, {{projects.people_rel.state}}
+                        {{projects.people_rel.postalcode}}</br>
+                        {{projects.people_rel.phone}}</br>
+                        {{projects.people_rel.email}}</br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-lg-12">
+            <div class="card shadow mb-3" id="OrderDets">
+                <div class="card-header py-3">
+                    <p class="text-primary m-0 fw-bold">Order Details</p>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped" width="100%" id="orderdetails">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Description</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Printer</td>
+                                <td>{{projects.printer_rel.name}}</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Filament</td>
+                                <td>{{projects.filament_rel.name}} - ({{projects.filament_rel.color}}
+                                        {{projects.filament_rel.type_rel.type}}
+                                        {{projects.filament_rel.diameter}})</td>
+                                <td>{{"%.1f"|format(materialused)}}g</td>
+                                <td>{{"$%.2f"|format(newproject.filcost())}}</td>
+                            </tr>
+                            <tr>
+                                <td>Print Time</td>
+                                <td>Cost of Electricity</td>
+                                <td>{{"%.2f"|format(printtime)}} hours</td>
+                                <td>{{"$%.2f"|format(timecost)}}</td>
+                            </tr>
+                            {% if 1==2 %}
+                            <tr>
+                                <td>Design</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            {% endif %}
+                            {% if projects.advertising %}
+                            <tr>
+                                <td>Advertising</td>
+                                <td></td>
+                                <td></td>
+                                <td>{{"$%.2f"|format(projects.advertising)}}</td>
+                            </tr>
+                            {% endif %}
+                            {% if projects.overhead %}
+                            <tr>
+                                <td>Overhead</td>
+                                <td></td>
+                                <td></td>
+                                <td>{{"$%.2f"|format(projects.overhead)}}</td>
+                            </tr>
+                            {% endif %}
+                            {% if projects.rent %}
+                            <tr>
+                                <td>Rent</td>
+                                <td></td>
+                                <td></td>
+                                <td>{{"$%.2f"|format(projects.rent)}}</td>
+                            </tr>
+                            {% endif %}
+                            {% if projects.extrafees %}
+                            <tr>
+                                <td>Other</td>
+                                <td></td>
+                                <td></td>
+                                <td>{{"$%.2f"|format(projects.extrafees)}}</td>
+                            </tr>
+                            {% endif %}
+                            {% if projects.packaging %}
+                            <tr>
+                                <td>Packaging</td>
+                                <td></td>
+                                <td></td>
+                                <td>{{"$%.2f"|format(projects.packaging)}}</td>
+                            </tr>
+                            {% endif %}
+                            <tr>
+                                <td>Shipping</td>
+                                <td>{{projects.shipping_rel.company}}</td>
+                                <td></td>
+                                <td>{{"$%.2f"|format(projects.shipping_rel.cost)}}</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td>Total</td>
+                                <td>{{"$%.2f"|format(total)}}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="card mb-3" id="Order History">
+                <div class="card shadow mb-3">
+                    <div class="card-header py-3">
+                        <p class="text-primary m-0 fw-bold">Order History</p>
+                    </div>
+                    <div class="card-body shadow">
+                        <!-- TODO: place order history here -->
+                        Order History goes here
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+{% endblock %}
+
+{% block js_code %}
+<script>
+    $(document).ready(function () {
+        $('#orderdetails').DataTable({
+            "bPaginate": false,
+            "bLengthChange": false,
+            "bFilter": false,
+            "bInfo": true,
+            "bAutoWidth": true,
+            colReorder: false,
+            responsive: true,
+            searchable: false,
+            columns: [
+                {
+                    orderable: true,
+                },
+                {
+                    orderable: false,
+                },
+                {
+                    orderable: false,
+                },
+                {
+                    orderable: true,
+                },
+            ],
+        });
+    });
+</script>
 {% endblock %}

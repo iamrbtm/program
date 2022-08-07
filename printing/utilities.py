@@ -4,7 +4,9 @@ from printing.models import *
 from matplotlib import colors
 from flask import flash
 
-filename = 'temp.log'
+filename = "temp.log"
+
+
 def format_tel(phone):
     if phone != "":
         clean_phone = re.sub("[^0-9]+", "", phone)
@@ -220,7 +222,7 @@ def populate_types():
                     diameter=diam,
                     densitygcm3=fil["densitygcm3"],
                     m_in_1kg_3=fil["m_in_1kg_3"],
-                    m_in_1kg_175=fil["m_in_1kg_175"]
+                    m_in_1kg_175=fil["m_in_1kg_175"],
                 )
                 db.session.add(new)
                 db.session.commit()
@@ -411,15 +413,41 @@ def shorten_url(longurl):
     return link
 
 
-def calc_time_length(FileName):
-    Units = "Millimetres"
+# Calculation for Orders
+def calc_time_length(objid, projid):
+    def calc_weight(weightinm, projectid):
+        import math
 
+        self.project = db.session.query(Project).filter(Project.id == self.projectid).first()
+
+        diameter = (
+            db.session.query(Filament.diameter)
+            .filter(Filament.id == self.project.filamentfk)
+            .scalar()
+        )
+        density = (
+            db.session.query(Filament)
+            .filter(Filament.id == self.project.filamentfk)
+            .first()
+            .type_rel.densitygcm3
+        )
+        # Volume = (length in m * 100) * pi() * ((diam/2)^2)
+        filcm = weightinm * 100
+        radius = (diameter / 2) / 10
+        csarea = math.pi * (radius) ** 2
+        volume = filcm * csarea
+        weight = volume * density
+        return weight
+
+    stgs = db.session.query(Settings).first()
+    Units = "Millimetres"
+    objectinfo = db.session.query(Printobject).filter(Printobject.id == objid).first()
     import io, os, string, math, sys
 
     MoveDelay = 0.000014945651469
     PauseDelay = 0.0006
 
-    f = open(FileName)
+    f = open(objectinfo.file)
 
     BaseTime = 15
     FeedRate = 0.0
@@ -505,64 +533,113 @@ def calc_time_length(FileName):
         gflag = 0
     f.closed
 
-    printtime = float(
-        Totaltime
-        + MoveCount * MoveDelay
-        + BaseTime
-        + PauseCount * PauseDelay
-        + MatTotaltime
+    timepad = 1 - stgs.padding_time
+
+    printtime_in_min = float(
+        (
+            Totaltime
+            + MoveCount * MoveDelay
+            + BaseTime
+            + PauseCount * PauseDelay
+            + MatTotaltime
+        )
+        / timepad
     )
-    materialused = float(Material)
 
-    print("material = " + str(materialused))
-    print("    time = " + str(printtime))
+    matpad = 1 - stgs.padding_filament
+    materialused_in_mm = float(Material) / matpad
+
+    print(" material in mm = " + str(round(materialused_in_mm, 3)) + "mm")
+    print("  material in m = " + str(round(materialused_in_mm / 1000, 3)) + "m")
+    print("---------------")
+    print("    time in min = " + str(round(printtime_in_min, 3)) + "min")
+    print("     time in hr = " + str(round(printtime_in_min / 60, 3)) + "hrs")
+
+    weight_in_g = calc_weight(materialused_in_mm / 1000, projid)
+    objectinfo.kg_weight = weight_in_g / 1000
+    objectinfo.h_printtime = printtime_in_min / 60
+    db.session.commit()
+
+    return printtime_in_min, materialused_in_mm
+
+class CalcCost:
+    def __init__(self, id):
+        self.project = db.session.query(Project).filter(Project.id == id).first()
+
+        self.customer_disc = (
+            self.project.people_rel.discount_factor
+        )  # customer specific discount
+        self.customer_markup = (
+            self.project.people_rel.markup_factor
+        )  # customer specific markup
+        self.print_time = self.project.object_rel.h_printtime  # in hrs
+        self.length_m = self.project.object_rel.kg_weight  # in KG
+        self.filename = self.project.object_rel.file  # filename of object
+        self.filamentid = self.project.filamentfk  # filament id
+        self.diameter = self.project.filament_rel.diameter
+        self.density = self.project.filament_rel.type_rel.densitygcm3
+        self.kg_weight = self.project.object_rel.kg_weight
+        self.h_printtime = self.project.object_rel.h_printtime
+        self.cost_fil_per_g = self.project.filament_rel.priceperroll / 1000
+        self.filament_kw_per_hr = self.project.filament_rel.type_rel.kW_hr
     
-    return printtime,materialused
 
-def calculate_weight(weightinm, filament):
-    import math
+    def calc_m_to_g(self):
+        import math
 
-    diameter = db.session.query(Filament.diameter).filter(Filament.id == filament).scalar()
-    density = db.session.query(Filament).filter(Filament.id==filament).first().type_rel.densitygcm3
-    # Volume = (length in m * 100) * pi() * ((diam/2)^2)
-    filcm = weightinm * 100
-    radius = (diameter / 2) / 10
-    csarea = math.pi * (radius) ** 2
-    volume = filcm * csarea
-    weight = volume * density
-    return weight
+        # Volume = (length in m * 100) * pi() * ((diam/2)^2)
+        filcm = self.length_m * 100
+        radius = (self.diameter / 2) / 10
+        csarea = math.pi * (radius) ** 2
+        volume = filcm * csarea
+        weight = volume * self.density
+        self.weight_in_g = weight
+        return weight
 
-def timecost(time_in_min, filament):
-    time_in_hr = time_in_min / 60
-    kw_per_hr = db.session.query(Settings).first().cost_kW
-    filament_kw_per_hr = db.session.query(Filament).filter(Filament.id == filament).first().type_rel.kW_hr
-    
-    cost = time_in_hr*kw_per_hr*filament_kw_per_hr
-    if cost < .01: cost = .01
-    return cost
+    def filcost(self):
+        cost = (self.kg_weight * 1000) * self.cost_fil_per_g
+        if cost < 0.01:
+            cost = 0.01
+        return cost
 
-def filamentcost(weight_in_g, filamentfk):
-    fil_cost_per_g = (db.session.query(Filament).filter(Filament.id == filamentfk).first().priceperroll)/1000
-    
-    cost = weight_in_g * fil_cost_per_g
-    if cost < .01: cost = .01
-    
-    return cost
+    def timecost(self):
+        kw_per_hr = db.session.query(Settings).first().cost_kW
 
+        cost = self.h_printtime * kw_per_hr * self.filament_kw_per_hr
+        if cost < 0.01:
+            cost = 0.01
+        return cost
+
+    def total(self):
+        return (self.timecost() 
+                + self.filcost() 
+                + self.project.shipping_rel.cost
+                + self.project.packaging
+                + self.project.advertising
+                + self.project.rent
+                + self.project.overhead
+                + self.project.extrafees
+        )
+
+
+
+# Temp Data
 def write_td(data):
     if os.path.exists(filename):
         os.remove(filename)
-    
-    with open(filename, 'w') as file:
-            file.write(data)
+
+    with open(filename, "w") as file:
+        file.write(data)
+
 
 def get_td():
     if os.path.exists(filename):
-        with open(filename,'r') as file:
+        with open(filename, "r") as file:
             td = file.read()
         return td
-    return ''
+    return ""
+
 
 def flush_td():
     if os.path.exists(filename):
-      os.remove(filename)
+        os.remove(filename)
