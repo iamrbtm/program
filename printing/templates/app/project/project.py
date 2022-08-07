@@ -7,14 +7,14 @@ from printing import db
 from printing.utilities import *
 import datetime
 
-proj = Blueprint("project", __name__, url_prefix='/project')
+proj = Blueprint("project", __name__, url_prefix="/project")
 
 
 @proj.route("/")
 @login_required
 def project():
-    allactive = db.session.query(Project).all()
-    return render_template("app/project/project.html", user=User, projects=allactive)
+    allorders = db.session.query(Project).all()
+    return render_template("app/project/project.html", user=User, projects=allorders)
 
 
 @proj.route("/details/<int:id>")
@@ -39,5 +39,14 @@ def projectdetails(id):
         materialused=materialused,
         printtime=printtime,
         timecost=costelectricity,
-        filcost=costfilament
+        filcost=costfilament,
+    )
+
+
+@proj.route("/open_orders")
+@login_required
+def open_orders():
+    openorders = db.session.query(Project).filter(Project.active == True).all()
+    return render_template(
+        "app/project/open_orders.html", user=User, projects=openorders
     )
