@@ -147,14 +147,12 @@
     </div>
     <a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
   </div>
-  
+
   <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="{{url_for('static', filename='app/bootstrap/js/bootstrap.min.js')}}"></script>
   <script src="{{url_for('static', filename='app/js/script.min.js')}}"></script>
   <script type="text/javascript" charset="utf8" src="{{url_for('static', filename='app/datatables/datatables.js')}}"></script>
-  {% block js_code %}
-
-  {% endblock %}
+  {% block js_code %}{% endblock %}
 </body>
 
 </html>

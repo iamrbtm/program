@@ -9,6 +9,8 @@ import datetime
 
 proj = Blueprint("project", __name__, url_prefix="/project")
 
+# TODO: new project
+
 
 @proj.route("/")
 @login_required
