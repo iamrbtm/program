@@ -1,27 +1,78 @@
 {% extends "app/base/base.html" %}
+
 {% block title %}Details for {{projects.project_name}} {% endblock %}
+
+{% block header %}
+{{projects.project_name.upper()}} - <span class="display-6">{{projects.ordernum}}</span>
+{% endblock %}
+
 {% block content %}
 <div class="container-fluid">
-    <h3 class="text-dark mb-4">{{projects.project_name.upper()}}</h3>
     <div class="row mb-3">
-        <div class="col-lg-6">
+        <div class="col-lg-4">
             <div class="card mb-3" id="CustInfo">
                 <div class="card shadow mb-3">
                     <div class="card-header py-3">
                         <p class="text-primary m-0 fw-bold">Customer Info</p>
                     </div>
                     <div class="card-body shadow">
-                        {{projects.people_rel.fname}} {{projects.people_rel.lname}}</br>
-                        {{projects.people_rel.address}}</br>
-                        {{projects.people_rel.city}}, {{projects.people_rel.state}}
-                        {{projects.people_rel.postalcode}}</br>
-                        {{projects.people_rel.phone}}</br>
-                        {{projects.people_rel.email}}</br>
+                        {{projects.customer_rel.fname}} {{projects.customer_rel.lname}}</br>
+                        {{projects.customer_rel.address}}</br>
+                        {{projects.customer_rel.city}}, {{projects.customer_rel.state}}
+                        {{projects.customer_rel.postalcode}}</br>
+                        {{projects.customer_rel.phone}}</br>
+                        {{projects.customer_rel.email}}</br>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-lg-6">
+        <div class="col-lg-4">
+            <div class="card mb-3" id="ShippingInfo">
+                <div class="card shadow mb-3">
+                    <div class="card-header py-3">
+                        <p class="text-primary m-0 fw-bold">Shipping Address</p>
+                    </div>
+                    <div class="card-body shadow">
+                        {% if projects.customer_rel.ship_fname %}
+                        {{projects.customer_rel.ship_fname}}
+                        {% else %}
+                        {{projects.customer_rel.fname}}
+                        {% endif %}
+                        {% if projects.customer_rel.ship_lname %}
+                        {{projects.customer_rel.ship_lname}}
+                        {% else %}
+                        {{projects.customer_rel.lname}}
+                        {% endif %}
+                        </br>
+                        {% if projects.customer_rel.ship_address %}
+                        {{projects.customer_rel.ship_address}}
+                        {% else %}
+                        {{projects.customer_rel.address}}
+                        {% endif %}
+                        </br>
+                        {% if projects.customer_rel.ship_city %}
+                        {{projects.customer_rel.ship_city}},
+                        {% else %}
+                        {{projects.customer_rel.city}},
+                        {% endif %}
+                        {% if projects.customer_rel.ship_state %}
+                        {{projects.customer_rel.ship_state}}
+                        {% else %}
+                        {{projects.customer_rel.state}}
+                        {% endif %}
+                        {% if projects.customer_rel.ship_postalcode %}
+                        {{projects.customer_rel.ship_postalcode}}
+                        {% else %}
+                        {{projects.customer_rel.postalcode}}
+                        {% endif %}
+                        </br>
+                        </br>
+                        </br>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
             <div class="card mb-3" id="OrderInfo">
                 <div class="card shadow mb-3">
                     <div class="card-header py-3">
@@ -29,8 +80,9 @@
                     </div>
                     <div class="card-body shadow">
                         <b>Order Number:</b> {{projects.ordernum}}</br>
-                        <b>Date Created:</b> {{projects.time_created}}</br>
-                        <b>Employee:</b> {{current_user.firstname}} {{current_user.lastname}}</br>
+                        <b>Date Created:</b> {{projects.time_created.strftime('%b %d, %Y')}}</br>
+                        <b>Time Created:</b> {{projects.time_created.strftime('%-I:%m %p')}}</br>
+                        <b>Employee:</b> {{projects.employee_rel.fname}} {{projects.employee_rel.lname}}</br>
                         <b>Shipping:</b> {{projects.shipping_rel.company}} - {{projects.shipping_rel.service}}</br>
                     </div>
                 </div>
@@ -72,7 +124,7 @@
                                 <td>Print Time</td>
                                 <td>Cost of Electricity</td>
                                 <td>{{"%.2f"|format(printtime)}} hours</td>
-                                <td>{{"$%.2f"|format(timecost)}}</td>
+                                <td>{{"$%.2f"|format(newproject.timecost())}}</td>
                             </tr>
                             {% if 1==2 %}
                             <tr>
@@ -122,19 +174,31 @@
                                 <td>{{"$%.2f"|format(projects.packaging)}}</td>
                             </tr>
                             {% endif %}
+                        </tbody>
+                        <tfoot class="table table-bordered">
                             <tr>
-                                <td>Shipping</td>
-                                <td>{{projects.shipping_rel.company}}</td>
                                 <td></td>
+                                <td></td>
+                                <td class="text-end">Subtotal</td>
+                                <td>{{"$%.2f"|format(newproject.subtotal())}}</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td class="text-end">Discount - {{"%.0f"|format(projects.customer_rel.discount_factor*100|round)}}%</td>
+                                <td style="color: red">{{"$%.2f"|format(newproject.subtotal()*projects.customer_rel.discount_factor|float)}}</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td class="text-end">Shipping - {{projects.shipping_rel.company}}</td>
                                 <td>{{"$%.2f"|format(projects.shipping_rel.cost)}}</td>
                             </tr>
-                        </tbody>
-                        <tfoot>
                             <tr>
                                 <td></td>
                                 <td></td>
-                                <td>Total</td>
-                                <td>{{"$%.2f"|format(total)}}</td>
+                                <td class="text-end">Total</td>
+                                <td>{{"$%.2f"|format(newproject.total())}}</td>
                             </tr>
                         </tfoot>
                     </table>
@@ -149,7 +213,7 @@
                     </div>
                     <div class="card-body shadow">
                         <!-- DONE: place order history here -->
-                        <!-- FIXME: place link for order history to detail page -->
+                        <!-- DONE: place link for order history to detail page -->
                         <table class="table table-striped" width="100%" id="orderhistory">
                             <thead>
                                 <tr>
@@ -162,7 +226,10 @@
                             <tbody>
                                 {% for hist in history %}
                                 <tr>
-                                    <td>{{hist.ordernum}}</td>
+                                    <td>
+                                        <a href="{{url_for('project.projectdetails', id=hist.id)}}">
+                                            {{hist.ordernum}}
+                                        </a></td>
                                     <td>{{hist.project_name}}</td>
                                     <td>{{hist.time_created}}</td>
                                     <td>{{hist.active}}</td>
@@ -175,8 +242,6 @@
             </div>
         </div>
     </div>
-</div>
-</div>
 </div>
 {% endblock %}
 

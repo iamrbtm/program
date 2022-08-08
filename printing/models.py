@@ -53,6 +53,12 @@ class People(db.Model):
     customer = db.Column(db.Boolean, default=True)
     markup_factor = db.Column(db.Float)
     discount_factor = db.Column(db.Float)
+    ship_fname = db.Column(db.String(50))
+    ship_lname = db.Column(db.String(50))
+    ship_address = db.Column(db.String(75))
+    ship_city = db.Column(db.String(50))
+    ship_state = db.Column(db.String(2))
+    ship_postalcode = db.Column(db.String(10))
     employee = db.Column(db.Boolean)
     employee_wage = db.Column(db.Float)
     employee_design = db.Column(db.Float)
@@ -60,6 +66,8 @@ class People(db.Model):
     company_name = db.Column(db.String(50))
     url = db.Column(db.String(250))
     active = db.Column(db.Boolean)
+    employee = db.relationship("Project", foreign_keys='Project.employeefk', back_populates="employee_rel")
+    customers = db.relationship("Project", foreign_keys='Project.customerfk', back_populates="customer_rel")
 
 
 class Printer(db.Model):
@@ -137,6 +145,9 @@ class Project(db.Model):
     shippingfk = db.Column(
         db.Integer, db.ForeignKey("shipping.id", ondelete="CASCADE"), nullable=False
     )
+    employeefk = db.Column(
+        db.Integer, db.ForeignKey("people.id"), nullable=False
+    )
     packaging = db.Column(db.Float)
     advertising = db.Column(db.Float)
     rent = db.Column(db.Float)
@@ -145,14 +156,15 @@ class Project(db.Model):
     discount = db.Column(db.Float)
     tracking = db.Column(db.Text)
     ordernum = db.Column(db.Integer)
+    active = db.Column(db.Boolean)
     time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
     time_updated = db.Column(db.DateTime(timezone=True), onupdate=func.now())
-    people_rel = db.relationship("People", backref="project")
+    employee_rel = db.relationship("People", back_populates="employee", foreign_keys=[employeefk])
+    customer_rel = db.relationship("People", back_populates="customers", foreign_keys=[customerfk])
     printer_rel = db.relationship("Printer", backref="project")
     filament_rel = db.relationship("Filament", backref="project")
     object_rel = db.relationship("Printobject", backref="project")
     shipping_rel = db.relationship("Shipping", backref="project")
-    active = db.Column(db.Boolean)
 
 
 class Settings(db.Model):

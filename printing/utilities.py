@@ -567,10 +567,10 @@ class CalcCost:
         self.project = db.session.query(Project).filter(Project.id == id).first()
 
         self.customer_disc = (
-            self.project.people_rel.discount_factor
+            self.project.customer_rel.discount_factor
         )  # customer specific discount
         self.customer_markup = (
-            self.project.people_rel.markup_factor
+            self.project.customer_rel.markup_factor
         )  # customer specific markup
         self.print_time = self.project.object_rel.h_printtime  # in hrs
         self.length_m = self.project.object_rel.kg_weight  # in KG
@@ -600,7 +600,7 @@ class CalcCost:
         cost = (self.kg_weight * 1000) * self.cost_fil_per_g
         if cost < 0.01:
             cost = 0.01
-        return cost * (1-self.customer_markup)
+        return cost * (1 + self.customer_markup)
 
     def timecost(self):
         kw_per_hr = db.session.query(Settings).first().cost_kW
@@ -608,20 +608,20 @@ class CalcCost:
         cost = self.h_printtime * kw_per_hr * self.filament_kw_per_hr
         if cost < 0.01:
             cost = 0.01
-        return cost * (1-self.customer_markup)
+        return cost * (1 + self.customer_markup)
 
-    def total(self):
-        return (self.timecost() 
+    def subtotal(self):
+        return round(float(self.timecost() 
                 + self.filcost() 
-                + self.project.shipping_rel.cost
                 + self.project.packaging
                 + self.project.advertising
                 + self.project.rent
                 + self.project.overhead
                 + self.project.extrafees
-        )
-
-
+        ),2)
+    def total(self):
+        return (round(self.subtotal() * (1 - self.customer_disc),2)
+                + self.project.shipping_rel.cost)
 
 # Temp Data
 def write_td(data):

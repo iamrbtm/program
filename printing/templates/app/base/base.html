@@ -61,8 +61,8 @@
             </div>
           </li>
 
-          <li class="nav-item dropdown no-arrow">
-            <div class="nav-item dropdown no-arrow">
+          <li class="nav-item dropdown">
+            <div class="nav-item dropdown">
               <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
                 <i class="bi bi-kanban-fill" style="color: #3a3b45"></i>
                 <span style="color: var(--bs-gray-900)">Projects</span>
@@ -73,12 +73,12 @@
                   &nbsp;Open Orders
                 </a>
 
-                <!-- <a class="dropdown-item" href="{{url_for('supplier.supplier')}}">
-                  <i class="fas fa-solid fa-truck"></i>
-                  &nbsp;Supplier
+                <a class="dropdown-item" href="{{url_for('project.new_project')}}">
+                  <i class="bi bi-file-plus-fill"></i>
+                  &nbsp;New Project
                 </a>
 
-                <a class="dropdown-item" href="{{url_for('employee.employee')}}">
+                <!-- <a class="dropdown-item" href="{{url_for('employee.employee')}}">
                   <i class="bi bi-person-badge-fill"></i>
                   &nbsp;Employee -->
                 </a>
@@ -98,9 +98,14 @@
     </nav>
     <div class="d-flex flex-column" id="content-wrapper">
       <div id="content">
+        <!-- Top Bar -->
         <nav class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top">
-          <!-- Top Bar -->
           <div class="container-fluid">
+            <div>
+              <div class="text-dark d-flex aligns-items-center" style="height:100%">
+                <div class="display-5">{% block header %}{% endblock %}</div>
+              </div>
+            </div>
             <ul class="navbar-nav flex-nowrap ms-auto">
               <div class="d-none d-sm-block topbar-divider"></div>
               <li class="nav-item dropdown no-arrow">
@@ -118,7 +123,7 @@
                       &nbsp;Profile
                     </a>
 
-                    <a class="dropdown-item" href="#">
+                    <a class="dropdown-item" href="{{url_for('settings.settings')}}">
                       <i class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>
                       &nbsp;Settings
                     </a>
@@ -151,7 +156,8 @@
   <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="{{url_for('static', filename='app/bootstrap/js/bootstrap.min.js')}}"></script>
   <script src="{{url_for('static', filename='app/js/script.min.js')}}"></script>
-  <script type="text/javascript" charset="utf8" src="{{url_for('static', filename='app/datatables/datatables.js')}}"></script>
+  <script type="text/javascript" charset="utf8" src="{{url_for('static', filename='app/datatables/datatables.js')}}">
+  </script>
   {% block js_code %}{% endblock %}
 </body>
 

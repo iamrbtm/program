@@ -9,14 +9,11 @@ import datetime, random
 
 proj = Blueprint("project", __name__, url_prefix="/project")
 
-# TODO: from open projects, click on the name of the project to take to details page
-
 
 @proj.route("/")
 @login_required
 def project():
-    allorders = db.session.query(Project).all()
-    return render_template("app/project/project.html", user=User, projects=allorders)
+    return redirect(url_for("project.open_orders"))
 
 
 @proj.route("/details/<int:id>")
@@ -29,23 +26,22 @@ def projectdetails(id):
     histrecs = (
         db.session.query(Project).filter(Project.customerfk == project.customerfk).all()
     )
-    return render_template(
-        "app/project/project_details.html",
-        user=User,
-        projects=project,
-        newproject=project1,
-        materialused=project1.kg_weight * 1000,
-        printtime=project1.h_printtime,
-        timecost=project1.timecost(),
-        filcost=project1.filcost(),
-        total=project1.total(),
-        history=histrecs,
-    )
+
+    content = {
+        "user": User,
+        "projects": project,
+        "newproject": project1,
+        "materialused": project1.kg_weight * 1000,
+        "printtime": project1.h_printtime,
+        "history": histrecs,
+    }
+    return render_template("app/project/project_details.html", **content)
 
 
 @proj.route("/open_orders")
 @login_required
 def open_orders():
+    # DONE: from open projects, click on the name of the project to take to details page
     openorders = db.session.query(Project).filter(Project.active == True).all()
     return render_template(
         "app/project/open_orders.html", user=User, projects=openorders
@@ -53,7 +49,11 @@ def open_orders():
 
 
 # TODO: new project
-@proj.route("/new")
+@proj.route("/new", methods=["GET", "POST"])
 @login_required
 def new_project():
-    ordernumber = int(str('22'+str(random.randint(1000, 9999))))
+    ordernumber = int(str("22" + str(random.randint(1000, 9999))))
+    employees = db.session.query(People).filter(People.employee == True).filter(People.active == True).all()
+
+    content = {"user": User, "ordernumber":ordernumber, "employees":employees}
+    return render_template("/app/project/project_new.html", **content)
