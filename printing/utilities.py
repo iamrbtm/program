@@ -600,7 +600,7 @@ class CalcCost:
         cost = (self.kg_weight * 1000) * self.cost_fil_per_g
         if cost < 0.01:
             cost = 0.01
-        return cost
+        return cost * (1-self.customer_markup)
 
     def timecost(self):
         kw_per_hr = db.session.query(Settings).first().cost_kW
@@ -608,7 +608,7 @@ class CalcCost:
         cost = self.h_printtime * kw_per_hr * self.filament_kw_per_hr
         if cost < 0.01:
             cost = 0.01
-        return cost
+        return cost * (1-self.customer_markup)
 
     def total(self):
         return (self.timecost() 

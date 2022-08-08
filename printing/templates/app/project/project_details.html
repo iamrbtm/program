@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <h3 class="text-dark mb-4">{{projects.project_name.upper()}}</h3>
     <div class="row mb-3">
-        <div class="col-lg-4">
+        <div class="col-lg-6">
             <div class="card mb-3" id="CustInfo">
                 <div class="card shadow mb-3">
                     <div class="card-header py-3">
@@ -17,6 +17,21 @@
                         {{projects.people_rel.postalcode}}</br>
                         {{projects.people_rel.phone}}</br>
                         {{projects.people_rel.email}}</br>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card mb-3" id="OrderInfo">
+                <div class="card shadow mb-3">
+                    <div class="card-header py-3">
+                        <p class="text-primary m-0 fw-bold">Order Info</p>
+                    </div>
+                    <div class="card-body shadow">
+                        <b>Order Number:</b> {{projects.ordernum}}</br>
+                        <b>Date Created:</b> {{projects.time_created}}</br>
+                        <b>Employee:</b> {{current_user.firstname}} {{current_user.lastname}}</br>
+                        <b>Shipping:</b> {{projects.shipping_rel.company}} - {{projects.shipping_rel.service}}</br>
                     </div>
                 </div>
             </div>
@@ -48,8 +63,8 @@
                             <tr>
                                 <td>Filament</td>
                                 <td>{{projects.filament_rel.name}} - ({{projects.filament_rel.color}}
-                                        {{projects.filament_rel.type_rel.type}}
-                                        {{projects.filament_rel.diameter}})</td>
+                                    {{projects.filament_rel.type_rel.type}}
+                                    {{projects.filament_rel.diameter}})</td>
                                 <td>{{"%.1f"|format(materialused)}}g</td>
                                 <td>{{"$%.2f"|format(newproject.filcost())}}</td>
                             </tr>
@@ -133,8 +148,28 @@
                         <p class="text-primary m-0 fw-bold">Order History</p>
                     </div>
                     <div class="card-body shadow">
-                        <!-- TODO: place order history here -->
-                        Order History goes here
+                        <!-- DONE: place order history here -->
+                        <!-- FIXME: place link for order history to detail page -->
+                        <table class="table table-striped" width="100%" id="orderhistory">
+                            <thead>
+                                <tr>
+                                    <th>Order#</th>
+                                    <th>ProjectName</th>
+                                    <th>Date</th>
+                                    <th>Active</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for hist in history %}
+                                <tr>
+                                    <td>{{hist.ordernum}}</td>
+                                    <td>{{hist.project_name}}</td>
+                                    <td>{{hist.time_created}}</td>
+                                    <td>{{hist.active}}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -157,8 +192,7 @@
             colReorder: false,
             responsive: true,
             searchable: false,
-            columns: [
-                {
+            columns: [{
                     orderable: true,
                 },
                 {

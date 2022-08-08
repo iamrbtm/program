@@ -5,11 +5,10 @@ from sqlalchemy.orm import session
 from printing.models import *
 from printing import db, uploads
 from printing.utilities import *
-import datetime
+import datetime, random
 
 proj = Blueprint("project", __name__, url_prefix="/project")
 
-# TODO: new project
 # TODO: from open projects, click on the name of the project to take to details page
 
 
@@ -27,7 +26,9 @@ def projectdetails(id):
     project = db.session.query(Project).filter(Project.id == id).first()
 
     # timelength = calc_time_length(2,id)
-
+    histrecs = (
+        db.session.query(Project).filter(Project.customerfk == project.customerfk).all()
+    )
     return render_template(
         "app/project/project_details.html",
         user=User,
@@ -37,7 +38,8 @@ def projectdetails(id):
         printtime=project1.h_printtime,
         timecost=project1.timecost(),
         filcost=project1.filcost(),
-        total=project1.total()
+        total=project1.total(),
+        history=histrecs,
     )
 
 
@@ -48,3 +50,10 @@ def open_orders():
     return render_template(
         "app/project/open_orders.html", user=User, projects=openorders
     )
+
+
+# TODO: new project
+@proj.route("/new")
+@login_required
+def new_project():
+    ordernumber = int(str('22'+str(random.randint(1000, 9999))))

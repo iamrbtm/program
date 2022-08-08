@@ -116,6 +116,7 @@ class Shipping(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     company = db.Column(db.String(50))
     cost = db.Column(db.Float)
+    service = db.Column(db.Text)
 
 
 class Project(db.Model):
@@ -142,6 +143,10 @@ class Project(db.Model):
     overhead = db.Column(db.Float)
     extrafees = db.Column(db.Float)
     discount = db.Column(db.Float)
+    tracking = db.Column(db.Text)
+    ordernum = db.Column(db.Integer)
+    time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
+    time_updated = db.Column(db.DateTime(timezone=True), onupdate=func.now())
     people_rel = db.relationship("People", backref="project")
     printer_rel = db.relationship("Printer", backref="project")
     filament_rel = db.relationship("Filament", backref="project")
