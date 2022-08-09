@@ -74,6 +74,7 @@ def create_app():
     from printing.templates.app.people.supplier import vendor
     from printing.templates.app.dashboard.dashboard import dash
     from printing.templates.app.settings.settings import stg
+    from printing.templates.app.address.address import addy
     
     app.register_blueprint(base, url_prefix='/')
     app.register_blueprint(proj)
@@ -82,6 +83,7 @@ def create_app():
     app.register_blueprint(cust)
     app.register_blueprint(dash)
     app.register_blueprint(stg)
+    app.register_blueprint(addy)
 
     from printing.models import User
 

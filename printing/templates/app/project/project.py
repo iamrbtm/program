@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for
 from flask_login import login_required, current_user
 import flask_login
+from sqlalchemy import distinct
 from sqlalchemy.orm import session
 from printing.models import *
 from printing import db, uploads
@@ -53,7 +54,14 @@ def open_orders():
 @login_required
 def new_project():
     ordernumber = int(str("22" + str(random.randint(1000, 9999))))
-    employees = db.session.query(People).filter(People.employee == True).filter(People.active == True).all()
-
-    content = {"user": User, "ordernumber":ordernumber, "employees":employees}
+    existingcust = db.session.query(People).filter(People.customer == True).filter(People.active == True).all()
+    pastcust = db.session.query(People).filter(People.customer == True).filter(People.active == False).all()
+    # employees = db.session.query(People).filter(People.employee == True).filter(People.active == True).all()
+    states = db.session.query(distinct(States.abr),States.abr, States.state).all()
+    addresses = db.session.query(Address).all()
+    content = {"user": User, "ordernumber":ordernumber,
+               "customers":existingcust,
+               "pastcusts":pastcust,
+               "states":states,
+               "addresses":addresses}
     return render_template("/app/project/project_new.html", **content)

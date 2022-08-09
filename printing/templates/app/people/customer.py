@@ -23,32 +23,63 @@ def customer():
 
 @cust.route("/new", methods=["GET", "POST"])
 @login_required
-def new_customer():
+def customer_new():
     # get default markup and discount from settings table
     setting = Settings.query.first()
     dmu = setting.default_markup
     dd = setting.default_discount
 
     if request.method == "POST":
+        address = request.form.get("address")
+        address2 = request.form.get("address2")
+        company = request.form.get("company")
+        city = request.form.get("city")
+        state = request.form.get("state")
+        postalcode = request.form.get("postalcode")
+        
+        #Create New Customer
         newcust = People(
             fname=request.form.get("fname"),
             lname=request.form.get("lname"),
-            address=request.form.get("address"),
-            city=request.form.get("city"),
-            state=request.form.get("state"),
-            postalcode=request.form.get("postalcode"),
             phone=format_tel(request.form.get("phone")),
             email=request.form.get("email"),
-            active=request.form.get("active"),
+            active=True,
             customer=True,
-            markup_factor=request.form.get("markup_factor"),
-            discount_factor=request.form.get("discount_factor"),
+            markup_factor=request.form.get("markup_factor")/100,
+            discount_factor=request.form.get("discount_factor")/100
         )
         db.session.add(newcust)
         db.session.commit()
+        db.session.refresh(newcust)
+        
+        #Create New Address
+        newaddy = Address(
+            fname = newcust.fname,
+            lname = newcust.lname,
+            company = company,
+            address = address,
+            address2 = address2,
+            city = city,
+            state = state,
+            postalcode = postalcode,
+            peoplefk = newcust.id,
+            type = "New Address"
+            )
+        db.session.add(newaddy)
+        db.session.commit()
+        db.session.refresh(newaddy)
+        
+        #Put address.id into new cust mail and shipping address fk
+        newcust.main_addressfk = newaddy.id,
+        newcust.ship_addressfk = newaddy.id
+        db.session.add(newaddy)
+        db.session.commit()
+        
         return redirect(url_for("customer.customer"))
+    
+    states = db.session.query(distinct(States.abr),States.abr, States.state).all()
 
-    content = {"user": User, "dmu": dmu, "dd": dd}
+    content = {"user": User, "dmu": dmu, "dd": dd, "states":states}
     return render_template("app/people/customer_new.html", **content)
 
 

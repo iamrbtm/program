@@ -10,161 +10,63 @@ New Project
 <form method="POST">
     <div class="container-fluid">
         <div class="row mb-3">
-            <div class="col-lg-6">
-                <div class="card mb-3" id="CustInfo">
-                    <div class="card shadow mb-3">
-                        <div class="card-header py-3">
-                            <p class="text-primary m-0 fw-bold">Customer Info</p>
-                        </div>
-                        <div class="card-body shadow">
-                            <div class="form-row align-items-center row">
-                                <div class="col mb-3">
-                                    <label for="fname">First Name</label>
-                                    <input type="text" class="form-control" name="fname" id="fname"
-                                        placeholder="First Name">
-                                </div>
 
-                                <div class="col mb-3">
-                                    <label for="lname">Last Name</label>
-                                    <input type="text" class="form-control" name="lname" id="lname"
-                                        placeholder="Last Name">
-                                    <input type="hidden" name="active" id="active" value="1">
-                                </div>
+            <!-- Customer Information Tab -->
+            <div class="col">
+                <div class="card shadow">
+                    <div class="card-header py-3">
+                        <p class="text-primary m-0 fw-bold">Customer Info</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-1 d-flex justify-content-start align-items-center">
+                                <a href="{{url_for('customer.customer_new')}}">
+                                    <i class="bi bi-person-plus-fill"></i>
+                                </a>
+                            </div>
+                            <div class="col">
+                                <label for="existing">Choose a customer</label>
+                                <select name="existing" id="existing" class="form-select form-select-lg mb-3">
+                                    <optgroup label="Current Customers">
+                                        {% for customer in customers %}
+                                        <option value="{{customer.id}}">{{customer.fname}} {{customer.lname}}</option>
+                                        {% endfor %}
+                                    </optgroup>
+                                    <optgroup label="Returning Customers">
+                                        {% for customer in pastcusts %}
+                                        <option value="{{customer.id}}">{{customer.fname}} {{customer.lname}}</option>
+                                        {% endfor %}
+                                    </optgroup>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-1 d-flex justify-content-start align-items-center">
+                                <a href="{{url_for('address.address_new')}}">
+                                    <i class="bi bi-geo-alt-fill"></i>
+                                </a>
+                            </div>
+                            <div class="col">
+                                <label for="mailing">Mailing Address</label>
+                                <select name="mailing" id="mailing" class="form-select form-select-lg mb-3">
+                                    {% for address in addresses %}
+                                    <option value="{{address.id}}">{{address.type}} - {{address.fname}} {{address.lname}} ({{address.address}} {{address.city}}, {{address.state}} {{address.postalcode}})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col">
+                                <label for="shipping">Shipping Address</label>
+                                <select name="shipping" id="shipping" class="form-select form-select-lg mb-3">
+                                    {% for address in addresses %}
+                                    <option value="{{address.id}}">{{address.type}} - {{address.fname}} {{address.lname}} ({{address.address}} {{address.city}}, {{address.state}} {{address.postalcode}})</option>
+                                    {% endfor %}
+                                </select>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6">
-                <div class="card mb-3" id="ShippingInfo">
-                    <div class="card shadow mb-3">
-                        <div class="card-header py-3">
-                            <p class="text-primary m-0 fw-bold">Shipping Address</p>
-                        </div>
-                        <div class="card-body shadow">
-                            <!-- FIXME: place shipping info here -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-12">
-                <div class="card mb-3" id="OrderInfo">
-                    <div class="card shadow mb-3">
-                        <div class="card-header py-3">
-                            <p class="text-primary m-0 fw-bold">Order Info</p>
-                        </div>
-                        <div class="card-body shadow">
-                            <!-- FIXME: put order info here -->
-                            <b>Order Number:</b> <input type="text" id="ordernumber" name="ordernumber" value="{{ordernumber}}"></br>
-                            <b>Employee:</b> </br>
-                            <b>Shipping:</b> </br>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
-        <div class="row mb-3">
-            <div class="col-lg-12">
-                <div class="card shadow mb-3" id="OrderDets">
-                    <div class="card-header py-3">
-                        <p class="text-primary m-0 fw-bold">Order Details</p>
-                    </div>
-                    <div class="card-body">
-                        <table class="table table-striped" width="100%" id="orderdetails">
-                            <thead>
-                                <tr>
-                                    <th>Item</th>
-                                    <th>Description</th>
-                                    <th>Quantity</th>
-                                    <th>Price</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Printer</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>Filament</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>Print Time</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>Design</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>Advertising</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>Overhead</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>Rent</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>Other</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>Packaging</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            </tbody>
-                            <tfoot class="table table-bordered">
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td class="text-end">Subtotal</td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td class="text-end"></td>
-                                    <td style="color: red"></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td class="text-end">Shipping</td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td class="text-end">Total</td>
-                                    <td></td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
+    </div>
 </form>
 {% endblock %}

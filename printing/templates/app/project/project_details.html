@@ -17,9 +17,9 @@
                     </div>
                     <div class="card-body shadow">
                         {{projects.customer_rel.fname}} {{projects.customer_rel.lname}}</br>
-                        {{projects.customer_rel.address}}</br>
-                        {{projects.customer_rel.city}}, {{projects.customer_rel.state}}
-                        {{projects.customer_rel.postalcode}}</br>
+                        {{projects.customer_rel.mainaddress_rel.address}}</br>
+                        {{projects.customer_rel.mainaddress_rel.city}}, {{projects.customer_rel.mainaddress_rel.state}}
+                        {{projects.customer_rel.mainaddress_rel.postalcode}}</br>
                         {{projects.customer_rel.phone}}</br>
                         {{projects.customer_rel.email}}</br>
                     </div>
@@ -33,39 +33,10 @@
                         <p class="text-primary m-0 fw-bold">Shipping Address</p>
                     </div>
                     <div class="card-body shadow">
-                        {% if projects.customer_rel.ship_fname %}
-                        {{projects.customer_rel.ship_fname}}
-                        {% else %}
-                        {{projects.customer_rel.fname}}
-                        {% endif %}
-                        {% if projects.customer_rel.ship_lname %}
-                        {{projects.customer_rel.ship_lname}}
-                        {% else %}
-                        {{projects.customer_rel.lname}}
-                        {% endif %}
-                        </br>
-                        {% if projects.customer_rel.ship_address %}
-                        {{projects.customer_rel.ship_address}}
-                        {% else %}
-                        {{projects.customer_rel.address}}
-                        {% endif %}
-                        </br>
-                        {% if projects.customer_rel.ship_city %}
-                        {{projects.customer_rel.ship_city}},
-                        {% else %}
-                        {{projects.customer_rel.city}},
-                        {% endif %}
-                        {% if projects.customer_rel.ship_state %}
-                        {{projects.customer_rel.ship_state}}
-                        {% else %}
-                        {{projects.customer_rel.state}}
-                        {% endif %}
-                        {% if projects.customer_rel.ship_postalcode %}
-                        {{projects.customer_rel.ship_postalcode}}
-                        {% else %}
-                        {{projects.customer_rel.postalcode}}
-                        {% endif %}
-                        </br>
+                        {{projects.customer_rel.shippingaddress_rel.fname}} {{projects.customer_rel.shippingaddress_rel.lname}}</br>
+                        {{projects.customer_rel.shippingaddress_rel.address}}</br>
+                        {{projects.customer_rel.shippingaddress_rel.city}}, {{projects.customer_rel.shippingaddress_rel.state}}
+                        {{projects.customer_rel.shippingaddress_rel.postalcode}}</br>
                         </br>
                         </br>
                     </div>
