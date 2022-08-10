@@ -1,4 +1,4 @@
-import re, os
+import re, os, requests
 from printing import db
 from printing.models import *
 from matplotlib import colors
@@ -643,3 +643,20 @@ def get_td():
 def flush_td():
     if os.path.exists(filename):
         os.remove(filename)
+
+def update_kw_oregonavg():
+    def get_new_rate():
+        from bs4 import BeautifulSoup
+
+        URL = "https://findenergy.com/providers/pacificorp/"
+        r = requests.get(URL)
+        soup = BeautifulSoup(r.content, "lxml")  
+
+        r = soup.find("span", class_="stats__item__data")
+        for i in r:
+            oregonavg = float(i[:5])/100
+        print(oregonavg)
+        return oregonavg
+    stg = db.session.query(Settings).first()
+    stg.cost_kW = get_new_rate()
+    db.session.commit()

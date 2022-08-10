@@ -1,0 +1,64 @@
+{% extends "app/base/base.html" %}
+
+{% block title %}Settings{% endblock %}
+
+{% block header %}
+SETTINGS
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col">
+        <div class="card shadow mb-3">
+            <div class="card-header py-3">
+                <p class="text-primary m-0 fw-bold">Global Settings</p>
+            </div>
+            <div class="card-body">
+                <form action="{{url_for('settings.settings')}}" method="POST">
+                    <div class="row">
+                        <label for="costKW">Cost per kWh</label>
+                        <div class="input-group">
+                            <span class="input-group-text" id="basic-addon2">$</span>
+                            <input type="text" , name="cost_kW" id="cost_kW" class="form_control"
+                                value="{{settings.cost_kW}}">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label for="makrup">Markup Percentage</label>
+                        <div class="input-group">
+                            <input type="number" , name="default_markup" id="default_markup" class="form_control"
+                                value="{{settings.default_markup * 100}}">
+                            <span class="input-group-text" id="basic-addon2">%</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label for="default_discount">Discount Percentage</label>
+                        <div class="input-group">
+                            <input type="number" , name="default_discount" id="default_discount" class="form_control"
+                                value="{{settings.default_discount * 100}}">
+                            <span class="input-group-text" id="basic-addon2">%</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label for="padding_time">Time Padding (%)</label>
+                        <div class="input-group">
+                            <input type="number" , name="padding_time" id="padding_time" class="form_control"
+                                value="{{settings.padding_time * 100}}">
+                            <span class="input-group-text" id="basic-addon2">%</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label for="padding_filament">Filament Padding (%)</label>
+                        <div class="input-group">
+                            <input type="number" , name="padding_filament" id="padding_filament" class="form_control"
+                                value="{{settings.padding_filament * 100}}">
+                            <span class="input-group-text" id="basic-addon2">%</span>
+                        </div>
+                    </div>
+                    <input type="submit" class="btn btn-success">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock%}

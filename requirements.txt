@@ -13,3 +13,5 @@ python-dotenv
 pymysql
 WTForms-SQLAlchemy
 email_validator
+beautifulsoup4
+lxml

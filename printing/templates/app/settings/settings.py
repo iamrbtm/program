@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, render_template, redirect, url_for, request
 from flask_login import login_required, current_user
 import flask_login
 from sqlalchemy.orm import session
@@ -9,10 +9,28 @@ import datetime, random
 
 stg = Blueprint("settings", __name__, url_prefix="/settings")
 
-@stg.route("/")
+
+@stg.route("/", methods=['GET','POST'])
 @login_required
 def settings():
-    return redirect(url_for("dashboard.dashboard"))
+    stgs = Settings.query.first()
+    
+    if request.method == "POST":
+        stgs.cost_kW = float(request.form.get('cost_kW'))
+        stgs.default_markup = float(request.form.get('default_markup'))/100
+        stgs.default_discount = float(request.form.get('default_discount'))/100
+        stgs.padding_time = float(request.form.get('padding_time'))/100
+        stgs.padding_filament = float(request.form.get('padding_filament'))/100
+        db.session.commit()
+        return redirect(url_for('dashboard.dashboard'))
+    return render_template("/app/settings/settings.html", user=User, settings=stgs)
 
-#TODO: make settings page with all the options in the settings table in the db
-#TODO: change route from dashboard to settings page once made
+
+# TODO: make settings page with all the options in the settings table in the db
+# TODO: change route from dashboard to settings page once made
+
+
+@stg.route("/updatecostkw")
+def updatecostkw():
+    update_kw_oregonavg()
+    return redirect(url_for('settings.settings'))
