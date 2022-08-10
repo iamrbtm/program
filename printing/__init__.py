@@ -138,7 +138,7 @@ def choose_database(app):
                 errorlist.append(msg)
                 stopper = False
         if stopper:
-            connectstring = f"mysql://{os.environ.get('DB_USERNAME')}:{os.environ.get('DB_PASSWORD')}@{os.environ.get('DB_HOST')}/{os.environ.get('DB_NAME')}"
+            connectstring = f"mysql+pymysql://{os.environ.get('DB_USERNAME')}:{os.environ.get('DB_PASSWORD')}@{os.environ.get('DB_HOST')}/{os.environ.get('DB_NAME')}"
 
     return [stopper, errorlist, connectstring]
 

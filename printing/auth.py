@@ -17,7 +17,7 @@ def login():
         if user:
             if check_password_hash(user.password, password):
                 login_user(user, remember=True)
-                return redirect("http://127.0.0.1:5000/")
+                return redirect(url_for('dashboard.dashboard'))
             else:
                 flash("Password is incorrect.", category="error")
         else:

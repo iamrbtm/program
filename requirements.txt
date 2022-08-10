@@ -10,6 +10,6 @@ requests
 validators
 flask_debugtoolbar
 python-dotenv
-mysqlclient
+pymysql
 WTForms-SQLAlchemy
 email_validator

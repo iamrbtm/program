@@ -123,7 +123,7 @@ class Filament(db.Model):
     typefk = db.Column(
         db.Integer, db.ForeignKey("type.id", ondelete="CASCADE"), nullable=False
     )
-    type_rel = db.relationship("Type", backref="filament")
+    type_rel = db.relationship("Type", backref="filament", overlaps="filament_rel,type")
 
 
 class Printobject(db.Model):

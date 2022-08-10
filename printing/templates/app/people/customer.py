@@ -36,8 +36,8 @@ def customer_new():
         city = request.form.get("city")
         state = request.form.get("state")
         postalcode = request.form.get("postalcode")
-        
-        #Create New Customer
+
+        # Create New Customer
         newcust = People(
             fname=request.form.get("fname"),
             lname=request.form.get("lname"),
@@ -45,74 +45,63 @@ def customer_new():
             email=request.form.get("email"),
             active=True,
             customer=True,
-            markup_factor=request.form.get("markup_factor")/100,
-            discount_factor=request.form.get("discount_factor")/100
+            markup_factor=request.form.get("markup_factor") / 100,
+            discount_factor=request.form.get("discount_factor") / 100,
         )
         db.session.add(newcust)
         db.session.commit()
         db.session.refresh(newcust)
-        
-        #Create New Address
+
+        # Create New Address
         newaddy = Address(
-            fname = newcust.fname,
-            lname = newcust.lname,
-            company = company,
-            address = address,
-            address2 = address2,
-            city = city,
-            state = state,
-            postalcode = postalcode,
-            peoplefk = newcust.id,
-            type = "New Address"
-            )
+            fname=newcust.fname,
+            lname=newcust.lname,
+            company=company,
+            address=address,
+            address2=address2,
+            city=city,
+            state=state,
+            postalcode=postalcode,
+            peoplefk=newcust.id,
+            type="New Address",
+        )
         db.session.add(newaddy)
         db.session.commit()
         db.session.refresh(newaddy)
-        
-        #Put address.id into new cust mail and shipping address fk
-        newcust.main_addressfk = newaddy.id,
+
+        # Put address.id into new cust mail and shipping address fk
+        newcust.main_addressfk = (newaddy.id,)
         newcust.ship_addressfk = newaddy.id
         db.session.add(newaddy)
         db.session.commit()
-        
+
         return redirect(url_for("customer.customer"))
-    
-    states = db.session.query(distinct(States.abr),States.abr, States.state).all()
 
-    content = {"user": User, "dmu": dmu, "dd": dd, "states":states}
+    states = db.session.query(distinct(States.abr), States.abr, States.state).all()
+
+    content = {"user": User, "dmu": dmu, "dd": dd, "states": states}
     return render_template("app/people/customer_new.html", **content)
-
-
-@cust.get("/statelist")
-def statelist():
-    city = request.args.get("city")
-    if city:
-        write_td(city)
-        r = db.session.query(distinct(States.abr)).filter(States.city.like(city)).all()
-        statelist = []
-        for state in r:
-            statelist.append(state._data[0])
-        return render_template("app/people/people_statelist.html", statelist=statelist)
-    return ""
 
 
 @cust.get("/zipcodelist")
 def zipcodelist():
-    city = get_td()
-    state = request.args.get("state")
+    city = request.args.get("city")
     if city:
-        if state:
-            postalcodes = (
-                db.session.query(States)
-                .filter(and_(States.abr == state, States.city == city))
-                .all()
-            )
-            zipcodes = []
-            for postal in postalcodes:
-                zipcodes.append(postal.zipcode)
-            flush_td()
-            return render_template(
-                "app/people/people_zipcodelist.html", zipcodes=zipcodes
-            )
+        print("incity")
+        console.log("incity")
+        postalcodes = (
+            db.session.query(States)
+            .filter(and_(States.abr == state, States.city == city))
+            .all()
+        )
+        zipcodes = []
+        for postal in postalcodes:
+            zipcodes.append(postal.zipcode)
+        flush_td()
+        return render_template(
+            "app/people/people_zipcodelist.html", zipcodes=zipcodes
+        )
+    else:
+        print("notincity")
+        console.log("notincity")
         return ""
-    return ""
