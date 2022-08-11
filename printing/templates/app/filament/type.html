@@ -1,0 +1,69 @@
+{% extends "app/base/base.html" %}
+{% block title %}Filament Types{% endblock %}
+{% block header %}FILAMENT TYPE{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col">
+        <div class="card shadow mb-3">
+            <div class="card-header py-3">
+                <p class="text-primary m-0 fw-bold">Type</p>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped" id="type">
+                    <thead>
+                        <tr>
+                            <th>Properties</th>
+                            <th>Usage</th>
+                            <th>Diameter</th>
+                            <th>Extruder Temp</th>
+                            <th>Bed temp</th>
+                            <th>Bed Adhesion</th>
+                            <th>Length in Meter (1.75 diam)</th>
+                            <th>Length in Meter (3.0 diam)</th>
+                            <th>Type</th>
+                            <th>Density</th>
+                            <th>Power to print (kWh)</th>
+                            <th>Active</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for type in types %}
+                        <tr>
+                            <td>{{type.properties}}</td>
+                            <td>{{type.useage}}</td>
+                            <td>{{type.diameter}}</td>
+                            <td>{{type.extruder_temp}}</td>
+                            <td>{{type.bed_temp}}</td>
+                            <td>{{type.bed_adhesion}}</td>
+                            <td>{{type.m_in_1kg_3}}</td>
+                            <td>{{type.m_in_1kg_175}}</td>
+                            <td>{{type.type}}</td>
+                            <td>{{type.densitygcm3}}</td>
+                            <td>{{type.kW_hr}}</td>
+                            <td>{{type.active}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js_code %}
+<script>
+    $(document).ready(function () {
+        $('#type').DataTable({
+            "bPaginate": false,
+            "bLengthChange": false,
+            "bFilter": true,
+            "bInfo": true,
+            "bAutoWidth": true,
+            colReorder: true,
+            responsive: true,
+            searchable: true,
+        });
+    });
+</script>
+{% endblock %}

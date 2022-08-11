@@ -36,8 +36,8 @@
             </a>
           </li>
 
-          <li class="nav-item dropdown no-arrow">
-            <div class="nav-item dropdown no-arrow">
+          <li class="nav-item dropdown">
+            <div class="nav-item dropdown">
               <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
                 <i class="fas fa-user" style="color: #3a3b45"></i>
                 <span style="color: var(--bs-gray-900)">People</span>
@@ -85,12 +85,31 @@
               </div>
             </div>
           </li>
+          
+          <li class="nav-item dropdown">
+            <div class="nav-item dropdown">
+              <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
+                <i class="bi bi-disc-fill" style="color: #3a3b45"></i>
+                <span style="color: var(--bs-gray-900)">Filament</span>
+              </a>
+              <div class="dropdown-menu dropdown-menu-dark shadow dropdown-menu-end animated--grow-in">
+                <a class="dropdown-item" href="{{url_for('filament.filament')}}">
+                  <i class="bi bi-box-seam-fill"></i>
+                  &nbsp;Filament
+                </a>
+                
+                <a class="dropdown-item" href="{{url_for('filament.filament_new')}}">
+                  <i class="bi bi-box-seam-fill"></i>
+                  &nbsp;New Filament
+                </a>
 
-          <li class="nav-item">
-            <a class="nav-link" href="{{url_for('base.profile')}}">
-              <i class="bi bi-disc-fill" style="color: #3a3b45"></i>
-              <span style="color: var(--bs-gray-900)">Filament</span>
-            </a>
+                <a class="dropdown-item" href="{{url_for('filament.type')}}">
+                  <i class="bi bi-file-plus-fill"></i>
+                  &nbsp;Types
+                </a>
+
+              </div>
+            </div>
           </li>
 
         </ul>

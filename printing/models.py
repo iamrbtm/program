@@ -106,6 +106,7 @@ class Type(db.Model):
     m_in_1kg_3 = db.Column(db.Float)
     m_in_1kg_175 = db.Column(db.Float)
     kW_hr = db.Column(db.Float)
+    active = db.Column(db.Boolean, default=True)
     filament_rel = db.relationship("Filament", backref="type", passive_deletes=True)
 
 
@@ -123,6 +124,7 @@ class Filament(db.Model):
     typefk = db.Column(
         db.Integer, db.ForeignKey("type.id", ondelete="CASCADE"), nullable=False
     )
+    active = db.Column(db.Boolean)
     type_rel = db.relationship("Type", backref="filament", overlaps="filament_rel,type")
 
 

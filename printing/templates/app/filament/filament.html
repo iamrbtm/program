@@ -1,0 +1,65 @@
+{% extends "app/base/base.html" %}
+{% block title %}Filaments{% endblock %}
+{% block header %}FILAMENTS{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col">
+        <div class="card shadow mb-3">
+            <div class="card-header py-3">
+                <p class="text-primary m-0 fw-bold">Filament</p>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped" id="filament">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Color</th>
+                            <th>Color Hex</th>
+                            <th>Price Per Roll</th>
+                            <th>Length of Spool (g)</th>
+                            <th>Diameter</th>
+                            <th>Url</th>
+                            <th>Purchase Date</th>
+                            <th>Picture</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for filament in filaments %}
+                        <tr>
+                            <td>{{filament.name}}</td>
+                            <td>{{filament.type_rel.type}}</td>
+                            <td>{{filament.color}}</td>
+                            <td style="background-color: {{filament.colorhex}} ";>{{filament.colorhex}}</td>
+                            <td>{{"$%.2f"%filament.priceperroll}}</td>
+                            <td>{{filament.length_spool}}</td>
+                            <td>{{filament.diameter}}</td>
+                            <td>{{filament.url}}</td>
+                            <td>{{filament.purchasedate}}</td>
+                            <td>{{filament.picture}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js_code %}
+<script>
+    $(document).ready(function () {
+        $('#filament').DataTable({
+            "bPaginate": false,
+            "bLengthChange": true,
+            "bFilter": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            colReorder: true,
+            responsive: true,
+            searchable: true,
+        });
+    });
+</script>
+{% endblock %}
