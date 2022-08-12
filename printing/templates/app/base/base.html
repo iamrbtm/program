@@ -133,7 +133,7 @@
                     <span class="d-none d-lg-inline me-2 text-gray-600 small">{{current_user.firstname}}
                       {{current_user.lastname}}</span>
                     <img class="border rounded-circle img-profile"
-                      src="{{url_for('static', filename='app/img/avatars/avatar1.jpeg')}}" width="32" height="32" /></a>
+                      src="{{url_for('static', filename=current_user.avatar_url)}}" width="32" height="32" /></a>
 
                   <div class="dropdown-menu dropdown-menu-dark shadow dropdown-menu-end animated--grow-in">
 

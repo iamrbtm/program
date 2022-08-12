@@ -51,7 +51,7 @@ class People(db.Model):
     customer = db.Column(db.Boolean, default=True)
     markup_factor = db.Column(db.Float)
     discount_factor = db.Column(db.Float)
-    employee = db.Column(db.Boolean)
+    is_employee = db.Column(db.Boolean)
     employee_wage = db.Column(db.Float)
     employee_design = db.Column(db.Float)
     supplier = db.Column(db.Boolean)

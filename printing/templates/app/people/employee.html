@@ -1,12 +1,46 @@
 {% extends "app/base/base.html" %}
-
 {% block title %}Employees{% endblock %}
-
-{%block content %}
-<h3 class="display-3">Employees</h3>
-<ol>
-    {% for employee in employees %}
-    <li>{{employee.fname}} {{employee.lname}}</li>
-    {% endfor %}
-</ol>
+{% block header %}
+EMPLOYEES
+{% endblock %}
+{% block content %}
+<table class="table table-striped" id="employees">
+    <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>City, State</th>
+            <th>Phone</th>
+            <th>Email</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for employee in employees %}
+        <tr>
+            <td>{{employee.fname}}</td>
+            <td>{{employee.lname}}</td>
+            <td>{{employee.mainaddress_rel.city}}, {{employee.mainaddress_rel.state}}</td>
+            <td>{{employee.phone}}</td>
+            <td>{{employee.email}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+{% block js_code %}
+<script>
+    $(document).ready(function () {
+        $('#employees').DataTable({
+            "fixedHeader": true,
+            "bPaginate": true,
+            "bLengthChange": true,
+            "bFilter": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "colReorder": true,
+            "responsive": true,
+            "searchable": true,
+        });
+    });
+</script>
 {% endblock %}

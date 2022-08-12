@@ -9,8 +9,10 @@ emp = Blueprint("employee", __name__, url_prefix='/employee')
 def employee():
     employees = (
         db.session.query(People)
-        .filter(People.employee == True)
+        .filter(People.is_employee == True)
         .filter(People.active == True)
         .all()
     )
-    return render_template("app/people/employee.html", user=User, employees=employees)
+    
+    context = {"user":User, "employees":employees}
+    return render_template("app/people/employee.html", **context)

@@ -11,11 +11,12 @@ from flask_login import login_required, current_user
 import flask_login
 from sqlalchemy.orm import session
 from printing.models import *
-from printing import db, photos
+from printing import db, photos, avatar
 from printing.forms import *
 from printing.utilities import *
 from werkzeug.security import generate_password_hash, check_password_hash
 import datetime
+from PIL import Image
 
 base = Blueprint("base", __name__)
 
@@ -33,7 +34,15 @@ def profile():
     usr = db.session.query(User).filter(User.id == flask_login.current_user.id).first()
 
     if request.method == "POST":
-        if request.form.get("where") == "contact":
+        if request.form.get("where") == "picture":
+            filename = avatar.save(request.files['picture'])
+            path = '/app/img/avatars'
+            
+            # Save to db
+            current_user.avatar_filename = filename
+            current_user.avatar_url = os.path.join(path,filename)
+        
+        elif request.form.get("where") == "contact":
             current_user.firstname = request.form.get("firstname")
             current_user.lastname = request.form.get("lastname")
             current_user.address = request.form.get("address")
@@ -49,7 +58,7 @@ def profile():
 
         db.session.commit()
         flash("Information Saved")
-        return render_template("app/dashboard/dashboard.html")
+        return redirect(url_for("base.profile"))
 
     states = db.session.query(States).all()
     return render_template("app/base/profile.html", user=User, states=states)

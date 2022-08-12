@@ -9,126 +9,129 @@ PROFILE
     <div class="row mb-3">
         <div class="col-lg-4">
             <div class="card mb-3">
-                <!-- FIXME: make it so the user can upload a personal photo from their computer to use as avatar -->
+                <!-- DONE: make it so the user can upload a personal photo from their computer to use as avatar -->
                 <!-- TODO: Add the ability for the user to change their password on this screen -->
-                <div class="card-body text-center shadow"><img class="rounded-circle mb-3 mt-4"
-                        src="{{url_for('static', filename='app/img/dogs/image2.jpeg')}}" width="160" height="160">
-                    <div class="mb-3">
-                        <button class="btn btn-primary btn-sm" type="button">Change Photo</button>
-                    </div>
+                <div class="card-body text-center shadow">
+                    <img class="rounded-circle mb-3 mt-4" src="{{url_for('static', filename=current_user.avatar_url)}}"
+                        width="160" height="160">
+                    <form action="" enctype=multipart/form-data method="POST">
+                        <div class="mb-3">
+                        <input type="file" class="form form-control" name="picture" id="picture">
+                        <input type="hidden" name="where" id="where" value="picture">
+                </div>
+                <div class="mb-3">
+                    <input type="submit" class="btn btn-primary btn-sm" type="button" value="Change Photo">
+                    </form>
                 </div>
             </div>
         </div>
-        <div class="col-lg-8">
-            <div class="row">
-                <div class="col">
-                    <div class="card shadow mb-3">
-                        <div class="card-header py-3">
-                            <p class="text-primary m-0 fw-bold">User Settings</p>
-                        </div>
-                        <div class="card-body">
-                            <form metehod="POST">
-                                <input type="hidden" id="where" name="where" value="user">
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label class="form-label" for="username"><strong>Username</strong></label>
-                                            <input class="form-control" type="text" id="username"
-                                                placeholder="user.name" name="username"
-                                                value="{{current_user.username}}">
-                                        </div>
-                                    </div>
-
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label class="form-label" for="email"><strong>Email Address</strong></label>
-                                            <input class="form-control" type="email" id="email"
-                                                placeholder="user@example.com" name="email"
-                                                value="{{current_user.email}}">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="mb-3"><button class="btn btn-primary btn-sm" type="submit">Save
-                                        Settings</button></div>
-                            </form>
-                        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="row">
+            <div class="col">
+                <div class="card shadow mb-3">
+                    <div class="card-header py-3">
+                        <p class="text-primary m-0 fw-bold">User Settings</p>
                     </div>
-                    <div class="card shadow">
-                        <div class="card-header py-3">
-                            <p class="text-primary m-0 fw-bold">Contact Settings</p>
-                        </div>
-                        <div class="card-body">
-                            <form method="POST">
-                                <input type="hidden" id="where" name="where" value="contact">
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="mb-3"><label class="form-label" for="firstname"><strong>First
-                                                    Name</strong></label>
-                                            <input class="form-control" type="text" id="firstname" placeholder="John"
-                                                name="firstname" value="{{current_user.firstname}}"></div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="mb-3"><label class="form-label" for="lastname"><strong>Last
-                                                    Name</strong></label>
-                                            <input class="form-control" type="text" id="lastname" placeholder="Doe"
-                                                name="lastname" value="{{current_user.lastname}}"></div>
+                    <div class="card-body">
+                        <form metehod="POST">
+                            <input type="hidden" id="where" name="where" value="user">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="username"><strong>Username</strong></label>
+                                        <input class="form-control" type="text" id="username" placeholder="user.name"
+                                            name="username" value="{{current_user.username}}">
                                     </div>
                                 </div>
 
-                                <div class="row">
+                                <div class="col">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="email"><strong>Email Address</strong></label>
+                                        <input class="form-control" type="email" id="email"
+                                            placeholder="user@example.com" name="email" value="{{current_user.email}}">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3"><button class="btn btn-primary btn-sm" type="submit">Save
+                                    Settings</button></div>
+                        </form>
+                    </div>
+                </div>
+                <div class="card shadow">
+                    <div class="card-header py-3">
+                        <p class="text-primary m-0 fw-bold">Contact Settings</p>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST">
+                            <input type="hidden" id="where" name="where" value="contact">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="mb-3"><label class="form-label" for="firstname"><strong>First
+                                                Name</strong></label>
+                                        <input class="form-control" type="text" id="firstname" placeholder="John"
+                                            name="firstname" value="{{current_user.firstname}}"></div>
+                                </div>
+                                <div class="col">
+                                    <div class="mb-3"><label class="form-label" for="lastname"><strong>Last
+                                                Name</strong></label>
+                                        <input class="form-control" type="text" id="lastname" placeholder="Doe"
+                                            name="lastname" value="{{current_user.lastname}}"></div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="mb-3"><label class="form-label"
+                                        for="address"><strong>Address</strong></label>
+                                    <input class="form-control" type="text" id="address" placeholder="Sunset Blvd, 38"
+                                        name="address" value="{{current_user.address}}"></div>
+                                <div class="col">
+                                    <div class="mb-3"><label class="form-label" for="city"><strong>City</strong></label>
+                                        <input class="form-control" type="text" id="city" placeholder="Los Angeles"
+                                            name="city" value="{{current_user.city}}"></div>
+                                </div>
+                                <div class="col">
                                     <div class="mb-3"><label class="form-label"
-                                            for="address"><strong>Address</strong></label>
-                                        <input class="form-control" type="text" id="address"
-                                            placeholder="Sunset Blvd, 38" name="address"
-                                            value="{{current_user.address}}"></div>
-                                    <div class="col">
-                                        <div class="mb-3"><label class="form-label"
-                                                for="city"><strong>City</strong></label>
-                                            <input class="form-control" type="text" id="city" placeholder="Los Angeles"
-                                                name="city" value="{{current_user.city}}"></div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="mb-3"><label class="form-label"
-                                                for="state"><strong>State</strong></label><input class="form-control"
-                                                type="text" id="state" placeholder="OR" name="state"
-                                                value="{{current_user.state}}">
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="mb-3"><label class="form-label"
-                                                for="postalcode"><strong>Zipcode</strong></label><input
-                                                class="form-control" type="text" id="postalcode" placeholder="97303"
-                                                name="postalcode" value="{{current_user.postalcode}}">
-                                        </div>
+                                            for="state"><strong>State</strong></label><input class="form-control"
+                                            type="text" id="state" placeholder="OR" name="state"
+                                            value="{{current_user.state}}">
                                     </div>
                                 </div>
+                                <div class="col">
+                                    <div class="mb-3"><label class="form-label"
+                                            for="postalcode"><strong>Zipcode</strong></label><input class="form-control"
+                                            type="text" id="postalcode" placeholder="97303" name="postalcode"
+                                            value="{{current_user.postalcode}}">
+                                    </div>
+                                </div>
+                            </div>
 
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label class="form-label" for="phone">
-                                                <strong>Phone Number</strong></label>
-                                            <input class="form-control" type="tel" id="phone" placeholder="000-000-0000"
-                                                name="phone" value="{{current_user.phone}}"></div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label class="form-label" for="dob">
-                                                <strong>Birthdate</strong></label>
-                                            <input class="form-control" type="date" id="dob" name="dob"
-                                                value="{{current_user.dob}}">
-                                        </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="phone">
+                                            <strong>Phone Number</strong></label>
+                                        <input class="form-control" type="tel" id="phone" placeholder="000-000-0000"
+                                            name="phone" value="{{current_user.phone}}"></div>
+                                </div>
+                                <div class="col">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="dob">
+                                            <strong>Birthdate</strong></label>
+                                        <input class="form-control" type="date" id="dob" name="dob"
+                                            value="{{current_user.dob}}">
                                     </div>
                                 </div>
-                                <div class="mb-3"><button class="btn btn-primary btn-sm"
-                                        type="submit">Save&nbsp;Settings</button></div>
-                            </form>
-                        </div>
+                            </div>
+                            <div class="mb-3"><button class="btn btn-primary btn-sm"
+                                    type="submit">Save&nbsp;Settings</button></div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 {% endblock %}
