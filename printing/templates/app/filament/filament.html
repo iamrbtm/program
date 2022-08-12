@@ -12,31 +12,25 @@
                 <table class="table table-striped" id="filament">
                     <thead>
                         <tr>
-                            <th>Name</th>
                             <th>Type</th>
                             <th>Color</th>
                             <th>Color Hex</th>
                             <th>Price Per Roll</th>
                             <th>Length of Spool (g)</th>
                             <th>Diameter</th>
-                            <th>Url</th>
                             <th>Purchase Date</th>
-                            <th>Picture</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for filament in filaments %}
                         <tr>
-                            <td>{{filament.name}}</td>
                             <td>{{filament.type_rel.type}}</td>
                             <td>{{filament.color}}</td>
-                            <td style="background-color: {{filament.colorhex}} ";>{{filament.colorhex}}</td>
+                            <td style="background-color: {{filament.colorhex}}; color: rgba(0, 0, 0, 0);";>{{filament.colorhex}}</td>
                             <td>{{"$%.2f"%filament.priceperroll}}</td>
                             <td>{{filament.length_spool}}</td>
                             <td>{{filament.diameter}}</td>
-                            <td>{{filament.url}}</td>
                             <td>{{filament.purchasedate}}</td>
-                            <td>{{filament.picture}}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -51,14 +45,15 @@
 <script>
     $(document).ready(function () {
         $('#filament').DataTable({
-            "bPaginate": false,
+            "fixedHeader": true,
+            "bPaginate": true,
             "bLengthChange": true,
             "bFilter": true,
             "bInfo": true,
             "bAutoWidth": false,
-            colReorder: true,
-            responsive: true,
-            searchable: true,
+            "colReorder": true,
+            "responsive": true,
+            "searchable": true,
         });
     });
 </script>

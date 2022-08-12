@@ -58,11 +58,25 @@ class People(db.Model):
     company_name = db.Column(db.String(50))
     url = db.Column(db.String(250))
     active = db.Column(db.Boolean)
-    mainaddress_rel = db.relationship("Address", back_populates="main_address", foreign_keys=[main_addressfk])
-    shippingaddress_rel = db.relationship("Address", back_populates="shipping_address", foreign_keys=[ship_addressfk])
-    employee = db.relationship("Project", foreign_keys='Project.employeefk', back_populates="employee_rel")
-    customers = db.relationship("Project", foreign_keys='Project.customerfk', back_populates="customer_rel")
-    address = db.relationship("Address", foreign_keys='Address.peoplefk', back_populates="people_rel")
+    mainaddress_rel = db.relationship(
+        "Address", back_populates="main_address", foreign_keys=[main_addressfk]
+    )
+    shippingaddress_rel = db.relationship(
+        "Address", back_populates="shipping_address", foreign_keys=[ship_addressfk]
+    )
+    employee = db.relationship(
+        "Project", foreign_keys="Project.employeefk", back_populates="employee_rel"
+    )
+    customers = db.relationship(
+        "Project", foreign_keys="Project.customerfk", back_populates="customer_rel"
+    )
+    address = db.relationship(
+        "Address", foreign_keys="Address.peoplefk", back_populates="people_rel"
+    )
+    filament = db.relationship(
+        "Filament", foreign_keys="Filament.supplierfk", back_populates="supplier_rel"
+    )
+
 
 class Address(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -75,13 +89,21 @@ class Address(db.Model):
     city = db.Column(db.String(50))
     state = db.Column(db.String(2))
     postalcode = db.Column(db.String(20))
-    longitude = db.Column(db.DECIMAL(11,8))
-    latitudes = db.Column(db.DECIMAL(10,8))
+    longitude = db.Column(db.DECIMAL(11, 8))
+    latitudes = db.Column(db.DECIMAL(10, 8))
     peoplefk = db.Column(db.Integer, db.ForeignKey("people.id"))
-    shipping_address = db.relationship("People", foreign_keys='People.ship_addressfk', back_populates="shippingaddress_rel")
-    main_address = db.relationship("People", foreign_keys='People.main_addressfk', back_populates="mainaddress_rel")
-    people_rel = db.relationship("People", back_populates="address", foreign_keys=[peoplefk])
-        
+    shipping_address = db.relationship(
+        "People",
+        foreign_keys="People.ship_addressfk",
+        back_populates="shippingaddress_rel",
+    )
+    main_address = db.relationship(
+        "People", foreign_keys="People.main_addressfk", back_populates="mainaddress_rel"
+    )
+    people_rel = db.relationship(
+        "People", back_populates="address", foreign_keys=[peoplefk]
+    )
+
 
 class Printer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -124,8 +146,12 @@ class Filament(db.Model):
     typefk = db.Column(
         db.Integer, db.ForeignKey("type.id", ondelete="CASCADE"), nullable=False
     )
+    supplierfk = db.Column(db.Integer, db.ForeignKey("people.id"))
     active = db.Column(db.Boolean)
     type_rel = db.relationship("Type", backref="filament", overlaps="filament_rel,type")
+    supplier_rel = db.relationship(
+        "People", back_populates="filament", foreign_keys=[supplierfk]
+    )
 
 
 class Printobject(db.Model):
@@ -160,9 +186,7 @@ class Project(db.Model):
     shippingfk = db.Column(
         db.Integer, db.ForeignKey("shipping.id", ondelete="CASCADE"), nullable=False
     )
-    employeefk = db.Column(
-        db.Integer, db.ForeignKey("people.id"), nullable=False
-    )
+    employeefk = db.Column(db.Integer, db.ForeignKey("people.id"), nullable=False)
     packaging = db.Column(db.Float)
     advertising = db.Column(db.Float)
     rent = db.Column(db.Float)
@@ -174,8 +198,12 @@ class Project(db.Model):
     active = db.Column(db.Boolean)
     time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
     time_updated = db.Column(db.DateTime(timezone=True), onupdate=func.now())
-    employee_rel = db.relationship("People", back_populates="employee", foreign_keys=[employeefk])
-    customer_rel = db.relationship("People", back_populates="customers", foreign_keys=[customerfk])
+    employee_rel = db.relationship(
+        "People", back_populates="employee", foreign_keys=[employeefk]
+    )
+    customer_rel = db.relationship(
+        "People", back_populates="customers", foreign_keys=[customerfk]
+    )
     printer_rel = db.relationship("Printer", backref="project")
     filament_rel = db.relationship("Filament", backref="project")
     object_rel = db.relationship("Printobject", backref="project")
