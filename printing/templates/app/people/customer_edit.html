@@ -1,0 +1,131 @@
+    {% extends "app/base/base.html" %}
+
+    {% block title %}New Customer{% endblock %}
+
+    {% block content %}
+    <form method="POST">
+        <h4 class="mb-3">Customer</h4>
+
+        <form class="form-inline">
+            <div class="form-group mb-2 mr-2">
+                <div class="form-row align-items-center">
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <label for="fname">First Name</label>
+                            <input type="text" class="form-control" name="fname" id="fname" value="{{customer.fname}}">
+                        </div>
+
+                        <div class="col-6 mb-3">
+                            <label for="lname">Last Name</label>
+                            <input type="text" class="form-control" name="lname" id="lname" value="{{customer.lname}}">
+                        </div>
+                    </div>
+                    <div class="col-12-md-5 mb-3">
+                        <label for="company">Copmany</label>
+                        <input type="text" class="form-control" name="company" id="company"
+                            value="{{customer.company_name}}">
+                    </div>
+
+                    <div class="col-md-2 mb-3">
+                        <label>Active</label>
+                        <div class="custom-control custom-switch">
+                            {% if customer.active == True %}
+                            <input class="custom-control-input" type="checkbox" name="active" id="active" value=True
+                                checked>
+                            {% else %}
+                            <input class="custom-control-input" type="checkbox" name="active" id="active" value=False>
+                            {% endif %}
+                            <label class="custom-control-label mr-2" for="active">Active</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group mb-2 mr-2">
+                <div class="row">
+                    <div class="col-6">
+                        <label class="mr-2" for="address">Address</label>
+                        <input type="text" class="form-control" name="address" id="address" value="{{customer.mainaddress_rel.address}}">
+                    </div>
+                    <div class="col-6">
+                        <label class="mr-2" for="address2">Address 2</label>
+                        <input type="text" class="form-control" name="address2" id="address2"
+                        value="{{customer.mainaddress_rel.address2}}">
+                    </div>
+                </div>
+                <div class="form-group mb-2 mr-2">
+                    <div class="row">
+                        <div class="col-4">
+                            <label>City</label>
+                            <input type="text" name="city" id="city" class="form-control" value="{{customer.mainaddress_rel.city}}">
+                        </div>
+                        <div class="col-4">
+                            <label for="state">State</label>
+                            <select type="select" name="state" id="state" class="form-select" placeholder="State">
+                                {% for state in states %}
+                                {% if state.abr == customer.mainaddress_rel.state %}
+                                <option value="{{state.abr}}" selected>{{state.abr}} - {{state.state}}</option>
+                                {% else %}
+                                <option value="{{state.abr}}">{{state.abr}} - {{state.state}}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-4">
+                            <label for="postalcode">Postal Code</label>
+                            <input type="text" name="postalcode" id="postalcode" class="form-control" value="{{customer.mainaddress_rel.postalcode}}">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group mb-2 mr-2">
+                    <div class="form-row align-items-center">
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <label for="email">Email Address</label>
+                                <input type="email" class="form-control" name="email" id="email"
+                                    value="{{customer.email}}">
+                            </div>
+
+                            <div class="col-6 mb-3">
+                                <label for="phone">Phone Number</label>
+                                <input type="text" class="form-control" name="phone" id="phone"
+                                value="{{customer.phone}}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group mb-2 mr-2">
+                    <div class="form-row align-items-center">
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <label for="markup_factor">Markup Factor</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="markup_factor" id="markup_factor"
+                                        value={{customer.markup_factor*100}} required>
+                                    <span class="input-group-text" id="basic-addon2">%</span>
+                                </div>
+                            </div>
+
+                            <div class="col-6 mb-3">
+                                <label for="discount_factor">Discount Factor</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="discount_factor" id="discount_factor"
+                                        value={{customer.discount_factor*100}} placeholder="Discount Factor" required>
+                                    <span class="input-group-text" id="basic-addon2">%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <button type="submit" class="btn btn-primary mr-2 mb-2" name="submit" id="submit">Save</button>
+        </form>
+
+    </form>
+    {% endblock %}
+    </body>
+
+    </html>

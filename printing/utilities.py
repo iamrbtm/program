@@ -650,3 +650,15 @@ def update_kw_oregonavg():
     stg = db.session.query(Settings).first()
     stg.cost_kW = get_new_rate()
     db.session.commit()
+    
+def get_log_lat(id):
+    from geopy.geocoders import Nominatim
+    
+    addresses = db.session.query(Address).filter(Address.peoplefk == id).all()
+    for address in addresses:
+        addy=f'{address.address} {address.city} {address.state} {address.postalcode}'
+        geolocator = Nominatim(user_agent="Your_Name")
+        location = geolocator.geocode(addy)
+        address.longitude = location.longitude
+        address.latitudes = location.latitude
+        db.session.commit()

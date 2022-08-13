@@ -15,4 +15,4 @@ WTForms-SQLAlchemy
 email_validator
 beautifulsoup4
 lxml
-Pillow
+Flask-Googlemaps
