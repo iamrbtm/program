@@ -5,7 +5,6 @@ from printing.forms import *
 from printing.utilities import *
 import requests
 from sqlalchemy import distinct, and_, or_
-from flask_googlemaps import Map
 
 
 cust = Blueprint("customer", __name__, url_prefix="/customer")

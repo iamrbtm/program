@@ -652,6 +652,14 @@ def update_kw_oregonavg():
     db.session.commit()
     
 def get_log_lat(id):
+    """Gets long and lat from addresses in the database
+    the program will get the address from the id of the 
+    person supplied
+
+    Args:
+        id (int): represents the persons whom addresses are
+                  being processed
+    """
     from geopy.geocoders import Nominatim
     
     addresses = db.session.query(Address).filter(Address.peoplefk == id).all()
@@ -677,3 +685,5 @@ def db_maintance():
     for inact in inactives:
         inact.active = 0
         db.session.commit()
+        
+    update_kw_oregonavg()
