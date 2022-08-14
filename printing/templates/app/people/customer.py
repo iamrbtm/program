@@ -5,6 +5,8 @@ from printing.forms import *
 from printing.utilities import *
 import requests
 from sqlalchemy import distinct, and_, or_
+from flask_googlemaps import Map
+
 
 cust = Blueprint("customer", __name__, url_prefix="/customer")
 
@@ -111,11 +113,13 @@ def customer_details(id):
     customer = db.session.query(People).filter(People.id == id).first()
     states = db.session.query(distinct(States.abr),States.abr, States.state).all()
     history = db.session.query(Project).filter(Project.customerfk == id).all()
-    
+    addresses = db.session.query(Address).filter(Address.peoplefk == id).all()
+
     context = {
         'user':User,
         'customer':customer,
         'history':history,
-        'states':states
+        'states':states,
+        'addresses':addresses
     }
     return render_template('app/people/customer_details.html', **context)
