@@ -217,3 +217,14 @@ class Settings(db.Model):
     default_discount = db.Column(db.Float)
     padding_time = db.Column(db.Float)
     padding_filament = db.Column(db.Float)
+
+class Events(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    start_date = db.Column(db.Date)
+    end_date = db.Column(db.Date)
+    start_time = db.Column(db.Time)
+    end_time = db.Column(db.Time)
+    location = db.Column(db.String(100))
+    title = db.Column(db.String(50))
+    description = db.Column(db.Text)
+    publish = db.Column(db.Boolean, default = True)
