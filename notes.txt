@@ -4,3 +4,14 @@ removes all __pycache__ and .pyc files in the current directory and subdirectori
 if powerd is using alot of cpu and fan is going, computer hot
     sudo pmset schedule cancelall
 
+if you want to see the action dropdown, you need to pass:
+    action=1 or 'action':1
+    to the template from the py file.
+
+once the action menu is activated:
+    {% block action_items %}
+    <a class="dropdown-item" href="{{url_for('base.profile')}}">
+        <i class="bi bi-pencil-fill me-2 text-gray-400"></i>
+        &nbsp;Edit
+    </a>
+    {% endblock %}

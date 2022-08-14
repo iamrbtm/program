@@ -120,6 +120,16 @@ def customer_details(id):
         'customer':customer,
         'history':history,
         'states':states,
-        'addresses':addresses
+        'addresses':addresses,
+        'action':1
     }
     return render_template('app/people/customer_details.html', **context)
+
+@cust.route("/archive/<id>", methods=["GET"])
+@login_required
+def customer_archive(id):
+    cust = db.session.query(People).filter(People.id == id).first()
+    cust.customer = 0
+    db.session.commit()
+    db_maintance()
+    return redirect(url_for('customer.customer'))

@@ -6,116 +6,83 @@
 
 {% block content %}
 <div class="container-fluid">
-    <div class="row mb-3">
-        <div class="col-lg-4">
-            <div class="card shadow mb-3">
-                <div class="card-header py-3">
-                    <p class="text-primary m-0 fw-bold">User Settings</p>
-                </div>
-                <div class="card-body mb-3">
-                    Markup Factor: {{customer.markup_factor * 100}}%<br>
-                    Dicount Factor: {{customer.discount_factor * 100}}%<br>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-8">
-            <div class="row">
-                <div class="col">
-                    <div class="card shadow mb-3">
-                        <div class="card-header py-3">
-                            <p class="text-primary m-0 fw-bold">User Settings</p>
-                        </div>
-                        <div class="card-body">
-                            Name: {{customer.fname}} {{customer.lname}}<br>
-                            Phone: <a style="text-decoration: none !important;"
-                                href="tel:{{customer.phone}}">{{customer.phone}}</a><br>
-                            Email: <a style="text-decoration: none !important;"
-                                href="mailto:{{customer.email}}">{{customer.email}}</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="card shadow mb-3">
-                    <div class="card-header py-3">
-                        <p class="text-primary m-0 fw-bold">Addresses</p>
-                    </div>
-                    <div class="card-body mb-3">
-                        <div class="row">
-                            <div class="col-6">
-                                <p class="text-primary m-0 fw-bold">Main Address</p>
-                                <div>
-                                    {{googlemap("defaultmap", lat=customer.mainaddress_rel.latitudes, lng=customer.mainaddress_rel.longitude, markers=[(customer.mainaddress_rel.latitudes,customer.mainaddress_rel.longitude)], zoom="18")}}
-                                </div>
-                                {{customer.mainaddress_rel.address}} <br>
-                                {{customer.mainaddress_rel.city}}, {{customer.mainaddress_rel.state}}
-                                {{customer.mainaddress_rel.postalcode}}
-                            </div>
-                            <div class="col-6">
-                                <p class="text-primary m-0 fw-bold">Shipping Address</p>
-                                <div>
-                                    {{googlemap("shipmap", lat=customer.shippingaddress_rel.latitudes, lng=customer.shippingaddress_rel.longitude, markers=[(customer.shippingaddress_rel.latitudes, customer.shippingaddress_rel.longitude)], zoom="18")}}
-                                </div>
-                                {{customer.shippingaddress_rel.address}} <br>
-                                {{customer.shippingaddress_rel.city}}, {{customer.shippingaddress_rel.state}}
-                                {{customer.shippingaddress_rel.postalcode}}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <table id="addresses">
-                                    <thead>
-                                        <th>Type</th>
-                                        <th>Name</th>
-                                        <th>Address</th>
-                                    </thead>
-                                    <tbody>
-                                        {% for address in addresses %}
-                                            <tr>
-                                                <td>{{address.type}}</td>
-                                                <td>{{address.fname}} {{address.lname}}</td>
-                                                <td>{{address.address}} {{address.city}}, {{address.state}} {{address.postalcode}}</td>
-                                            </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="card shadow mb-3">
         <div class="card-header py-3">
-            <p class="text-primary m-0 fw-bold">Order History</p>
+            <p class="text-primary m-0 fw-bold">Customer Information</p>
         </div>
         <div class="card-body mb-3">
-            <table id="history" class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Order<br>Num</th>
-                        <th>Name</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for hist in history %}
-                    <tr>
-                        <td style="width:50%">{{hist.ordernum}}</td>
-                        <td>{{hist.project_name}} <br> <span
-                                class="small">{{hist.time_created.strftime('%m-%d-%y')}}</span>
-                        </td>
+            <div class="row">
+                <div class="col-6">
+                    Name: {{customer.fname}} {{customer.lname}}<br>
+                    Phone: <a style="text-decoration: none !important;"
+                        href="tel:{{customer.phone}}">{{customer.phone}}</a><br>
+                    Email: <a style="text-decoration: none !important;"
+                        href="mailto:{{customer.email}}">{{customer.email}}</a> <br>
+                    Markup Factor: {{customer.markup_factor * 100}}%<br>
+                    Dicount Factor: {{customer.discount_factor * 100}}%
 
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                </div>
+                <div class="col-6">
+                    <div>
+                        <p class="text-primary m-0 fw-bold">Main Address</p>
+                        {{customer.mainaddress_rel.address}} <br>
+                        {{customer.mainaddress_rel.city}}, {{customer.mainaddress_rel.state}}
+                        {{customer.mainaddress_rel.postalcode}}
+                        <hr>
+                        <p class="text-primary m-0 fw-bold">Shipping Address</p>
+                        {{customer.shippingaddress_rel.address}} <br>
+                        {{customer.shippingaddress_rel.city}}, {{customer.shippingaddress_rel.state}}
+                        {{customer.shippingaddress_rel.postalcode}}<br>
+                    </div>
+                </div>
+            </div>
+            <div class="card-header py-3">
+                <p class="text-primary m-0 fw-bold">Other Addresses</p>
+            </div>
+            <div>
+                <table id="addresses" class="table table-stripped">
+                    <thead>
+                        <th>Type</th>
+                        <th>Name</th>
+                        <th>Address</th>
+                    </thead>
+                    <tbody>
+                        {% for address in addresses %}
+                        <tr>
+                            <td>{{address.type}}</td>
+                            <td>{{address.fname}} {{address.lname}}</td>
+                            <td>{{address.address}} {{address.city}}, {{address.state}}
+                                {{address.postalcode}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-header py-3">
+                <p class="text-primary m-0 fw-bold">Order History</p>
+            </div>
+            <div class="card-body mb-3">
+                <table id="history" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Order<br>Num</th>
+                            <th>Date</th>
+                            <th>Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for hist in history %}
+                        <tr>
+                            <td><a href="{{url_for('project.projectdetails', id=hist.id)}}">{{hist.ordernum}}</a></td>
+                            <td>{{hist.time_created.strftime('%m-%d-%y')}}</td>
+                            <td>{{hist.project_name}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
-</div>
 </div>
 {% endblock %}
 {% block js_code %}
@@ -149,4 +116,15 @@
         });
     });
 </script>
+{% endblock %}
+
+{% block action_items %}
+<a class="dropdown-item" href="{{url_for('customer.customer_edit', id=customer.id)}}">
+    <i class="bi bi-pencil-fill me-2 text-gray-400"></i>
+    &nbsp;Edit
+</a>
+<a class="dropdown-item" href="{{url_for('customer.customer_archive', id=customer.id)}}">
+    <i class="bi bi-file-zip-fill me-2 text-gray-400"></i>
+    &nbsp;Archive
+</a>
 {% endblock %}

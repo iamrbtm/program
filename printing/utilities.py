@@ -662,3 +662,18 @@ def get_log_lat(id):
         address.longitude = location.longitude
         address.latitudes = location.latitude
         db.session.commit()
+
+def db_maintance():
+    """
+    Author: Jeremy Guill
+    Date: 8/14/22
+    Summary: Various tasks for maintaining the database for the printing program
+    List of Tasks: Search for Inactive Users
+                   #IDEA: Check on other db's
+    """
+    # No customer no employee and no supplier, set active to 0
+    inactives = db.session.query(People).filter(People.customer == 0).filter(People.is_employee == 0).filter(People.supplier == 0).all()
+    
+    for inact in inactives:
+        inact.active = 0
+        db.session.commit()

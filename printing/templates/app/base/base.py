@@ -75,4 +75,10 @@ def stateimport():
 @login_required
 def typeimport():
     populate_types()
-    return redirect(url_for("base.home"))
+    return redirect(url_for("dashboard.dashboard"))
+
+@base.route("/dbmaint")
+@login_required
+def dbmaint():
+    db_maintance()
+    return redirect(url_for("dashboard.dashboard"))

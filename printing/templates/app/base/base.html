@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
-  <title>{% block title %}App - Amazing Prints{% endblock %}</title>
+  <title>{% block title %}Dudefish Printing{% endblock %}</title>
   <link rel="stylesheet" href="{{url_for('static', filename='app/bootstrap/css/bootstrap.min.css')}}" />
   <link rel="stylesheet" href="{{url_for('static', filename='app/fonts/fontawesome-all.min.css')}}" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
@@ -23,7 +23,7 @@
             <i class="fa-solid fa-fish"></i>
           </div>
           <div class="sidebar-brand-text mx-3">
-            <span>Amazing<br />Prints</span>
+            <span>Dudefish<br>Printing</span>
           </div>
         </a>
         <hr class="sidebar-divider my-0" />
@@ -77,15 +77,10 @@
                   <i class="bi bi-file-plus-fill"></i>
                   &nbsp;New Project
                 </a>
-
-                <!-- <a class="dropdown-item" href="{{url_for('employee.employee')}}">
-                  <i class="bi bi-person-badge-fill"></i>
-                  &nbsp;Employee -->
-                </a>
               </div>
             </div>
           </li>
-          
+
           <li class="nav-item dropdown">
             <div class="nav-item dropdown">
               <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
@@ -97,7 +92,7 @@
                   <i class="bi bi-box-seam-fill"></i>
                   &nbsp;Filament
                 </a>
-                
+
                 <a class="dropdown-item" href="{{url_for('filament.filament_new')}}">
                   <i class="bi bi-box-seam-fill"></i>
                   &nbsp;New Filament
@@ -111,7 +106,6 @@
               </div>
             </div>
           </li>
-
         </ul>
       </div>
     </nav>
@@ -126,7 +120,29 @@
               </div>
             </div>
             <ul class="navbar-nav flex-nowrap ms-auto">
+              <!-- Action Button -->
+              {% if action == 1 %}
+              <li class="nav-item dropdown no-arrow">
+                <div class="nav-item dropdown no-arrow">
+                  <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
+                    <img class="border rounded-circle img-profile"
+                      src="{{url_for('static', filename='app/img/placeholders/downarrow.png')}}" width="32"
+                      height="32" /></a>
+
+                  <div class="dropdown-menu dropdown-menu-dark shadow dropdown-menu-end animated--grow-in">
+                    {% block action_items %}
+                    <!-- <a class="dropdown-item" href="{{url_for('base.profile')}}">
+                      <i class="bi bi-pencil-fill me-2 text-gray-400"></i>
+                      &nbsp;Edit
+                    </a> -->
+                    {% endblock %}
+                  </div>
+                </div>
+              </li>
+              {% endif %}
+              <!-- Divider -->
               <div class="d-none d-sm-block topbar-divider"></div>
+              <!-- Profile Button -->
               <li class="nav-item dropdown no-arrow">
                 <div class="nav-item dropdown no-arrow">
                   <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
@@ -136,7 +152,6 @@
                       src="{{url_for('static', filename=current_user.avatar_url)}}" width="32" height="32" /></a>
 
                   <div class="dropdown-menu dropdown-menu-dark shadow dropdown-menu-end animated--grow-in">
-
                     <a class="dropdown-item" href="{{url_for('base.profile')}}">
                       <i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>
                       &nbsp;Profile
@@ -145,6 +160,11 @@
                     <a class="dropdown-item" href="{{url_for('settings.settings')}}">
                       <i class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>
                       &nbsp;Settings
+                    </a>
+
+                    <a class="dropdown-item" href="{{url_for('base.dbmaint')}}">
+                      <i class="fa-solid fa-database me-2 text-gray-400"></i>
+                      &nbsp;Database Maintance
                     </a>
 
                     <div class="dropdown-divider"></div>
@@ -165,7 +185,9 @@
       <footer class="bg-white sticky-footer">
         <div class="container my-auto">
           <div class="text-center my-auto copyright">
-            <span>Copyright © Dudefish Printing (<script type="text/javascript">document.write( new Date().getFullYear() );</script>).
+            <span>Copyright © Dudefish Printing (<script type="text/javascript">
+                document.write(new Date().getFullYear());
+              </script>).
             </span>
           </div>
         </div>
