@@ -162,11 +162,20 @@
                       &nbsp;Settings
                     </a>
 
+                    <div class="dropdown-divider"></div>
+
                     <a class="dropdown-item" href="{{url_for('base.dbmaint')}}">
                       <i class="fa-solid fa-database me-2 text-gray-400"></i>
                       &nbsp;Database Maintance
                     </a>
 
+                    <div class="dropdown-divider"></div>
+                    
+                    <a class="dropdown-item" href="{{url_for('event.event')}}">
+                      <i class="bi bi-calendar-event-fill me-2 text-gray-400"></i>
+                      &nbsp;Events
+                    </a>
+                    
                     <div class="dropdown-divider"></div>
 
                     <a class="dropdown-item" href="{{url_for('auth.logout')}}">

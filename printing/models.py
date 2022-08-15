@@ -227,4 +227,5 @@ class Events(db.Model):
     location = db.Column(db.String(100))
     title = db.Column(db.String(50))
     description = db.Column(db.Text)
+    mapsurl = db.Column(db.Text)
     publish = db.Column(db.Boolean, default = True)

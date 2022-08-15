@@ -45,9 +45,9 @@
     <header class="text-center text-white bg-primary masthead">
         <div class="container"><img class="img-fluid d-block mx-auto mb-5"
                 src="{{url_for('static', filename='website/img/profile.png')}}" loading="auto">
-            <h1>John Doe</h1>
+            <h1>Dudefish Printing</h1>
             <hr class="star-light">
-            <h2 class="font-weight-light mb-0">Web Developer - Graphic Artist - User Experience Designer</h2>
+            <h2 class="font-weight-light mb-0">Your premier 3d printing and design company</h2>
         </div>
     </header>
     <section id="portfolio" class="portfolio">
@@ -102,27 +102,35 @@
         <div class="container">
             <h2 class="text-uppercase text-center text-secondary mb-0">EVENTS</h2>
             <hr class="star-dark mb-5">
-            <!-- FIXME: incorperate events table from db to the main page -->
             <div style="margin:46px;">
-                <div class="row row-striped">
+                {% if events is defined and events[0] is defined %}
+                {% for event in events %}
+                <div class="row row-striped text-secondary">
                     <div class="col-2 text-center ">
-                        <h1 class="display-4 "><span class="badge date-green">14</span></h1>
-                        <h2>FEB</h2>
+                        <h1 class="display-4 text-primary">
+                            <span class="badge bg-success">{{event.start_date.strftime('%d')}}</span></h1>
+                        <h2>{{event.start_date.strftime('%b')}}</h2>
                     </div>
                     <div class="col-10">
-                        <h3 class="text-uppercase"><strong>Valentine's Day</strong></h3>
+                        <h3 class="text-uppercase"><strong>{{event.title}}</strong></h3>
                         <ul class="list-inline">
-                            <li class="list-inline-item"><i class="fa fa-calendar-o" aria-hidden="true"></i> Wednesday
+                            <li class="list-inline-item"><i class="fa fa-calendar-o" aria-hidden="true"></i> {{event.start_date.strftime('%A')}}
                             </li>
-                            <li class="list-inline-item"><i class="fa fa-clock-o" aria-hidden="true"></i> 18:30 PM -
-                                22:00 PM</li>
+                            <li class="list-inline-item"><i class="fa fa-clock-o" aria-hidden="true"></i> {{event.start_time.strftime('%I:%M %p')}} -
+                                {{event.end_time.strftime('%I:%M %p')}}</li>
                             <li class="list-inline-item"><i class="fa fa-location-arrow" aria-hidden="true"></i>
-                                Restaurant</li>
+                                <a href="{{event.mapsurl}}" style="text-decoration:none;" class="text-primary">{{event.location}}</a></li>
                         </ul>
-                        <p>Lorem ipsum dolsit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                            labore et dolore magna aliqua.</p>
+                        <p>{{event.description}}</p>
                     </div>
                 </div>
+                {% endfor %}
+                {% else %}
+                <h4 class="text-uppercase text-center text-secondary mb-0">
+                    No events currently scheduled!  Please check back soon!
+                </h4>
+                
+                {% endif %}
             </div>
         </div>
     </section>
