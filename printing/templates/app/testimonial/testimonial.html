@@ -1,0 +1,55 @@
+{% extends "app/base/base.html" %}
+{% block title %}Testimonials{% endblock %}
+{% block header %}TESTIMONIALS{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col">
+        <div class="card shadow mb-3">
+            <div class="card-header py-3">
+                <p class="text-primary m-0 fw-bold">Testimonials</p>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped" id="testimonials">
+                    <thead>
+                        <tr>
+                            <th>Person Name</th>
+                            <th>Tetimonial</th>
+                            <th>Date</th>
+                            <th>Active</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for tst in testimonials %}
+                            <tr>
+                                <td><a href="{{url_for('testimonial.testimonial_edit',id=tst.id)}}">{{tst.name}}</a></td>
+                                <td>{{tst.testimonial}}</td>
+                                <td>{{tst.date_created}}</td>
+                                <td>{{tst.description}}</td>
+                                <td>{{tst.active}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js_code %}
+<script>
+    $(document).ready(function () {
+        $('#testimonials').DataTable({
+            "fixedHeader": true,
+            "bPaginate": true,
+            "bLengthChange": true,
+            "bFilter": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "colReorder": true,
+            "responsive": true,
+            "searchable": true,
+        });
+    });
+</script>
+{% endblock %}

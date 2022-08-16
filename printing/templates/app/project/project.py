@@ -10,11 +10,15 @@ import datetime, random
 
 proj = Blueprint("project", __name__, url_prefix="/project")
 
+#TODO: Complete new project page
 
 @proj.route("/")
 @login_required
 def project():
-    return redirect(url_for("project.open_orders"))
+    context = {
+        user:User,
+    }
+    return redirect(url_for("project.open_orders"), **context)
 
 
 @proj.route("/details/<int:id>")
@@ -44,9 +48,12 @@ def projectdetails(id):
 def open_orders():
     # DONE: from open projects, click on the name of the project to take to details page
     openorders = db.session.query(Project).filter(Project.active == True).all()
-    return render_template(
-        "app/project/open_orders.html", user=User, projects=openorders
-    )
+    context = {
+        "user":User,
+        "action":1,
+        "projects":openorders
+    }
+    return render_template("app/project/open_orders.html", **context)
 
 
 # TODO: new project

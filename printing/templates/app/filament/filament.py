@@ -12,7 +12,7 @@ fil = Blueprint("filament", __name__, url_prefix="/filament")
 @login_required
 def filament():
     filaments = db.session.query(Filament).filter(Filament.active == True).all()
-    context = {"user": User, "filaments": filaments}
+    context = {"user": User, "action":1, "filaments": filaments}
     return render_template("app/filament/filament.html", **context)
 
 

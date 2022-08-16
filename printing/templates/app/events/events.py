@@ -8,6 +8,8 @@ from datetime import datetime
 
 evt = Blueprint("event", __name__, url_prefix="/event")
 
+# TODO: make new event page
+
 def unpublish_past_events():
     events = db.session.query(Events).filter(Events.start_date < datetime.now()).filter(Events.publish == 1).all()
     for event in events:

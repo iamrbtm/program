@@ -19,7 +19,13 @@ def customer():
         .filter(People.active == True)
         .all()
     )
-    return render_template("app/people/customer_list.html", user=User, customers=customers)
+    
+    context = {
+        "action":1,
+        "user":User, 
+        "customers":customers
+    }
+    return render_template("app/people/customer_list.html", **context)
 
 @cust.route("/new", methods=["GET", "POST"])
 @login_required

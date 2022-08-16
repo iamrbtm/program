@@ -89,6 +89,7 @@ def create_app():
     from printing.templates.app.address.address import addy
     from printing.templates.app.filament.filament import fil
     from printing.templates.app.events.events import evt
+    from printing.templates.app.testimonial.testimonial import testimony
     
     app.register_blueprint(base, url_prefix='/')
     app.register_blueprint(proj)
@@ -100,6 +101,7 @@ def create_app():
     app.register_blueprint(addy)
     app.register_blueprint(fil)
     app.register_blueprint(evt)
+    app.register_blueprint(testimony)
 
     from printing.models import User
 

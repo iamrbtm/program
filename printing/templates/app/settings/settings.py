@@ -9,6 +9,8 @@ import datetime, random
 
 stg = Blueprint("settings", __name__, url_prefix="/settings")
 
+#TODO: make settingslog table
+#TODO: Create trigger for settingslog
 
 @stg.route("/", methods=['GET','POST'])
 @login_required

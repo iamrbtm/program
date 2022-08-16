@@ -1,0 +1,56 @@
+{% extends "app/base/base.html" %}
+{% block title %}Edit Testimonial{% endblock %}
+{% block header %}Edit Testimonial{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col">
+        <div class="card shadow mb-3">
+            <div class="card-header py-3">
+                <p class="text-primary m-0 fw-bold">Testimonial</p>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="row">
+                        <div class="col-10">
+                            <label for="name" class="form col-form-label-lg">Name</label>
+                            <input type="text" class="form form-control" name="name" id="name"
+                                value="{{testimony.name}}">
+                        </div>
+                        <div class="col-2">
+                            <label for="active" class="form col-form-label-lg">Active</label>
+                            <select class="form form-select" name="active" id="active">
+                                <option value=1 {% if testimony.active %}selected{% endif %}>True</option>
+                                <option value=0 {% if not testimony.active %}selected{% endif %}>False</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-8">
+                            <label for="testimonial" class="form col-form-label-lg">Testimonial</label>
+                            <input type="text" class="form form-control" name="testimonial" id="testimonial"
+                                value="{{testimony.testimonial}}">
+                        </div>
+                        <div class="col-4">
+                            <label for="date_created" class="form col-form-label-lg">Date Created</label>
+                            <input type="date" class="form form-control" name="date_created" id="date_created"
+                                value="{{testimony.date_created}}">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label for="fulltext" class="form col-form-label-lg">Full Text</label>
+                            <textarea class="form form-control" name="fulltext" id="fulltext" cols="100%"
+                                rows="10">{{testimony.fulltext}}</textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <input type="submit" value="Submit" class="btn btn-success">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

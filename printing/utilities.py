@@ -408,16 +408,16 @@ def calc_time_length(objid, projid):
     def calc_weight(weightinm, projectid):
         import math
 
-        self.project = db.session.query(Project).filter(Project.id == self.projectid).first()
+        project = db.session.query(Project).filter(Project.id == projectid).first()
 
         diameter = (
             db.session.query(Filament.diameter)
-            .filter(Filament.id == self.project.filamentfk)
+            .filter(Filament.id == project.filamentfk)
             .scalar()
         )
         density = (
             db.session.query(Filament)
-            .filter(Filament.id == self.project.filamentfk)
+            .filter(Filament.id == project.filamentfk)
             .first()
             .type_rel.densitygcm3
         )

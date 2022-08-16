@@ -229,3 +229,11 @@ class Events(db.Model):
     description = db.Column(db.Text)
     mapsurl = db.Column(db.Text)
     publish = db.Column(db.Boolean, default = True)
+    
+class Testimonials(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+    testimonial = db.Column(db.String(200))
+    fulltext = db.Column(db.Text)
+    active = db.Column(db.Boolean)
+    date_created = db.Column(db.Date, default=func.now())

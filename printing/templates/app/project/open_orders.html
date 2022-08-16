@@ -65,3 +65,10 @@
     });
 </script>
 {% endblock %}
+
+{% block action_items %}
+<a class="dropdown-item" href="{{url_for('project.new_project')}}">
+    <i class="bi bi-file-plus-fill me-2 text-gray-400"></i>
+    &nbsp;Add New Project
+</a>
+{% endblock %}
