@@ -1,0 +1,91 @@
+{% extends "app/base/base.html" %}
+{% block title %}New Address{% endblock %}
+{% block header %}New Address{% endblock %}
+{% block content %}
+<form method="POST">
+    <div class="row">
+        <div class="col">
+            <div class="card shadow mb-3">
+                <div class="card-header py-3">
+                    <p class="text-primary m-0 fw-bold">New Address</p>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <label for="peoplefk" class="form col-form-label-lg">Link to whom?</label>
+                            <select type="text" class="form form-select" id="peoplefk" name="peoplefk">
+                                {% for person in people %}
+                                <option value="{{person.id}}">{{person.lname}}, {{person.fname}} -
+                                    {% if person.customer %}
+                                    Customer
+                                    {% elif person.employee %}
+                                    Employee
+                                    {% else %}
+                                    Supplier
+                                    {% endif %}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label for="company" class="form col-form-label-lg">Company</label>
+                            <input type="text" class="form form-control" name="company" id="company">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label for="type" class="form col-form-label-lg">Type</label>
+                            <select type="text" class="form form-select" id="type" name="type">
+                                {% for type in types %}
+                                <option value="{{type.type}}">{{type.type}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-4">
+                            <label for="fname" class="form col-form-label-lg">First Name</label>
+                            <input type="text" class="form form-control" name="fname" id="fname">
+                        </div>
+                        <div class="col-5">
+                            <label for="fname" class="form col-form-label-lg">Last Name</label>
+                            <input type="text" class="form form-control" name="lname" id="lname">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <label for="address" class="form col-form-label-lg">Address</label>
+                            <input type="text" class="form form-control" name="address" id="address">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <label for="address2" class="form col-form-label-lg">Address 2</label>
+                            <input type="text" class="form form-control" name="address2" id="address2">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-5">
+                            <label for="city" class="form col-form-label-lg">City</label>
+                            <input type="text" class="form form-control" name="city" id="city">
+                        </div>
+                        <div class="col-2">
+                            <label for="state" class="form col-form-label-lg">State</label>
+                            <input type="text" class="form form-control" name="state" id="state">
+                        </div>
+                        <div class="col-5">
+                            <label for="postalcode" class="form col-form-label-lg">Postal Code</label>
+                            <input type="text" class="form form-control" name="postalcode" id="postalcode">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col mt-lg-3">
+                            <input type="submit" value="Submit" class="btn btn-success">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}

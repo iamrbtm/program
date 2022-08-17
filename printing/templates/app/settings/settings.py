@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 import flask_login
 from sqlalchemy.orm import session
 from printing.models import *
-from printing import db, uploads
+from printing import db
 from printing.utilities import *
 import datetime, random
 

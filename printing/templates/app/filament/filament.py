@@ -3,7 +3,8 @@ from flask_login import login_required, current_user
 from sqlalchemy import distinct
 from printing.models import *
 from printing.utilities import *
-from printing import filamentpics
+from printing import filamentpics, gcode
+from os.path import abspath, join, dirname
 
 fil = Blueprint("filament", __name__, url_prefix="/filament")
 
@@ -63,3 +64,4 @@ def type():
 
     context = {"user": User, "types": types}
     return render_template("app/filament/type.html", **context)
+

@@ -113,6 +113,8 @@ class Printer(db.Model):
     cost = db.Column(db.Float)
     purchase_date = db.Column(db.Date)
     picture = db.Column(db.Text)
+    active = db.Column(db.Boolean)
+    
 
 
 class Type(db.Model):

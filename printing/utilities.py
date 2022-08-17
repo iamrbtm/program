@@ -404,20 +404,18 @@ def shorten_url(longurl):
 
 
 # Calculation for Orders
-def calc_time_length(objid, projid):
-    def calc_weight(weightinm, projectid):
+def calc_time_length(filename, filamentfk):
+    def calc_weight(weightinm, filamentfk):
         import math
-
-        project = db.session.query(Project).filter(Project.id == projectid).first()
 
         diameter = (
             db.session.query(Filament.diameter)
-            .filter(Filament.id == project.filamentfk)
+            .filter(Filament.id == filamentfk)
             .scalar()
         )
         density = (
             db.session.query(Filament)
-            .filter(Filament.id == project.filamentfk)
+            .filter(Filament.id == filamentfk)
             .first()
             .type_rel.densitygcm3
         )
@@ -431,13 +429,12 @@ def calc_time_length(objid, projid):
 
     stgs = db.session.query(Settings).first()
     Units = "Millimetres"
-    objectinfo = db.session.query(Printobject).filter(Printobject.id == objid).first()
     import io, os, string, math, sys
 
     MoveDelay = 0.000014945651469
     PauseDelay = 0.0006
 
-    f = open(objectinfo.file)
+    f = open(filename)
 
     BaseTime = 15
     FeedRate = 0.0
@@ -539,18 +536,17 @@ def calc_time_length(objid, projid):
     matpad = 1 - stgs.padding_filament
     materialused_in_mm = float(Material) / matpad
 
+    weight_in_g = calc_weight(materialused_in_mm / 1000, filamentfk)
+
     print(" material in mm = " + str(round(materialused_in_mm, 3)) + "mm")
     print("  material in m = " + str(round(materialused_in_mm / 1000, 3)) + "m")
     print("---------------")
     print("    time in min = " + str(round(printtime_in_min, 3)) + "min")
     print("     time in hr = " + str(round(printtime_in_min / 60, 3)) + "hrs")
+    print("---------------")
+    print("    weight in g = " + str(round(weight_in_g)) + "g")
 
-    weight_in_g = calc_weight(materialused_in_mm / 1000, projid)
-    objectinfo.kg_weight = weight_in_g / 1000
-    objectinfo.h_printtime = printtime_in_min / 60
-    db.session.commit()
-
-    return printtime_in_min, materialused_in_mm
+    return round(printtime_in_min / 60, 3), weight_in_g/1000
 
 class CalcCost:
     def __init__(self, id):
