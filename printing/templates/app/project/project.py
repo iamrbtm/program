@@ -1,10 +1,10 @@
-from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, render_template, redirect, url_for, request
 from flask_login import login_required, current_user
 import flask_login
 from sqlalchemy import distinct
 from sqlalchemy.orm import session
 from printing.models import *
-from printing import db
+from printing import db, gcode
 from printing.utilities import *
 import datetime, random
 
@@ -69,6 +69,54 @@ def new_project():
     shippingcost = db.session.query(Shipping).all()
     filaments = db.session.query(Filament).filter(Filament.active == True).all()
     printers = db.session.query(Printer).filter(Printer.active == True).all()
+    
+    if request.method == "POST":
+        if request.files['gcode'].filename != '':
+            #Save uploaded file
+            gcodefile = gcode.save(request.files['gcode'])
+            
+            #process file for time and materials
+            basedir = os.path.abspath(os.path.dirname(__file__))
+            filepath = os.path.join(basedir, 'uploads', gcodefile)
+
+            time_in_h, weight_in_kg = calc_time_length(filepath,request.form.get('filamentfk'))
+            
+            #save file to db
+            newgcode = Printobject(
+                file = gcodefile,
+                h_printtime = time_in_h,
+                kg_weight = weight_in_kg
+            )
+            db.session.add(newgcode)
+            db.session.commit()
+            db.session.refresh(newgcode)
+            
+        #save project details to db
+        newproj = Project(
+            project_name = request.form.get('projectname'),
+            customerfk = request.form.get('customer'),
+            printerfk = request.form.get('printer'),
+            filamentfk = request.form.get('filamentfk'),
+            objectfk = newgcode.id,
+            shippingfk = request.form.get('shippingcost'),
+            employeefk = request.form.get('employee'),
+            packaging = 0,
+            advertising = 0,
+            rent = 0,
+            overhead = 0,
+            extrafees = 0,
+            ordernum = ordernumber,
+            active = 1,
+            
+        )
+        db.session.add(newproj)
+        db.session.commit()
+        db.session.refresh(newproj)
+        
+        #redirect to project details
+        return redirect(url_for('project.projectdetails', id=newproj.id))
+    
+    
     content = {"user": User, "ordernumber":ordernumber,
                "customers":existingcust,
                "pastcusts":pastcust,

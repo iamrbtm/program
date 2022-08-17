@@ -74,96 +74,106 @@
                     <p class="text-primary m-0 fw-bold">Order Details</p>
                 </div>
                 <div class="card-body">
-                    <table class="table table-striped" width="100%" id="orderdetails">
-                        <thead>
-                            <tr>
-                                <th>Item</th>
-                                <th>Selection</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Printer</td>
-                                <td><select name="printer" id="printer" class="form form-select">
-                                        {% for printer in printers %}
-                                        <option value="{{printer.id}}">{{printer.name}}</option>
-                                        {% endfor %}
-                                    </select></td>
-                            </tr>
-                            <tr>
-                                <td>Filament</td>
-                                <td><select name="filamentfk" id="filamentfk" class="form form-select">
-                                        {% for filament in filaments %}
-                                        <option value="{{filament.id}}">{{filament.name}} - ({{filament.color}}
-                                            {{filament.type_rel.type}} {{filament.diameter}})</option>
-                                        {% endfor %}
-                                    </select></td>
-                            </tr>
-                            <tr>
-                                <td>Print Time - Cost of Electricity</td>
-                                <td><input type="text" class="form form-control" disabled
-                                        placeholder="Automatically Calculated"></td>
-                            </tr>
-                            <tr>
-                                <td>Design</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Advertising</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Overhead</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Rent</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Other</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Packaging</td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                        <tfoot class="table table-bordered">
-                            <tr>
-                                <td class="text-end">Shipping:</td>
-                                <td><select name="shippingcost" id="shippingcost" class="form form-select">
-                                        {% for shipping in shippingcost %}
-                                        <option value="{{shipping.id}}">{{shipping.company}} -
-                                            {{"$%.2f"|format(shipping.cost)}}
-                                        </option>
-                                        {% endfor %}
-                                    </select></td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row mb-3">
-        <div class="col-lg-12">
-            <div class="card mb-3" id="Order History">
-                <div class="card shadow mb-3">
-                    <div class="card-header py-3">
-                        <p class="text-primary m-0 fw-bold">Upload File</p>
+                    <div class="row mb-3">
+                        <div class="col-lg-12">
+                            <b>Project Name:</b><br>
+                            <input type="text" class="form form-control" id="projectname" name="projectname" placeholder="Name of Project">
+                        </div>
                     </div>
-                    <div class="card-body shadow">
-                        <b>Uplead a gcode file:</b><br>
-                        <input type="file" id="gcode" name="gcode" class="form form-control-file">
+                    <div class="row mb-3">
+                        <div class="col-lg-12">
+                            <table class="table table-striped" width="100%" id="orderdetails">
+                                <thead>
+                                    <tr>
+                                        <th>Item</th>
+                                        <th>Selection</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Printer</td>
+                                        <td><select name="printer" id="printer" class="form form-select">
+                                                {% for printer in printers %}
+                                                <option value="{{printer.id}}">{{printer.name}}</option>
+                                                {% endfor %}
+                                            </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Filament</td>
+                                        <td><select name="filamentfk" id="filamentfk" class="form form-select">
+                                                {% for filament in filaments %}
+                                                <option value="{{filament.id}}">{{filament.name}} - ({{filament.color}}
+                                                    {{filament.type_rel.type}} {{filament.diameter}})</option>
+                                                {% endfor %}
+                                            </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Print Time - Cost of Electricity</td>
+                                        <td><input type="text" class="form form-control" disabled
+                                                placeholder="Automatically Calculated"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Design</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Advertising</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Overhead</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Rent</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Other</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Packaging</td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                                <tfoot class="table table-bordered">
+                                    <tr>
+                                        <td class="text-end">Shipping:</td>
+                                        <td><select name="shippingcost" id="shippingcost" class="form form-select">
+                                                {% for shipping in shippingcost %}
+                                                <option value="{{shipping.id}}">{{shipping.company}} -
+                                                    {{"$%.2f"|format(shipping.cost)}}
+                                                </option>
+                                                {% endfor %}
+                                            </select></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="row mb-3">
-        <div class="col-lg-12">
-            <input type="submit" value="Submit" class="btn btn-success btn-lg">
+            <div class="row mb-3">
+                <div class="col-lg-12">
+                    <div class="card mb-3" id="Order History">
+                        <div class="card shadow mb-3">
+                            <div class="card-header py-3">
+                                <p class="text-primary m-0 fw-bold">Upload File</p>
+                            </div>
+                            <div class="card-body shadow">
+                                <b>Uplead a gcode file:</b><br>
+                                <input type="file" id="gcode" name="gcode" class="form form-control-file">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-lg-12">
+                    <input type="submit" value="Submit" class="btn btn-success btn-lg">
+                </div>
+            </div>
         </div>
     </div>
 </form>
