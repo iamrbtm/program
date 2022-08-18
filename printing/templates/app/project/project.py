@@ -47,7 +47,7 @@ def projectdetails(id):
 @login_required
 def open_orders():
     # DONE: from open projects, click on the name of the project to take to details page
-    openorders = db.session.query(Project).filter(Project.active == True).all()
+    openorders = db.session.query(Project).filter(Project.customerfk != 2).filter(Project.active == True).all()
     context = {
         "user":User,
         "action":1,

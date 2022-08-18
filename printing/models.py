@@ -198,6 +198,9 @@ class Project(db.Model):
     tracking = db.Column(db.Text)
     ordernum = db.Column(db.Integer)
     active = db.Column(db.Boolean)
+    sale_price = db.Column(db.Float)
+    cost = db.Column(db.Float)
+    current_quantity = db.Column(db.Integer)
     time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
     time_updated = db.Column(db.DateTime(timezone=True), onupdate=func.now())
     employee_rel = db.relationship(

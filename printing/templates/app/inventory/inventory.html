@@ -1,0 +1,67 @@
+{% extends "app/base/base.html" %}
+{% block title %}Inventory{% endblock %}
+{% block header %}Inventory{% endblock %}
+{% block content %}
+<table id="inventory" class="table table-striped">
+    <thead>
+        <tr>
+            <th>Project Name</th>
+            <th>Quantity</th>
+            <th>Cost</th>
+            <th>Sales Price</th>
+            <th>Filament</th>
+            <th>Printer</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for inv in inventory %}
+        <tr>
+            <td>
+                <a href="{{url_for('inventory.inventory_details', id=inv.id)}}">
+                    {{inv.project_name}}
+                </a>
+            </td>
+            <td>{{inv.current_quantity}}</td>
+            <td>{{"$%.2f"|format(inv.cost)}}</td>
+            <td>{{"$%.2f"|format(inv.sale_price)}}</td>
+            <td>{{inv.filament_rel.name}} - {{inv.filament_rel.color}}({{inv.filament_rel.diameter}})</td>
+            <td>{{"$%.2f"|format(inv.sale_price - inv.cost)}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+{% block js_code %}
+<script>
+    $(document).ready(function () {
+        $('#invenory').DataTable({
+            colReorder: true,
+            responsive: true,
+            columns: [{
+                    searchable: true
+                },
+                {
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    orderable: true,
+                    searchable: true
+                },
+            ],
+        });
+    });
+</script>
+{% endblock %}
+
+{% block action_items %}
+<a class="dropdown-item" href="{{url_for('inventory.inventory_new')}}">
+    <i class="bi bi-file-plus-fill me-2 text-gray-400"></i>
+    &nbsp;Add New Inventory
+</a>
+{% endblock %}
