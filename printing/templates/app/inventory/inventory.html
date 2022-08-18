@@ -9,8 +9,8 @@
             <th>Quantity</th>
             <th>Cost</th>
             <th>Sales Price</th>
-            <th>Filament</th>
-            <th>Printer</th>
+            <th>Profit</th>
+            <th>Margin</th>
         </tr>
     </thead>
     <tbody>
@@ -24,8 +24,8 @@
             <td>{{inv.current_quantity}}</td>
             <td>{{"$%.2f"|format(inv.cost)}}</td>
             <td>{{"$%.2f"|format(inv.sale_price)}}</td>
-            <td>{{inv.filament_rel.name}} - {{inv.filament_rel.color}}({{inv.filament_rel.diameter}})</td>
             <td>{{"$%.2f"|format(inv.sale_price - inv.cost)}}</td>
+            <td>{{"%.2f"|format(((inv.sale_price - inv.cost)/inv.sale_price)*100)}}%</td>
         </tr>
         {% endfor %}
     </tbody>
@@ -35,25 +35,16 @@
 {% block js_code %}
 <script>
     $(document).ready(function () {
-        $('#invenory').DataTable({
-            colReorder: true,
-            responsive: true,
-            columns: [{
-                    searchable: true
-                },
-                {
-                    orderable: true,
-                    searchable: true
-                },
-                {
-                    orderable: true,
-                    searchable: true
-                },
-                {
-                    orderable: true,
-                    searchable: true
-                },
-            ],
+        $('#inventory').DataTable({
+            "fixedHeader": true,
+            "bPaginate": true,
+            "bLengthChange": true,
+            "bFilter": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "colReorder": true,
+            "responsive": true,
+            "searchable": true,
         });
     });
 </script>

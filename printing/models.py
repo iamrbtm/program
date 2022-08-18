@@ -201,6 +201,7 @@ class Project(db.Model):
     sale_price = db.Column(db.Float)
     cost = db.Column(db.Float)
     current_quantity = db.Column(db.Integer)
+    qtyperprint = db.Column(db.Integer)
     time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
     time_updated = db.Column(db.DateTime(timezone=True), onupdate=func.now())
     employee_rel = db.relationship(

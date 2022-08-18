@@ -463,7 +463,8 @@ def calc_time_length(filename, filamentfk):
     LineCount = 0
 
     while True:
-
+        # LineCount += 1
+        # print(LineCount)
         flin = f.readline()
         if flin == "":
             break
@@ -602,7 +603,6 @@ class CalcCost:
                 + self.project.packaging
                 + self.project.advertising
                 + self.project.rent
-                + self.project.overhead
                 + self.project.extrafees
         ),2)
     def total(self):

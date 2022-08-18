@@ -16,6 +16,7 @@ db = SQLAlchemy()
 photos = UploadSet("photos", IMAGES)
 filamentpics = UploadSet("filamentpics", IMAGES)
 gcode = UploadSet("gcode", ALL)
+invgcode = UploadSet("invgcode", ALL)
 avatar = UploadSet("avatar", IMAGES)
 mail = Mail()
 
@@ -28,10 +29,12 @@ def create_app():
     # Flask-Uploads & Static
     app.config["UPLOADED_PHOTOS_DEST"] = "printing/static/app/images"
     app.config["UPLOADED_GCODE_DEST"] = "printing/templates/app/project/uploads"
+    app.config["UPLOADED_INVGCODE_DEST"] = "printing/templates/app/inventory/uploads"
     app.config["UPLOADED_FILAMENTPICS_DEST"] = "printing/static/app/img/filament"
     app.config["UPLOADED_AVATAR_DEST"] = "printing/static/app/img/avatars"
     configure_uploads(app, photos)
     configure_uploads(app, gcode)
+    configure_uploads(app, invgcode)
     configure_uploads(app, filamentpics)
     configure_uploads(app, avatar)
 

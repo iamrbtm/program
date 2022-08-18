@@ -1,65 +1,14 @@
 {% extends "app/base/base.html" %}
 
-{% block title %}Details for {{projects.project_name}} {% endblock %}
+{% block title %}Details for {{inventory.project_name}} {% endblock %}
 
 {% block header %}
-{{projects.project_name.upper()}} - <span class="display-6">{{projects.ordernum}}</span>
+{{inventory.project_name.upper()}} - <span class="display-6">{{inventory.ordernum}}</span>
 {% endblock %}
 
 {% block content %}
 <div class="container-fluid">
-    <div class="row mb-3">
-        <div class="col-lg-4">
-            <div class="card mb-3" id="CustInfo">
-                <div class="card shadow mb-3">
-                    <div class="card-header py-3">
-                        <p class="text-primary m-0 fw-bold">Customer Info</p>
-                    </div>
-                    <div class="card-body shadow">
-                        {{projects.customer_rel.fname}} {{projects.customer_rel.lname}}</br>
-                        {{projects.customer_rel.mainaddress_rel.address}}</br>
-                        {{projects.customer_rel.mainaddress_rel.city}}, {{projects.customer_rel.mainaddress_rel.state}}
-                        {{projects.customer_rel.mainaddress_rel.postalcode}}</br>
-                        {{projects.customer_rel.phone}}</br>
-                        {{projects.customer_rel.email}}</br>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="card mb-3" id="ShippingInfo">
-                <div class="card shadow mb-3">
-                    <div class="card-header py-3">
-                        <p class="text-primary m-0 fw-bold">Shipping Address</p>
-                    </div>
-                    <div class="card-body shadow">
-                        {{projects.customer_rel.shippingaddress_rel.fname}} {{projects.customer_rel.shippingaddress_rel.lname}}</br>
-                        {{projects.customer_rel.shippingaddress_rel.address}}</br>
-                        {{projects.customer_rel.shippingaddress_rel.city}}, {{projects.customer_rel.shippingaddress_rel.state}}
-                        {{projects.customer_rel.shippingaddress_rel.postalcode}}</br>
-                        </br>
-                        </br>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="card mb-3" id="OrderInfo">
-                <div class="card shadow mb-3">
-                    <div class="card-header py-3">
-                        <p class="text-primary m-0 fw-bold">Order Info</p>
-                    </div>
-                    <div class="card-body shadow">
-                        <b>Order Number:</b> {{projects.ordernum}}</br>
-                        <b>Date Created:</b> {{projects.time_created.strftime('%b %d, %Y')}}</br>
-                        <b>Time Created:</b> {{projects.time_created.strftime('%-I:%m %p')}}</br>
-                        <b>Employee:</b> {{projects.employee_rel.fname}} {{projects.employee_rel.lname}}</br>
-                        <b>Shipping:</b> {{projects.shipping_rel.company}} - {{projects.shipping_rel.service}}</br>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <span class="display-5"><b>{{inventory.customer_rel.fname.upper()}} ACCOUNT </b></span>
     <div class="row mb-3">
         <div class="col-lg-12">
             <div class="card shadow mb-3" id="OrderDets">
@@ -79,23 +28,22 @@
                         <tbody>
                             <tr>
                                 <td>Printer</td>
-                                <td>{{projects.printer_rel.name}}</td>
+                                <td>{{inventory.printer_rel.name}}</td>
                                 <td></td>
                                 <td></td>
                             </tr>
                             <tr>
                                 <td>Filament</td>
-                                <td>{{projects.filament_rel.name}} - ({{projects.filament_rel.color}}
-                                    {{projects.filament_rel.type_rel.type}}
-                                    {{projects.filament_rel.diameter}})</td>
-                                <td>{{"%.1f"|format(materialused)}}g</td>
-                                <td>{{"$%.2f"|format(newproject.filcost())}}</td>
+                                <td>{{inventory.filament_rel.type_rel.type}} -
+                                    {{inventory.filament_rel.diameter}}</td>
+                                <td>{{"%.1f"|format(materialused / inventory.qtyperprint)}}g</td>
+                                <td>{{"$%.2f"|format(newinventory.filcost() / inventory.qtyperprint)}}</td>
                             </tr>
                             <tr>
                                 <td>Print Time</td>
                                 <td>Cost of Electricity</td>
-                                <td>{{"%.2f"|format(printtime)}} hours</td>
-                                <td>{{"$%.2f"|format(newproject.timecost())}}</td>
+                                <td>{{"%.2f"|format(printtime / inventory.qtyperprint)}} hours</td>
+                                <td>{{"$%.2f"|format(newinventory.timecost() / inventory.qtyperprint)}}</td>
                             </tr>
                             {% if 1==2 %}
                             <tr>
@@ -105,109 +53,86 @@
                                 <td></td>
                             </tr>
                             {% endif %}
-                            {% if projects.advertising %}
+                            {% if inventory.advertising %}
                             <tr>
                                 <td>Advertising</td>
                                 <td></td>
                                 <td></td>
-                                <td>{{"$%.2f"|format(projects.advertising)}}</td>
+                                <td>{{"$%.2f"|format(inventory.advertising)}}</td>
                             </tr>
                             {% endif %}
-                            {% if projects.overhead %}
+                            {% if inventory.overhead %}
                             <tr>
                                 <td>Overhead</td>
                                 <td></td>
                                 <td></td>
-                                <td>{{"$%.2f"|format(projects.overhead)}}</td>
+                                <td>{{"$%.2f"|format(inventory.overhead)}}</td>
                             </tr>
                             {% endif %}
-                            {% if projects.rent %}
+                            {% if inventory.rent %}
                             <tr>
                                 <td>Rent</td>
                                 <td></td>
                                 <td></td>
-                                <td>{{"$%.2f"|format(projects.rent)}}</td>
+                                <td>{{"$%.2f"|format(inventory.rent)}}</td>
                             </tr>
                             {% endif %}
-                            {% if projects.extrafees %}
+                            {% if inventory.extrafees %}
                             <tr>
                                 <td>Other</td>
                                 <td></td>
                                 <td></td>
-                                <td>{{"$%.2f"|format(projects.extrafees)}}</td>
+                                <td>{{"$%.2f"|format(inventory.extrafees)}}</td>
                             </tr>
                             {% endif %}
-                            {% if projects.packaging %}
+                            {% if inventory.packaging %}
                             <tr>
                                 <td>Packaging</td>
                                 <td></td>
                                 <td></td>
-                                <td>{{"$%.2f"|format(projects.packaging)}}</td>
+                                <td>{{"$%.2f"|format(inventory.packaging)}}</td>
                             </tr>
                             {% endif %}
+                            <tr>
+                                <td>File</td>
+                                <td>{{inventory.object_rel.file}} - <a
+                                        href="{{url_for('inventory.download',filename=filename)}}">Download</a><br>
+                                    <b>Items per print:</b> {{inventory.qtyperprint}}
+                                </td>
+                            </tr>
                         </tbody>
                         <tfoot class="table table-bordered">
                             <tr>
                                 <td></td>
                                 <td></td>
-                                <td class="text-end">Subtotal</td>
-                                <td>{{"$%.2f"|format(newproject.subtotal())}}</td>
+                                <td class="text-end">Total Cost</td>
+                                <td>{{"$%.2f"|format(newinventory.total() / inventory.qtyperprint)}}</td>
                             </tr>
                             <tr>
                                 <td></td>
                                 <td></td>
-                                <td class="text-end">Discount - {{"%.0f"|format(projects.customer_rel.discount_factor*100|round)}}%</td>
-                                <td style="color: red">{{"$%.2f"|format(newproject.subtotal()*projects.customer_rel.discount_factor|float)}}</td>
+                                <td class="text-end">Recommended Sale Price</td>
+                                <td>{{"$%.2f"|format(inventory.sale_price)}}</td>
                             </tr>
                             <tr>
                                 <td></td>
                                 <td></td>
-                                <td class="text-end">Shipping - {{projects.shipping_rel.company}}</td>
-                                <td>{{"$%.2f"|format(projects.shipping_rel.cost)}}</td>
+                                <td class="text-end">Profit</td>
+                                <td>{{"$%.2f"|format(inventory.sale_price - inventory.cost)}}
+                                </td>
                             </tr>
                             <tr>
                                 <td></td>
                                 <td></td>
-                                <td class="text-end">Total</td>
-                                <td>{{"$%.2f"|format(newproject.total())}}</td>
+                                <td class="text-end">Profit Margin</td>
+                                <td>{{"%.2f"|format(((inventory.sale_price - inventory.cost)/inventory.sale_price)*100)}}%
+                                </td>
                             </tr>
                         </tfoot>
                     </table>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-12">
-            <div class="card mb-3" id="Order History">
-                <div class="card shadow mb-3">
-                    <div class="card-header py-3">
-                        <p class="text-primary m-0 fw-bold">Order History</p>
-                    </div>
-                    <div class="card-body shadow">
-                        <!-- DONE: place order history here -->
-                        <!-- DONE: place link for order history to detail page -->
-                        <table class="table table-striped" width="100%" id="orderhistory">
-                            <thead>
-                                <tr>
-                                    <th>Order#</th>
-                                    <th>ProjectName</th>
-                                    <th>Date</th>
-                                    <th>Active</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for hist in history %}
-                                <tr>
-                                    <td>
-                                        <a href="{{url_for('project.projectdetails', id=hist.id)}}">
-                                            {{hist.ordernum}}
-                                        </a></td>
-                                    <td>{{hist.project_name}}</td>
-                                    <td>{{hist.time_created}}</td>
-                                    <td>{{hist.active}}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                    <div class="text-start">
+                        {{inventory.time_created.strftime('%b %d, %Y')}} {{inventory.time_created.strftime('%-I:%m %p')}} - 
+                        {{inventory.employee_rel.fname}} {{inventory.employee_rel.lname}}
                     </div>
                 </div>
             </div>
