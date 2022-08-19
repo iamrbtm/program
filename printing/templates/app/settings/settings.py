@@ -24,12 +24,12 @@ def settings():
         stgs.padding_time = float(request.form.get('padding_time'))/100
         stgs.padding_filament = float(request.form.get('padding_filament'))/100
         db.session.commit()
-        return redirect(url_for('dashboard.dashboard'))
+        return redirect(url_for('settings.settings'))
     return render_template("/app/settings/settings.html", user=User, settings=stgs)
 
 
-# TODO: make settings page with all the options in the settings table in the db
-# TODO: change route from dashboard to settings page once made
+# DONE: make settings page with all the options in the settings table in the db
+# DONE: change route from dashboard to settings page once made
 
 
 @stg.route("/updatecostkw")

@@ -10,7 +10,7 @@ import datetime, random
 
 proj = Blueprint("project", __name__, url_prefix="/project")
 
-#TODO: Complete new project page
+#DONE: Complete new project page
 
 @proj.route("/")
 @login_required
@@ -56,7 +56,7 @@ def open_orders():
     return render_template("app/project/open_orders.html", **context)
 
 
-# TODO: new project
+# DONE: new project
 @proj.route("/new", methods=["GET", "POST"])
 @login_required
 def new_project():

@@ -8,7 +8,7 @@ from datetime import datetime
 
 testimony = Blueprint("testimonial", __name__, url_prefix="/testimonial")
 
-#TODO: Make new page for testimonials
+#DONE: Make new page for testimonials
 
 @testimony.route("/")
 @login_required
