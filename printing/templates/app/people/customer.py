@@ -51,8 +51,8 @@ def customer_new():
             email=request.form.get("email"),
             active=True,
             customer=True,
-            markup_factor=request.form.get("markup_factor") / 100,
-            discount_factor=request.form.get("discount_factor") / 100,
+            markup_factor=float(request.form.get("markup_factor")) / 100,
+            discount_factor=float(request.form.get("discount_factor"))   / 100,
         )
         db.session.add(newcust)
         db.session.commit()
