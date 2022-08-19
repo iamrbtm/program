@@ -16,7 +16,7 @@ proj = Blueprint("project", __name__, url_prefix="/project")
 @login_required
 def project():
     context = {
-        user:User,
+        "user":User,
     }
     return redirect(url_for("project.open_orders"), **context)
 

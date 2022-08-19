@@ -1,0 +1,56 @@
+{% extends "app/base/base.html" %}
+{% block title %}Sales Order{% endblock %}
+{% block header %}Sales Order{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-7">
+        <div class="card shadow mb-3">
+            <div class="card-header py-3">
+                <p class="text-primary m-0 fw-bold">Products<p>
+            </div>
+            <div class="card-body">
+                <div class="row-fluid">
+                    {% for catagory, inv in inventory | groupby('catagory') %}
+                    <h3 class="mt-5">{{catagory}}</h3>
+                    {% for inv in inventory %}
+                    {% if inv.catagory == catagory %}
+
+                    {% if loop.index0 % 3 == 0 %}
+                    <div class="row">
+                        {% endif %}
+
+                        <div class="col-4 d-grid gap-2">
+                            <button class="btn btn-lg btn-block text-center btn-success">
+                                {{inv.project_name|truncate(12,true,'') }}<br>
+                                {{"$%.2f"%inv.sale_price}}<br>
+                                InStock: ({{inv.current_quantity}})<br>
+                            </button>
+                        </div>
+
+                        {% if loop.index0 % 3 == 2 or loop.last %}
+                    </div><br>
+                    {% endif %}
+                    {% endif %}
+                    {% endfor %}
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-5">
+        <div class="card shadow mb-3">
+            <div class="card-header py-3">
+                <p class="text-primary m-0 fw-bold">Order<p>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
