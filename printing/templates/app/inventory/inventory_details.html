@@ -170,3 +170,10 @@
     });
 </script>
 {% endblock %}
+
+{% block action_items %}
+<a class="dropdown-item" href="{{url_for('inventory.inventory_edit', id=inventory.id)}}">
+    <i class="bi bi-file-plus-fill me-2 text-gray-400"></i>
+    &nbsp;Edit Inventory
+</a>
+{% endblock %}

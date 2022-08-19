@@ -22,6 +22,77 @@ def inventory():
     return render_template("app/inventory/inventory.html", **context)
 
 
+@inv.route("/edit/<id>", methods=["GET", "POST"])
+@login_required
+def inventory_edit(id):
+    inventory = db.session.query(Project).filter(Project.id == id).first()
+    
+    if request.method == "POST":
+        # if request.files['gcode'].filename != '':
+        #     upload_store_gcode_file(
+        #         gcodefile=request.files['gcode'],
+        #         path=os.path.abspath(os.path.dirname(__file__)), 
+        #         filamentfk=request.form.get('filament'),
+        #         project_link=id
+        #     )
+        newval = request.form.to_dict()
+        inventory.project_name = newval['name']
+        inventory.customerfk = 2
+        inventory.printerfk = int(newval['printer'])
+        inventory.filamentfk = int(newval['filament'])
+        inventory.shippingfk = 3
+        inventory.employeefk = 1
+        inventory.packaging = float(newval['packaging'])
+        inventory.advertising = float(newval['advertising'])
+        inventory.rent = float(newval['rent'])
+        inventory.extrafees = float(newval['other'])
+        inventory.active = 1
+        inventory.sale_price = float(newval['sale_price'])
+        inventory.current_quantity = 0
+        inventory.qtyperprint = int(newval['qtyperprint'])
+        db.session.commit()
+        
+        inv1 = CalcCost(id)
+        inventory.cost = inv1.total() / inventory.qtyperprint
+        db.session.commit()
+        return redirect(url_for('inventory.inventory_details', id=id))
+    
+    printers = db.session.query(Printer).filter(Printer.active == True).all()
+    filaments = db.session.query(Filament).filter(Filament.active == True).all()
+    
+    context = {
+        "user":User,
+        "inventory":inventory,
+        "printers":printers,
+        "filaments":filaments
+    }
+    return render_template("app/inventory/inventory_edit.html", **context)
+
+
+@inv.route("/adjust", methods=["GET", "POST"])
+@login_required
+def inventory_adjust(): 
+    inventory = db.session.query(Project).filter(Project.customerfk == 2).filter(Project.active == True).all()
+    
+    if request.method == "POST":
+        newadj = Adjustment_log(
+            projectfk = request.form.get('item'),
+            adjustment = request.form.get('adjustment'),
+            description = request.form.get('desc'),
+            time_created = datetime.datetime.now()
+        )
+        db.session.add(newadj)
+        db.session.commit()
+        
+        Update_Inventory_Qty()
+        return redirect(url_for('inventory.inventory'))
+    
+    context = {
+    "user":User,
+    "inventory":inventory
+    }
+    return render_template("app/inventory/inventory_adjust.html", **context)
+
 @inv.route("/new", methods=["GET", "POST"])
 @login_required
 def inventory_new():
@@ -93,6 +164,7 @@ def inventory_details(id):
     inv1 = CalcCost(id)
     context = {
         "user":User,
+        "action":1,
         "inventory":inventory,
         "newinventory": inv1,
         "materialused": inv1.kg_weight * 1000,

@@ -243,3 +243,12 @@ class Testimonials(db.Model):
     fulltext = db.Column(db.Text)
     active = db.Column(db.Boolean)
     date_created = db.Column(db.Date, default=func.now())
+
+class Adjustment_log(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    adjustment = db.Column(db.Integer)
+    description = db.Column(db.Text)
+    time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
+    time_updated = db.Column(db.DateTime(timezone=True), onupdate=func.now())
+    projectfk = db.Column(db.Integer, db.ForeignKey("project.id"))
+    project_rel = db.relationship("Project", backref="adjustment_log")

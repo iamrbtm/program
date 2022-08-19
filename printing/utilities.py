@@ -1,5 +1,5 @@
 import re, os, requests
-from printing import db
+from printing import db, invgcode
 from printing.models import *
 from matplotlib import colors
 from flask import flash
@@ -683,3 +683,43 @@ def db_maintance():
         db.session.commit()
         
     update_kw_oregonavg()
+    
+def Update_Inventory_Qty():
+    inventory = db.session.query(Project).filter(Project.customerfk == 2).filter(Project.active == True).all()
+    
+    for item in inventory:
+        current_qty = Adjustment_log.query.with_entities(func.sum(Adjustment_log.adjustment).label('inv')).filter(Adjustment_log.projectfk == item.id).first().inv
+        item.current_quantity = current_qty
+        db.session.commit()
+        
+def upload_store_gcode_file(gcodefile, path, filamentfk, project_link=0):
+    """Uploads the given file to the /template/app/inventory(or project)/upload directory.  Then saves the record to the object_project table in the db
+
+    Args:
+        gcodefile (file): pass in the file from the form request.files['gcode']
+        path (string): the path where the file is stored. Default is<<>>
+        filamentfk (int): pass in the filament from the form. request.form.get('filamentfk')
+        project_link (int, optional): The project numbner of the linked project if needed to link.  If you dont put any number in this postion, you will not link the file to any project. Defaults to 0.
+    """
+   #Save uploaded file
+    gcodefile = invgcode.save(gcodefile)
+    
+    #process file for time and materials
+    filepath = os.path.join(path, 'uploads', gcodefile)
+
+    time_in_h, weight_in_kg = calc_time_length(filepath,filamentfk)
+    
+    #save file to db
+    newgcode = Printobject(
+        file = gcodefile,
+        h_printtime = time_in_h,
+        kg_weight = weight_in_kg
+    )
+    db.session.add(newgcode)
+    db.session.commit()
+   
+    if project_link != 0:
+        db.session.refresh(newgcode)
+        project = db.session.query(Project).filter(Project.id == project_link).first()
+        project.objectfk = newgcode.id
+        db.session.commit()
