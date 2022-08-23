@@ -32,7 +32,7 @@ def sales():
     dt = datetime.datetime.now().strftime("%m-%d-%y %I:%M %p")
     receipt = [{"data": {"receiptnum": receiptrnum, "dt": dt, "employee": employee}}]
     context = {"user": User, "inventory": inventory, "receipt": receipt, "numdic": 0}
-    return render_template("app/sales/sales1.html", **context)
+    return render_template("app/sales/sales.html", **context)
 
 
 def add_to_list(receipt, itemid):
