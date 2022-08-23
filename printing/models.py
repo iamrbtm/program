@@ -253,3 +253,24 @@ class Adjustment_log(db.Model):
     time_updated = db.Column(db.DateTime(timezone=True), onupdate=func.now())
     projectfk = db.Column(db.Integer, db.ForeignKey("project.id"))
     project_rel = db.relationship("Project", backref="adjustment_log")
+    
+class Sales(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    employeefk = db.Column(db.Integer, db.ForeignKey("people.id"))
+    customerfk = db.Column(db.Integer, db.ForeignKey("people.id"))
+    ordernum = db.Column(db.Integer)
+    date_time_created = db.Column(db.DateTime)
+    total = db.Column(db.Float)
+    sq_idempotency_key = db.Column(db.String(50))
+    customer_rel = db.relationship(
+        "People", backref="sales", foreign_keys=[customerfk]
+    )    
+
+class Sales_lineitems(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    projectfk = db.Column(db.Integer, db.ForeignKey("project.id"))
+    qty = db.Column(db.Integer)
+    price = db.Column(db.Float)
+    ordernumfk = db.Column(db.Integer)
+
+    project_rel = db.relationship("Project", backref="sales", foreign_keys=[projectfk])

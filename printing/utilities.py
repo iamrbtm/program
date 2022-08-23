@@ -1,4 +1,4 @@
-import re, os, requests
+import re, os, requests, json
 from printing import db, invgcode
 from printing.models import *
 from matplotlib import colors
@@ -723,3 +723,13 @@ def upload_store_gcode_file(gcodefile, path, filamentfk, project_link=0):
         project = db.session.query(Project).filter(Project.id == project_link).first()
         project.objectfk = newgcode.id
         db.session.commit()
+        
+def get_city_state_from_postalcoide(postalcode):
+    reqUrl = f"http://api.zippopotam.us/us/{postalcode}"
+
+    response = requests.request("GET", reqUrl)
+
+    response = json.loads(response.text)
+    state = response['places'][0]["state abbreviation"]
+    city = response['places'][0]["place name"]
+    return city, state

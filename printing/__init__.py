@@ -3,7 +3,6 @@ from flask_sqlalchemy import SQLAlchemy
 import os
 from flask_login import LoginManager
 from flask_migrate import Migrate
-from flask_debugtoolbar import DebugToolbarExtension
 from flask_uploads import UploadSet, configure_uploads, IMAGES, ALL
 from dotenv import load_dotenv
 from flask_mail import Mail
@@ -23,7 +22,6 @@ mail = Mail()
 
 def create_app():
     app = Flask(__name__)
-
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     # Flask-Uploads & Static
@@ -62,16 +60,15 @@ def create_app():
     Migrate(app, db)
 
     # Mail Setup
-    config_mail(app)
+    app.config['MAIL_SERVER'] = 'mail.dudefishprinting.com'
+    app.config['MAIL_PORT'] = 465
+    app.config['MAIL_USERNAME'] = 'customer_service@dudefishprinting.com'
+    app.config['MAIL_PASSWORD'] = 'Braces4me##'
+    app.config['MAIL_USE_TLS'] = False
+    app.config['MAIL_USE_SSL'] = True
+    app.config['MAIL_DEFAULT_SENDER'] = ('Dudefish Printing', 'customer_service@dudefishprinting.com')
 
-    # Debug Toolbar
-    if os.environ.get("TOOLBAR_USE") == "True":
-        if not os.environ.get("SECRET_KEY") == "":
-            toolbar = DebugToolbarExtension(app)
-            app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
-        else:
-            print("Please set secret key before proceeding")
-            abort(0)
+    mail.init_app(app)
 
     # Blueprints
     #website
@@ -167,35 +164,3 @@ def choose_database(app):
 
     return [stopper, errorlist, connectstring]
 
-
-def config_mail(app):
-    stopper = True
-    errorlist = []
-    if os.environ.get("MAIL_USE") == "True":
-        fields = [
-            "MAIL_SERVER",
-            "MAIL_PORT",
-            "MAIL_USERNAME",
-            "MAIL_PASSWORD",
-            "MAIL_USE_TLS",
-            "MAIL_USE_SSL",
-            "MAIL_DEFAULT_SENDER",
-        ]
-
-        for field in fields:
-            if field not in os.environ:
-                msg = f"{field} not configured"
-                errorlist.append(msg)
-                stopper = False
-            if os.environ.get(field) == "":
-                msg = f"value for {field} not set"
-                errorlist.append(msg)
-                stopper = False
-            if stopper:
-                app.config[field] = os.environ.get(field)
-
-        if stopper:
-            mail.init_app(app)
-        else:
-            print("DID NOT INIT MAIL... ")
-            print(errorlist)
