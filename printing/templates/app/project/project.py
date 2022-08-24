@@ -163,3 +163,9 @@ def upload():
     }
     return render_template('app/project/upload_gcode.html', **context)
         
+@proj.route('/clean')
+def clean():
+    import fnmatch
+    filepath = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'uploads')
+    clean_inventory_uploads(filepath)
+    return redirect(url_for('project.open_orders')) 

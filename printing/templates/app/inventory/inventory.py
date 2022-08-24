@@ -178,3 +178,13 @@ def download(filename):
     filepath = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'uploads')
 
     return send_from_directory(filepath, filename, as_attachment=True)
+
+@inv.route('/clean')
+def clean():
+    import fnmatch
+    filepath = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'uploads')
+    dbcount = Printobject.query.count()
+    filecount = len(fnmatch.filter(os.listdir(filepath), '*.*'))
+    if dbcount != filecount:
+        clean_inventory_uploads(filepath)
+    return redirect(url_for('inventory.inventory')) 

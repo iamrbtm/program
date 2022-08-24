@@ -76,6 +76,7 @@ def get_states():
     ]
     return states
 
+
 def populate_types():
     filtypes = {
         "results": [
@@ -412,7 +413,7 @@ def calc_time_length(filename, filamentfk):
         fil = db.session.query(Filament).filter(Filament.id == filamentfk).first()
         diameter = fil.diameter
         density = fil.type_rel.densitygcm3
-        
+
         # Volume = (length in m * 100) * pi() * ((diam/2)^2)
         filcm = length_in_m * 100
         radius = (diameter / 2) / 10
@@ -423,7 +424,8 @@ def calc_time_length(filename, filamentfk):
 
     time_in_h, length_in_mm = parse_gcode(filename)
     weight_in_g = calc_weight(length_in_mm / 1000, filamentfk)
-    return [time_in_h, weight_in_g/1000]
+    return [time_in_h, weight_in_g / 1000]
+
 
 class CalcCost:
     def __init__(self, id):
@@ -445,7 +447,6 @@ class CalcCost:
         self.h_printtime = self.project.object_rel.h_printtime
         self.cost_fil_per_g = self.project.filament_rel.priceperroll / 1000
         self.filament_kw_per_hr = self.project.filament_rel.type_rel.kW_hr
-    
 
     def calc_m_to_g(self):
         import math
@@ -474,16 +475,24 @@ class CalcCost:
         return cost * (1 + self.customer_markup)
 
     def subtotal(self):
-        return round(float(self.timecost() 
-                + self.filcost() 
+        return round(
+            float(
+                self.timecost()
+                + self.filcost()
                 + self.project.packaging
                 + self.project.advertising
                 + self.project.rent
                 + self.project.extrafees
-        ),2)
+            ),
+            2,
+        )
+
     def total(self):
-        return (round(self.subtotal() * (1 - self.customer_disc),2)
-                + self.project.shipping_rel.cost)
+        return (
+            round(self.subtotal() * (1 - self.customer_disc), 2)
+            + self.project.shipping_rel.cost
+        )
+
 
 # Temp Data
 def write_td(data):
@@ -506,26 +515,29 @@ def flush_td():
     if os.path.exists(filename):
         os.remove(filename)
 
+
 def update_kw_oregonavg():
     def get_new_rate():
         from bs4 import BeautifulSoup
 
         URL = "https://findenergy.com/providers/pacificorp/"
         r = requests.get(URL)
-        soup = BeautifulSoup(r.content, "lxml")  
+        soup = BeautifulSoup(r.content, "lxml")
 
         r = soup.find("span", class_="stats__item__data")
         for i in r:
-            oregonavg = float(i[:5])/100
+            oregonavg = float(i[:5]) / 100
         print(oregonavg)
         return oregonavg
+
     stg = db.session.query(Settings).first()
     stg.cost_kW = get_new_rate()
     db.session.commit()
-    
+
+
 def get_log_lat(id):
     """Gets long and lat from addresses in the database
-    the program will get the address from the id of the 
+    the program will get the address from the id of the
     person supplied
 
     Args:
@@ -533,15 +545,16 @@ def get_log_lat(id):
                   being processed
     """
     from geopy.geocoders import Nominatim
-    
+
     addresses = db.session.query(Address).filter(Address.peoplefk == id).all()
     for address in addresses:
-        addy=f'{address.address} {address.city} {address.state} {address.postalcode}'
+        addy = f"{address.address} {address.city} {address.state} {address.postalcode}"
         geolocator = Nominatim(user_agent="Your_Name")
         location = geolocator.geocode(addy)
         address.longitude = location.longitude
         address.latitudes = location.latitude
         db.session.commit()
+
 
 def db_maintance():
     """
@@ -552,22 +565,42 @@ def db_maintance():
                    #IDEA: Check on other db's
     """
     # No customer no employee and no supplier, set active to 0
-    inactives = db.session.query(People).filter(People.customer == 0).filter(People.is_employee == 0).filter(People.supplier == 0).all()
-    
+    inactives = (
+        db.session.query(People)
+        .filter(People.customer == 0)
+        .filter(People.is_employee == 0)
+        .filter(People.supplier == 0)
+        .all()
+    )
+
     for inact in inactives:
         inact.active = 0
         db.session.commit()
-        
+
     update_kw_oregonavg()
-    
+
+
 def Update_Inventory_Qty():
-    inventory = db.session.query(Project).filter(Project.customerfk == 2).filter(Project.active == True).all()
-    
+    inventory = (
+        db.session.query(Project)
+        .filter(Project.customerfk == 2)
+        .filter(Project.active == True)
+        .all()
+    )
+
     for item in inventory:
-        current_qty = Adjustment_log.query.with_entities(func.sum(Adjustment_log.adjustment).label('inv')).filter(Adjustment_log.projectfk == item.id).first().inv
+        current_qty = (
+            Adjustment_log.query.with_entities(
+                func.sum(Adjustment_log.adjustment).label("inv")
+            )
+            .filter(Adjustment_log.projectfk == item.id)
+            .first()
+            .inv
+        )
         item.current_quantity = current_qty
         db.session.commit()
-        
+
+
 def upload_store_gcode_file(gcodefile, path, filamentfk, project_link=0):
     """Uploads the given file to the /template/app/inventory(or project)/upload directory.  Then saves the record to the object_project table in the db
 
@@ -577,35 +610,53 @@ def upload_store_gcode_file(gcodefile, path, filamentfk, project_link=0):
         filamentfk (int): pass in the filament from the form. request.form.get('filamentfk')
         project_link (int, optional): The project numbner of the linked project if needed to link.  If you dont put any number in this postion, you will not link the file to any project. Defaults to 0.
     """
-   #Save uploaded file
+    # Save uploaded file
     gcodefile = invgcode.save(gcodefile)
-    
-    #process file for time and materials
-    filepath = os.path.join(path, 'uploads', gcodefile)
 
-    time_in_h, weight_in_kg = calc_time_length(filepath,filamentfk)
-    
-    #save file to db
+    # process file for time and materials
+    filepath = os.path.join(path, "uploads", gcodefile)
+
+    time_in_h, weight_in_kg = calc_time_length(filepath, filamentfk)
+
+    # save file to db
     newgcode = Printobject(
-        file = gcodefile,
-        h_printtime = time_in_h,
-        kg_weight = weight_in_kg
+        file=gcodefile, h_printtime=time_in_h, kg_weight=weight_in_kg
     )
     db.session.add(newgcode)
     db.session.commit()
-   
+
     if project_link != 0:
         db.session.refresh(newgcode)
         project = db.session.query(Project).filter(Project.id == project_link).first()
         project.objectfk = newgcode.id
         db.session.commit()
-        
+
+
 def get_city_state_from_postalcoide(postalcode):
     reqUrl = f"http://api.zippopotam.us/us/{postalcode}"
 
     response = requests.request("GET", reqUrl)
 
     response = json.loads(response.text)
-    state = response['places'][0]["state abbreviation"]
-    city = response['places'][0]["place name"]
+    state = response["places"][0]["state abbreviation"]
+    city = response["places"][0]["place name"]
     return city, state
+
+
+def clean_inventory_uploads(path):
+    import os
+
+    filestokeep = []
+    dbfiles = db.session.query(Printobject.file).all()
+    for file in dbfiles:
+        filestokeep.append(file[0])
+
+    ext = ".gcode"
+    for files in os.listdir(path):
+        if files.endswith(ext):
+            if files in filestokeep:
+                continue
+            else:
+                os.remove(os.path.join(path, files))
+        else:
+            os.remove(os.path.join(path, files))
