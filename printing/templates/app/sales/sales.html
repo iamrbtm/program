@@ -95,54 +95,17 @@
                                 </tfoot>
                                 {% endif %}
                             </table>
-                            <div>
-                                <ul class="nav nav-pills nav-justified" id="myTab" role="tablist">
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link active" id="card-tab" data-bs-toggle="tab"
-                                            data-bs-target="#card" type="button" role="tab" aria-controls="card"
-                                            aria-selected="false">Card</button>
-                                    </li>
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link" id="cash-account-tab" data-bs-toggle="tab"
-                                            data-bs-target="#cash-account" type="button" role="tab"
-                                            aria-controls="cash-account" aria-selected="true">Cash/Account</button>
-                                    </li>
-                                </ul>
-                                <div class="tab-content" id="myTabContent">
-                                    <div class="tab-pane fade" id="cash-account" role="tabpanel"
-                                        aria-labelledby="cash-account-tab">
-                                        Cash and Account
-                                        <div class="d-grid gap-2 row mx-auto">
-                                            <input type="submit" class="btn-lg btn-block btn-success btn-hover"
-                                                name="cashbtn" id="cashbtn" value="Cash">
-                                            <input type="submit" disabled class="btn-lg btn-block btn-success btn-hover"
-                                                name="accountbtn" id="accountbtn" value="Account">
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane fade show active" id="card" role="tabpanel"
-                                        aria-labelledby="card-tab">
-                                        Card
-                                        <input type="text" name="name" id="name" class="form form-control"
-                                            placeholder="Enter Name of Customer">
-                                        <input type="email" name="email" id="email" class="form form-control"
-                                            placeholder="Enter email">
-                                        <input type="text" name="postalcode" id="postalcode" class="form form-control"
-                                            placeholder="Enter Postalcode">
-                                        <div class="d-grid gap-2 row mx-auto">
-                                            <form id="payment-form">
-                                                <div id="card-container"></div>
-                                                <button id="card-button" type="button">Pay $1.00</button>
-                                            </form>
-                                            <div id="payment-status-container"></div>
-                                            <input type="submit" class="btn-lg btn-block btn-success btn-hover"
-                                                name="cardbtn" id="cardbtn" value="Card">
-                                        </div>
+                            <form class="payment-form" id="fast-checkout">
+                                <div class="wrapper">
+                                    <div class="d-grid gap-2 row mx-auto">
+                                        <form id="payment-form">
+                                            <div id="card-container"></div>
+                                            <button id="card-button" type="button">Pay $1.00</button>
+                                        </form>
+                                        <div id="payment-status-container"></div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="d-grid gap-2 row mx-auto">
-
-                            </div>
+                            </form>
                         </div>
                     </div>
                 </form>
@@ -150,124 +113,27 @@
         </div>
     </div>
 </div>
+</div>
+</div>
+{% endblock %}
+
+{% block js_code %}
+<script type="text/javascript" src="{{url_for('static', filename='/app/js/square/sq-ach.js')}}"></script>
+<script type="text/javascript" src="{{url_for('static', filename='/app/js/square/sq-apple-pay.js')}}"></script>
+<script type="text/javascript" src="{{url_for('static', filename='/app/js/square/sq-google-pay.js')}}"></script>
+<script type="text/javascript" src="{{url_for('static', filename='/app/js/square/sq-card-pay.js')}}"></script>
 {% endblock %}
 
 {% block payment_script %}
-<link href="{{url_for('static', filename='app/css/app.css')}}" rel="stylesheet" />
-<script type="text/javascript" src="https://sandbox.web.squarecdn.com/v2/square.js"></script>
-<script>
-    const appId = 'sandbox-sq0idb-ZyPc82gk7omgu9deVt5HrA';
-    const locationId = 'L2832HX1VJ45V';
+<script type="text/javascript" src="https://sandbox.web.squarecdn.com/v1/square.js"></script>
 
-    async function initializeCard(payments) {
-        const card = await payments.card();
-        await card.attach('#card-container');
-
-        return card;
-    }
-
-    async function createPayment(token) {
-        const body = JSON.stringify({
-            locationId,
-            sourceId: token,
-        });
-
-        const paymentResponse = await fetch('/payment', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body,
-        });
-
-        if (paymentResponse.ok) {
-            return paymentResponse.json();
-        }
-
-        const errorBody = await paymentResponse.text();
-        throw new Error(errorBody);
-    }
-
-    async function tokenize(paymentMethod) {
-        const tokenResult = await paymentMethod.tokenize();
-        if (tokenResult.status === 'OK') {
-            return tokenResult.token;
-        } else {
-            let errorMessage = `Tokenization failed with status: ${tokenResult.status}`;
-            if (tokenResult.errors) {
-                errorMessage += ` and errors: ${JSON.stringify(
-            tokenResult.errors
-          )}`;
-            }
-
-            throw new Error(errorMessage);
-        }
-    }
-
-    // status is either SUCCESS or FAILURE;
-    function displayPaymentResults(status) {
-        const statusContainer = document.getElementById(
-            'payment-status-container'
-        );
-        if (status === 'SUCCESS') {
-            statusContainer.classList.remove('is-failure');
-            statusContainer.classList.add('is-success');
-        } else {
-            statusContainer.classList.remove('is-success');
-            statusContainer.classList.add('is-failure');
-        }
-
-        statusContainer.style.visibility = 'visible';
-    }
-
-    document.addEventListener('DOMContentLoaded', async function () {
-        if (!window.Square) {
-            throw new Error('Square.js failed to load properly');
-        }
-
-        let payments;
-        try {
-            payments = window.Square.payments(appId, locationId);
-        } catch {
-            const statusContainer = document.getElementById(
-                'payment-status-container'
-            );
-            statusContainer.className = 'missing-credentials';
-            statusContainer.style.visibility = 'visible';
-            return;
-        }
-
-        let card;
-        try {
-            card = await initializeCard(payments);
-        } catch (e) {
-            console.error('Initializing Card failed', e);
-            return;
-        }
-
-        // Checkpoint 2.
-        async function handlePaymentMethodSubmission(event, paymentMethod) {
-            event.preventDefault();
-
-            try {
-                // disable the submit button as we await tokenization and make a payment request.
-                cardButton.disabled = true;
-                const token = await tokenize(paymentMethod);
-                const paymentResults = await createPayment(token);
-                displayPaymentResults('SUCCESS');
-
-                console.debug('Payment Success', paymentResults);
-            } catch (e) {
-                cardButton.disabled = false;
-                displayPaymentResults('FAILURE');
-                console.error(e.message);
-            }
-        }
-
-        const cardButton = document.getElementById('card-button');
-        cardButton.addEventListener('click', async function (event) {
-            await handlePaymentMethodSubmission(event, card);
-        });
-    });
+<script type="application/javascript">
+    window.applicationId = 'sandbox-sq0idb-ZyPc82gk7omgu9deVt5HrA';
+    window.locationId = 'LFW60HSSTRBJ5';
+    window.currency = 'USD';
+    window.country = 'US';
 </script>
+<!-- link to the custom styles for Web SDK -->
+<link rel='stylesheet' , href="{{url_for('static', filename='/app/css/sq-payment.css')}}" />
+<link rel='stylesheet' , href="{{url_for('static', filename='/app/css/style.css')}}" />
 {% endblock %}
