@@ -1,3 +1,10 @@
+change the following lines in file: /Volumes/PTS/program/print-venv/lib/python3.9/site-packages/flask_uploads.py
+from werkzeug import secure_filename, FileStorage
+becomes
+from werkzeug.utils import secure_filename
+from werkzeug.datastructures import  FileStorage
+
+
 removes all __pycache__ and .pyc files in the current directory and subdirectories
     pyclean -v .
 
