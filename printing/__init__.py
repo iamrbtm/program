@@ -6,7 +6,6 @@ from flask_migrate import Migrate
 from flask_uploads import UploadSet, configure_uploads, IMAGES, ALL
 from dotenv import load_dotenv
 from flask_mail import Mail
-from flask_googlemaps import GoogleMaps
 
 
 load_dotenv()
@@ -37,10 +36,6 @@ def create_app():
     configure_uploads(app, avatar)
 
     app._static_folder = "static"
-
-    #TODO: put googleapi key in env or database
-    app.config['GOOGLEMAPS_KEY'] = "AIzaSyCvOv3BlAYhRKyTyFCfkJGzZsNJjF0uo_E"
-    GoogleMaps(app)
 
     # Secrete Key
     app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")

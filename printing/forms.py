@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-import email_validator, flask_login
+import flask_login
 from wtforms import (
     StringField,
     DateField,

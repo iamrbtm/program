@@ -16,7 +16,6 @@ from printing.forms import *
 from printing.utilities import *
 from werkzeug.security import generate_password_hash, check_password_hash
 import datetime
-from PIL import Image
 
 base = Blueprint("base", __name__)
 
