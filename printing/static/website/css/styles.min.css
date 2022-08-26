@@ -1,6 +1,6 @@
 @font-face {
     font-family: Lato;
-    src: url(../../assets/fonts/S6u8w4BMUTPHjxsAUi-qNiXg7eU0.woff2) format('woff2');
+    src: url(/static/website/fonts/S6u8w4BMUTPHjxsAUi-qNiXg7eU0.woff2) format('woff2');
     font-weight: 400;
     font-style: italic;
     font-display: swap;
@@ -9,7 +9,7 @@
 
 @font-face {
     font-family: Lato;
-    src: url(../../assets/fonts/S6u8w4BMUTPHjxsAXC-qNiXg7Q.woff2) format('woff2');
+    src: url(/static/website/fonts/S6u8w4BMUTPHjxsAXC-qNiXg7Q.woff2) format('woff2');
     font-weight: 400;
     font-style: italic;
     font-display: swap;
@@ -18,7 +18,7 @@
 
 @font-face {
     font-family: Lato;
-    src: url(../../assets/fonts/S6u_w4BMUTPHjxsI5wq_FQftx9897sxZ.woff2) format('woff2');
+    src: url(/static/website/fonts/S6u_w4BMUTPHjxsI5wq_FQftx9897sxZ.woff2) format('woff2');
     font-weight: 700;
     font-style: italic;
     font-display: swap;
@@ -27,7 +27,7 @@
 
 @font-face {
     font-family: Lato;
-    src: url(../../assets/fonts/S6u_w4BMUTPHjxsI5wq_Gwftx9897g.woff2) format('woff2');
+    src: url(/static/website/fonts/S6u_w4BMUTPHjxsI5wq_Gwftx9897g.woff2) format('woff2');
     font-weight: 700;
     font-style: italic;
     font-display: swap;
@@ -36,7 +36,7 @@
 
 @font-face {
     font-family: Lato;
-    src: url(../../assets/fonts/S6uyw4BMUTPHjxAwXiWtFCfQ7A.woff2) format('woff2');
+    src: url(/static/website/fonts/S6uyw4BMUTPHjxAwXiWtFCfQ7A.woff2) format('woff2');
     font-weight: 400;
     font-style: normal;
     font-display: swap;
@@ -45,7 +45,7 @@
 
 @font-face {
     font-family: Lato;
-    src: url(../../assets/fonts/S6uyw4BMUTPHjx4wXiWtFCc.woff2) format('woff2');
+    src: url(/static/website/fonts/S6uyw4BMUTPHjx4wXiWtFCc.woff2) format('woff2');
     font-weight: 400;
     font-style: normal;
     font-display: swap;
@@ -54,7 +54,7 @@
 
 @font-face {
     font-family: Lato;
-    src: url(../../assets/fonts/S6u9w4BMUTPHh6UVSwaPGQ3q5d0N7w.woff2) format('woff2');
+    src: url(/static/website/fonts/S6u9w4BMUTPHh6UVSwaPGQ3q5d0N7w.woff2) format('woff2');
     font-weight: 700;
     font-style: normal;
     font-display: swap;
@@ -63,7 +63,7 @@
 
 @font-face {
     font-family: Lato;
-    src: url(../../assets/fonts/S6u9w4BMUTPHh6UVSwiPGQ3q5d0.woff2) format('woff2');
+    src: url(/static/website/fonts/S6u9w4BMUTPHh6UVSwiPGQ3q5d0.woff2) format('woff2');
     font-weight: 700;
     font-style: normal;
     font-display: swap;
@@ -72,7 +72,7 @@
 
 @font-face {
     font-family: Montserrat;
-    src: url(../../assets/fonts/JTUSjIg1_i6t8kCHKm459WRhyyTh89ZNpQ.woff2) format('woff2');
+    src: url(/static/website/fonts/JTUSjIg1_i6t8kCHKm459WRhyyTh89ZNpQ.woff2) format('woff2');
     font-weight: 400;
     font-style: normal;
     font-display: swap;
@@ -81,7 +81,7 @@
 
 @font-face {
     font-family: Montserrat;
-    src: url(../../assets/fonts/JTUSjIg1_i6t8kCHKm459W1hyyTh89ZNpQ.woff2) format('woff2');
+    src: url(/static/website/fonts/JTUSjIg1_i6t8kCHKm459W1hyyTh89ZNpQ.woff2) format('woff2');
     font-weight: 400;
     font-style: normal;
     font-display: swap;
@@ -90,7 +90,7 @@
 
 @font-face {
     font-family: Montserrat;
-    src: url(../../assets/fonts/JTUSjIg1_i6t8kCHKm459WZhyyTh89ZNpQ.woff2) format('woff2');
+    src: url(/static/website/fonts/JTUSjIg1_i6t8kCHKm459WZhyyTh89ZNpQ.woff2) format('woff2');
     font-weight: 400;
     font-style: normal;
     font-display: swap;
@@ -99,7 +99,7 @@
 
 @font-face {
     font-family: Montserrat;
-    src: url(../../assets/fonts/JTUSjIg1_i6t8kCHKm459WdhyyTh89ZNpQ.woff2) format('woff2');
+    src: url(/static/website/fonts/JTUSjIg1_i6t8kCHKm459WdhyyTh89ZNpQ.woff2) format('woff2');
     font-weight: 400;
     font-style: normal;
     font-display: swap;
@@ -108,7 +108,7 @@
 
 @font-face {
     font-family: Montserrat;
-    src: url(../../assets/fonts/JTUSjIg1_i6t8kCHKm459WlhyyTh89Y.woff2) format('woff2');
+    src: url(/static/website/fonts/JTUSjIg1_i6t8kCHKm459WlhyyTh89Y.woff2) format('woff2');
     font-weight: 400;
     font-style: normal;
     font-display: swap;
@@ -117,7 +117,7 @@
 
 @font-face {
     font-family: Montserrat;
-    src: url(../../assets/fonts/JTUSjIg1_i6t8kCHKm459WRhyyTh89ZNpQ.woff2) format('woff2');
+    src: url(/static/website/fonts/JTUSjIg1_i6t8kCHKm459WRhyyTh89ZNpQ.woff2) format('woff2');
     font-weight: 700;
     font-style: normal;
     font-display: swap;
@@ -126,7 +126,7 @@
 
 @font-face {
     font-family: Montserrat;
-    src: url(../../assets/fonts/JTUSjIg1_i6t8kCHKm459W1hyyTh89ZNpQ.woff2) format('woff2');
+    src: url(/static/website/fonts/JTUSjIg1_i6t8kCHKm459W1hyyTh89ZNpQ.woff2) format('woff2');
     font-weight: 700;
     font-style: normal;
     font-display: swap;
@@ -135,7 +135,7 @@
 
 @font-face {
     font-family: Montserrat;
-    src: url(../../assets/fonts/JTUSjIg1_i6t8kCHKm459WZhyyTh89ZNpQ.woff2) format('woff2');
+    src: url(/static/website/fonts/JTUSjIg1_i6t8kCHKm459WZhyyTh89ZNpQ.woff2) format('woff2');
     font-weight: 700;
     font-style: normal;
     font-display: swap;
@@ -144,7 +144,7 @@
 
 @font-face {
     font-family: Montserrat;
-    src: url(../../assets/fonts/JTUSjIg1_i6t8kCHKm459WdhyyTh89ZNpQ.woff2) format('woff2');
+    src: url(/static/website/fonts/JTUSjIg1_i6t8kCHKm459WdhyyTh89ZNpQ.woff2) format('woff2');
     font-weight: 700;
     font-style: normal;
     font-display: swap;
@@ -153,7 +153,7 @@
 
 @font-face {
     font-family: Montserrat;
-    src: url(../../assets/fonts/JTUSjIg1_i6t8kCHKm459WlhyyTh89Y.woff2) format('woff2');
+    src: url(/static/website/fonts/JTUSjIg1_i6t8kCHKm459WlhyyTh89Y.woff2) format('woff2');
     font-weight: 700;
     font-style: normal;
     font-display: swap;
