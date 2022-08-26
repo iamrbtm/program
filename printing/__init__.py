@@ -40,31 +40,25 @@ def create_app():
     # Secrete Key
     app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 
-    db.init_app(app)
-
     # Database Setup
-    result = choose_database(app)
-    if result[0]:
-        print("Connected to database!")
-        app.config["SQLALCHEMY_DATABASE_URI"] = result[2]
-    else:
-        print(result[1])
-        abort(403)
+    app.config["SQLALCHEMY_DATABASE_URI"] = f"mysql+pymysql://{os.environ.get('DB_USERNAME')}:{os.environ.get('DB_PASSWORD')}@{os.environ.get('DB_HOST')}/{os.environ.get('DB_NAME')}"
 
     # Migration for Database
     Migrate(app, db)
 
     # Mail Setup
-    app.config['MAIL_SERVER'] = 'mail.dudefishprinting.com'
-    app.config['MAIL_PORT'] = 465
-    app.config['MAIL_USERNAME'] = 'customer_service@dudefishprinting.com'
-    app.config['MAIL_PASSWORD'] = 'Braces4me##'
-    app.config['MAIL_USE_TLS'] = False
-    app.config['MAIL_USE_SSL'] = True
-    app.config['MAIL_DEFAULT_SENDER'] = ('Dudefish Printing', 'customer_service@dudefishprinting.com')
+    app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER')
+    app.config['MAIL_PORT'] = os.environ.get('MAIL_PORT')
+    app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+    app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+    app.config['MAIL_USE_TLS'] = os.environ.get('MAIL_USE_TLS')
+    app.config['MAIL_USE_SSL'] = os.environ.get('MAIL_USE_SSL')
+    app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER')
 
     mail.init_app(app)
 
+    db.init_app(app)
+    
     # Blueprints
     #website
     from printing.templates.website.website import site 
@@ -116,46 +110,4 @@ def create_app():
         return User.query.get(int(id))
 
     return app
-
-
-def choose_database(app):
-    stopper = True
-    errorlist = []
-    if os.environ.get("DB_SQLITE") == "True":
-        fields = ["DB_SQLLIGHT_NAME"]
-
-        for field in fields:
-            if field not in os.environ:
-                msg = f"{field} not configured"
-                errorlist.append(msg)
-                stopper = False
-            if os.environ.get(field) == "":
-                msg = f"value for {field} not set"
-                errorlist.append(msg)
-                stopper = False
-        if stopper:
-            connectstring = f'sqlite:///{os.environ.get("DB_SQLLIGHT_NAME")}'
-
-    elif os.environ.get("DB_MYSQL") == "True":
-        fields = [
-            "DB_HOST",
-            "DB_USERNAME",
-            "DB_USERNAME",
-            "DB_PASSWORD",
-            "DB_PORT",
-            "DB_NAME",
-        ]
-        for field in fields:
-            if field not in os.environ:
-                msg = f"{field} not configured"
-                errorlist.append(msg)
-                stopper = False
-            if os.environ.get(field) == "":
-                msg = f"value for {field} not set"
-                errorlist.append(msg)
-                stopper = False
-        if stopper:
-            connectstring = f"mysql+pymysql://{os.environ.get('DB_USERNAME')}:{os.environ.get('DB_PASSWORD')}@{os.environ.get('DB_HOST')}/{os.environ.get('DB_NAME')}"
-
-    return [stopper, errorlist, connectstring]
 
