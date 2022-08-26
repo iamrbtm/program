@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, request, send_from_directory
+from flask import Blueprint, render_template, redirect, url_for, request, send_from_directory, make_response
 from flask_login import login_required, current_user
 import flask_login
 from sqlalchemy import distinct
@@ -145,14 +145,15 @@ def inventory_new():
         db.session.commit()
         return redirect(url_for('inventory.inventory_details', id=newinv.id))
     
-    
+    catagory = db.session.query(distinct(Project.catagory), Project.catagory).all()
     printers = db.session.query(Printer).filter(Printer.active == True).all()
     filaments = db.session.query(Filament).filter(Filament.active == True).all()
     
     context = {
         "user":User,
         "printers":printers,
-        "filaments":filaments
+        "filaments":filaments,
+        "catagory":catagory
     }
     return render_template("app/inventory/inventory_new.html", **context)
 
@@ -188,3 +189,10 @@ def clean():
     if dbcount != filecount:
         clean_inventory_uploads(filepath)
     return redirect(url_for('inventory.inventory')) 
+
+@inv.route('/low_inventory_report')
+def low_inventory():
+    from flask_weasyprint import HTML, render_pdf
+    items = db.session.query(Project).filter((Project.threshold - Project.current_quantity) > 2).all()
+    return render_template("app/inventory/low_inventory_pdf.html", items=items)
+

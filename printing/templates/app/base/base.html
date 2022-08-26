@@ -118,6 +118,22 @@
               </div>
             </div>
           </li>
+        
+          <li class="nav-item dropdown">
+            <div class="nav-item dropdown">
+              <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
+                <i class="bi bi-basket-fill" style="color: #3a3b45"></i>
+                <span style="color: var(--bs-gray-900)">Reports</span>
+              </a>
+              <div class="dropdown-menu dropdown-menu-dark shadow dropdown-menu-end animated--grow-in">
+                <a class="dropdown-item" href="{{url_for('inventory.low_inventory')}}">
+                  <i class="bi bi-basket-fill"></i>
+                  &nbsp;Low Inventory
+                </a>
+
+              </div>
+            </div>
+          </li>
         </ul>
       </div>
     </nav>

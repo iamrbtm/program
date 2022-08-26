@@ -201,6 +201,7 @@ class Project(db.Model):
     sale_price = db.Column(db.Float)
     cost = db.Column(db.Float)
     current_quantity = db.Column(db.Integer)
+    threshold = db.Column(db.Integer)
     qtyperprint = db.Column(db.Integer)
     catagory = db.Column(db.String(50))
     time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())

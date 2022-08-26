@@ -3,7 +3,7 @@
 {% block title %}Details for {{inventory.project_name}} {% endblock %}
 
 {% block header %}
-{{inventory.project_name.upper()}} - <span class="display-6">{{inventory.ordernum}}</span>
+{{inventory.project_name|truncate(25, True, '...', 0)|upper}} - <span class="display-6">{{inventory.ordernum}}</span>
 {% endblock %}
 
 {% block content %}
@@ -93,6 +93,12 @@
                                 <td>{{"$%.2f"|format(inventory.packaging)}}</td>
                             </tr>
                             {% endif %}
+                            <tr>
+                                <td>Catagory</td>
+                                <td>{{inventory.catagory}}</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
                             <tr>
                                 <td>File</td>
                                 <td>{{inventory.object_rel.file}} - <a

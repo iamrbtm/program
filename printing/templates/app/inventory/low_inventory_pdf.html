@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Open+Sans&display=swap"
+        rel="stylesheet">
+    <link href="{{url_for('static', filename='app/css/lowinv.css')}}" rel="stylesheet">
+    <link rel="stylesheet" href="{{url_for('static', filename='app/bootstrap/css/bootstrap.min.css')}}" />
+
+    <title>Low Inventory Report</title>
+</head>
+
+<body>
+    <div class="page">
+        <div class="page-content">
+            <div class="header header_text">
+                Low Inventory Report
+            </div>
+            <div class="page-body">
+                <table class="table table-responsive table-striped">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Current Stock</th>
+                            <th>Threshold</th>
+                            <th>To Make</th>
+                            <th>Complete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for catagory, item in items | groupby('catagory') %}
+                            <th colspan="5" style="    background-color: rgba(44, 62, 80); color: white; text-transform: uppercase;
+                            ">{{catagory}}</th>
+                            {% for item in items %}
+                            {% if item.catagory == catagory %}
+                            <tr>
+                                <td>{{item.project_name}}</td>
+                                <td>{{item.current_quantity}}</td>
+                                <td>{{item.threshold}}</td>
+                                <td>{{item.threshold - item.current_quantity}}</td>
+                                <td></td>
+                            </tr>
+                            {% endif %}
+                            {% endfor %}
+                            {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

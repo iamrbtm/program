@@ -1,0 +1,63 @@
+*,
+*:before,
+*:after {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+body {
+    width: 8.5in;
+    height: 11in;
+    margin: 0;
+    padding: 0;
+}
+
+.page {
+    page-break-after: always;
+    position: relative;
+    width: 8.5in;
+    height: 11in;
+}
+
+.page-content {
+    position: absolute;
+    width: 8.125in;
+    height: 10.625in;
+    left: 0.1875in;
+    top: 0.1875in;
+    /* background-color: rgba(0, 0, 0, 0.2); */
+}
+
+.header {
+    position: fixed;
+    padding: 0;
+    margin: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background: rgba(44, 62, 80);
+    line-height: 100px;
+}
+
+.header_text {
+    font-family: 'Montserrat';
+    font-size: 30px;
+    padding-left: 20px;
+    vertical-align: middle;
+    text-transform: uppercase;
+    color: white;
+}
+
+.page-body {
+    margin-top: 100px;
+}
+
+table {
+    width: 90%;
+}
+
+td{
+    color:black
+}

@@ -13,8 +13,20 @@
                     <p class="text-primary m-0 fw-bold">Order Details</p>
                 </div>
                 <div class="card-body">
-                    <form method="POST" enctype=multipart/form-data> Project Name: <input type="text" name="name"
-                        id="name" class="form form-control">
+                    <form method="POST" enctype=multipart/form-data>
+                        <div class="row">
+                            <div class="col-6">
+                                Project Name: <input type="text" name="name" id="name" class="form form-control">
+                            </div>
+                            <div class="col-6">
+                                Catagory: <input type='text' class="form form-control" name="catagory" id="catagory" list='catagories'>
+                                <datalist id='catagories'>
+                                    {% for cat in catagory %}
+                                        <option value="{{cat.catagory}}">{{cat.catagory}}</option>
+                                    {% endfor %}
+                               </datalist>
+                            </div>
+                        </div>
                         <table class="table table-striped" width="100%" id="orderdetails">
                             <thead>
                                 <tr>
