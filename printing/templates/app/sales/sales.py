@@ -11,6 +11,8 @@ import datetime, random, json, secrets, os
 
 sale = Blueprint("sales", __name__, url_prefix="/sales")
 
+#TODO: working on the emails that go to customers and admin when an order is placed
+#TODO: working on setting up the square button to make purchases - NEED HELP
 
 @sale.route("/")
 @login_required
