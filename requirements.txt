@@ -9,6 +9,7 @@ flask_sqlalchemy
 flask_uploads
 flask_weasyprint
 flask_wtf
+lxml
 matplotlib
 pyclean
 PyMySQL

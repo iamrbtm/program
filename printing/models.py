@@ -275,3 +275,11 @@ class Sales_lineitems(db.Model):
     ordernumfk = db.Column(db.Integer)
 
     project_rel = db.relationship("Project", backref="sales", foreign_keys=[projectfk])
+    
+class Contact(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+    phone = db.Column(db.String(20))
+    email = db.Column(db.String(100))
+    message = db.Column(db.Text)
+    dt_created = db.Column(db.DateTime(timezone=True), default=func.now())

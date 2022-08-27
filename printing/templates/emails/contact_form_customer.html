@@ -1,0 +1,34 @@
+{% extends "emails/base_email.html" %}
+
+{% block title %}Thank you{% endblock %}
+
+{% block greeting %}THANK YOU FOR CONTACTING US{% endblock %}
+
+{% block preheader %}Thank you for contact us! We will respond to your email within 24 hours{% endblock %}
+
+{% block content %}This is the body of the emial{% endblock %}
+
+{% block messagebody %}
+    <table class="table">
+        <tr>
+            <td>Name:</td>
+            <td>{{data['name']}}</td>
+        </tr>
+        <tr>
+            <td>Phone:</td>
+            <td>{{data['phone']}}</td>
+        </tr>
+        <tr>
+            <td>Email:</td>
+            <td>{{data['email']}}</td>
+        </tr>
+        <tr>
+            <td>Message:</td>
+            <td>{{data['message']}}</td>
+        </tr>
+    </table>
+{% endblock %}
+
+{% block footer %}
+    {{ super() }}
+{% endblock %}

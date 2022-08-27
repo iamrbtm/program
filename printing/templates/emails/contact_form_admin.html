@@ -1,0 +1,30 @@
+{% extends "emails/base_email.html" %}
+
+{% block greeting %}NEW CONTACT US{% endblock %}
+
+{% block messagebody %}
+    <table class="table">
+        <tr>
+            <td>Name:</td>
+            <td>{{data['name']}}</td>
+        </tr>
+        <tr>
+            <td>Phone:</td>
+            <td>{{data['phone']}}</td>
+        </tr>
+        <tr>
+            <td>Email:</td>
+            <td>{{data['email']}}</td>
+        </tr>
+        <tr>
+            <td>Message:</td>
+            <td>{{data['message']}}</td>
+        </tr>
+        <tr>
+            <td>Date/Time:</td>
+            <td>{{dt}}</td>
+        </tr>
+    </table>
+{% endblock %}
+
+{% block footer %}{% endblock %}

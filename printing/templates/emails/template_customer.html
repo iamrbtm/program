@@ -1,0 +1,18 @@
+{% extends "emails/base_email.html" %}
+
+{% block title %}{% endblock %}
+
+{% block greeting %}{% endblock %}
+
+{% block preheader %}{% endblock %}
+
+{# content needs to be in HTML #}
+{% block content %}{% endblock %}
+
+{# Can also be used for order details information #}
+{% block messagebody %}{% endblock %}
+
+{# DO NOT CHANGE FOOTER #}
+{% block footer %}
+    {{ super() }}
+{% endblock %}

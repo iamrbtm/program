@@ -42,6 +42,7 @@ def create_app():
 
     # Database Setup
     app.config["SQLALCHEMY_DATABASE_URI"] = f"mysql+pymysql://{os.environ.get('DB_USERNAME')}:{os.environ.get('DB_PASSWORD')}@{os.environ.get('DB_HOST')}/{os.environ.get('DB_NAME')}"
+    # app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///test.db'
 
     # Migration for Database
     Migrate(app, db)
@@ -51,7 +52,6 @@ def create_app():
     app.config['MAIL_PORT'] = os.environ.get('MAIL_PORT')
     app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
     app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
-    app.config['MAIL_USE_TLS'] = os.environ.get('MAIL_USE_TLS')
     app.config['MAIL_USE_SSL'] = os.environ.get('MAIL_USE_SSL')
     app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER')
 

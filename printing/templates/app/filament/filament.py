@@ -21,7 +21,11 @@ def filament():
 @login_required
 def filament_new():
     if request.method == "POST":
-        filpic = filamentpics.save(request.files['picture'])
+        if request.files['picture'].filename == '':
+            filpic = None
+        else:
+            filpic = filamentpics.save(request.files['picture'])
+            
         newfil = Filament(
             name = request.form.get('name'),
             active = bool(request.form.get('active')),
