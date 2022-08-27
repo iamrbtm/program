@@ -1,8 +1,16 @@
 {
     "colors": {
-        "Blue": "#253C6A",
-        "Brown": "#6A5325",
-        "Yellow": "#fbf4e7",
-        "White": "#ffffff"
+        "Green": {
+            "HEX": "#57ba9c",
+            "RGB": "87, 186, 156"
+        },
+        "Blue": {
+            "HEX": "#303d4e",
+            "RGB": "48, 61, 78"
+        },
+        "White": {
+            "HEX": "#ffffff",
+            "RGB": "255, 255, 255"
+        }
     }
 }
