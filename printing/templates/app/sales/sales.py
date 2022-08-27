@@ -81,16 +81,15 @@ def send_email(receipt, emailaddy):
     receipt = list(eval(receipt))
     total = calc_total(receipt)
 
-    ordernum = receipt["data"]["ordernum"]
+    ordernum = receipt[0]["data"]["receiptnum"]
 
     msg = Message(
         "testing",
         sender=("Dudefish Printing", "customer_service@dudefishprinting.com"),
         recipients=[emailaddy],
     )
-    msg.body = f"Receipt for order {ordernum}"
     msg.html = render_template(
-        "/app/sales/email/receipt.html", receipt=receipt, total=total
+        "/emails/sales/receipt_customer.html", receipt=receipt, total=total
     )
     mail.send(msg)
 
@@ -138,7 +137,7 @@ def add_to_db(receipt, customerid, idempotency_key):
 
 def cash(receipt, customerid=2):
     add_to_db(receipt, customerid, idempotency_key="CASH")
-    emailaddy = db.session.query(People).filter(People.id == customerid).first().email
+    emailaddy = db.session.query(People).filter(People.id == 1).first().email
     if emailaddy:
         send_email(receipt, emailaddy)
 
