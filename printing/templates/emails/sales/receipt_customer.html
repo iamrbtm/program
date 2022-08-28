@@ -26,7 +26,7 @@
             <thead>
                 <tr>
                     <th width="60%" class="text-start">Item</th>
-                    <th width="20%" class="text-start">Quantity</th>
+                    <th width="20%" class="text-center">Quantity</th>
                     <th width="20%" class="text-end">Price</th>
                 </tr>
             </thead>
@@ -35,8 +35,8 @@
                 {% for dict in receipt %}
                 {% if loop.index > 1 %}
                 <tr>
-                    <td width="90%" class="text-start">{{dict[loop.index-1]['item']}}</td>
-                    <td width="20%" class="text-start">{{dict[loop.index-1]['qty']}}</td>
+                    <td width="90%" class="text-left">{{dict[loop.index-1]['item']}}</td>
+                    <td width="20%" class="text-center">{{dict[loop.index-1]['qty']}}</td>
                     <td width="20%" class="text-end">{{"$%.2f" % dict[loop.index-1]['price']}}</td>
                 </tr>
                 {% endif %}
@@ -53,6 +53,8 @@
         </table>
     </div>
 </div>
+
+
 {% endblock %}
 
 {# DO NOT CHANGE FOOTER #}
