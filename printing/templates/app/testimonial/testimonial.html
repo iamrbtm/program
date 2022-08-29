@@ -53,3 +53,10 @@
     });
 </script>
 {% endblock %}
+
+{% block action_items %}
+<a class="dropdown-item" href="{{url_for('testimonial.testimonial_new')}}">
+    <i class="bi bi-file-plus-fill me-2 text-gray-400"></i>
+    &nbsp;Add New Testimony
+</a>
+{% endblock %}

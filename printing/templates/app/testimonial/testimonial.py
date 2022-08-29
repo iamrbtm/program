@@ -14,7 +14,7 @@ testimony = Blueprint("testimonial", __name__, url_prefix="/testimonial")
 @login_required
 def testimonial():
     testimonials = db.session.query(Testimonials).filter(Testimonials.active == True).all()
-    return render_template('app/testimonial/testimonial.html', user=User, testimonials=testimonials)
+    return render_template('app/testimonial/testimonial.html', user=User, testimonials=testimonials, action=1)
 
 @testimony.route("/edit/<id>", methods=['GET','POST'])
 @login_required
@@ -29,3 +29,21 @@ def testimonial_edit(id):
         db.session.commit()
         return redirect(url_for('testimonial.testimonial'))
     return render_template('app/testimonial/testimonial_edit.html', user=User, testimony=testimony)
+
+@testimony.route("/new", methods=['GET','POST'])
+@login_required
+def testimonial_new():
+    if request.method == "POST":
+        data = request.form.to_dict()
+        
+        newtest = Testimonials(
+            name = data['name'],
+            testimonial = data['testimonial'],
+            fulltext = data['fulltext'],
+            active = bool(data['active']),
+            date_created = datetime.now(),
+        )
+        db.session.add(newtest)
+        db.session.commit()
+        return redirect(url_for('testimonial.testimonial'))
+    return render_template('app/testimonial/testimonial_new.html', user=User)

@@ -48,6 +48,28 @@
                     <th></th>
                     <th>{{"$%.2f" % total}}</th>
                 </tr>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                <table>
+                    <thead>
+                    <tr>
+                        <th><b>Payment Details</b></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>Payment Method: </tr>
+                    <tr>Cash</tr>
+                    <tr>Account</tr>
+                    <tr>
+                        <td>Visa, MC, AMEX - 1234</td>
+                        <td>Approval Code: 1234567890</td>
+                        <td>Approval Amount: {{"$%.2f" % total}}</td>
+                    </tr>
+                </tbody>
+                </table>
             </tfoot>
             {% endif %}
         </table>

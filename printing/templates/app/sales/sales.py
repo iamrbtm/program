@@ -11,8 +11,9 @@ import datetime, random, json, secrets, os
 
 sale = Blueprint("sales", __name__, url_prefix="/sales")
 
-#TODO: working on the emails that go to customers and admin when an order is placed
-#TODO: working on setting up the square button to make purchases - NEED HELP
+# TODO: working on the emails that go to customers and admin when an order is placed
+# TODO: working on setting up the square button to make purchases - NEED HELP
+
 
 @sale.route("/")
 @login_required
@@ -21,6 +22,7 @@ def sales():
         db.session.query(Project)
         .filter(Project.customerfk == 2)
         .filter(Project.active == True)
+        .group_by(Project.catagory, Project.project_name)
         .all()
     )
     exists = True
@@ -79,20 +81,18 @@ def see_if_dup(receipt, itemid):
     return results, receipt
 
 
-def send_email(receipt, emailaddy):
+def send_email(receipt, emailaddy, template_name, subject):
     receipt = list(eval(receipt))
     total = calc_total(receipt)
 
     ordernum = receipt[0]["data"]["receiptnum"]
 
     msg = Message(
-        "testing",
+        subject,
         sender=("Dudefish Printing", "customer_service@dudefishprinting.com"),
         recipients=[emailaddy],
     )
-    msg.html = render_template(
-        "/emails/sales/receipt_customer.html", receipt=receipt, total=total
-    )
+    msg.html = render_template(f"/emails/{template_name}", receipt=receipt, total=total)
     mail.send(msg)
 
 
@@ -135,13 +135,25 @@ def add_to_db(receipt, customerid, idempotency_key):
             db.session.add(newline)
             db.session.commit()
             i = i + 1
+    return ordernum
 
 
 def cash(receipt, customerid=2):
-    add_to_db(receipt, customerid, idempotency_key="CASH")
-    emailaddy = db.session.query(People).filter(People.id == 1).first().email
+    ordernum = add_to_db(receipt, customerid, idempotency_key="CASH")
+    emailaddy = db.session.query(People).filter(People.id == customerid).first().email
     if emailaddy:
-        send_email(receipt, emailaddy)
+        send_email(
+            receipt,
+            emailaddy,
+            "sales/receipt_customer.html",
+            "Your Dudefish Printing order confirmation.",
+        )
+        send_email(
+            receipt,
+            "orders@dudefishprinting.com",
+            "sales/receipt_admin.html",
+            f"Order# {ordernum}",
+        )
 
 
 def card(receipt, customerid, token):
@@ -172,7 +184,7 @@ def card(receipt, customerid, token):
     body["buyer_email_address"] = f"{sq_buyer_email_address}"
     body["note"] = f"{sq_note}"
     body["source_id"] = f"{token}"
-    
+
     result = client.payments.create_payment(body)
 
     if result.is_success():
@@ -214,6 +226,7 @@ def add_customer(name, email, postalcode):
     db.session.commit()
 
     return newcust.id
+
 
 @sale.post("/process-payment")
 def create_payment():
@@ -278,6 +291,7 @@ def add_item(receipt, itemid):
         db.session.query(Project)
         .filter(Project.customerfk == 2)
         .filter(Project.active == True)
+        .group_by(Project.catagory, Project.project_name)
         .all()
     )
 

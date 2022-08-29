@@ -1,11 +1,54 @@
 {% extends "emails/base_email.html" %}
 
-{% block greeting %}NEW CONTACT US{% endblock %}
+{% block greeting %}NEW sale{% endblock %}
 
 {# content needs to be in HTML #}
 {% block content %}{% endblock %}
 
 {# Can also be used for order details information #}
-{% block messagebody %}{% endblock %}
+{% block messagebody %}
+<div class="row">
+    <div class="col-6">
+        {% for dic in receipt %}
+        {% if loop.first %}
+        Receipt Number: {{dic['data']['receiptnum']}}<br>
+        Date/Time: {{dic['data']['dt']}}<br>
+        Employee: {{dic['data']['employee']}}<br>
+        {% endif %}
+        {% endfor %}
+        <hr>
+
+        <table width="100%" class="table table-striped table-hover table-success">
+            <thead>
+                <tr>
+                    <th width="60%" class="text-start">Item</th>
+                    <th width="20%" class="text-center">Quantity</th>
+                    <th width="20%" class="text-end">Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if numdic != 0 %}
+                {% for dict in receipt %}
+                {% if loop.index > 1 %}
+                <tr>
+                    <td width="90%" class="text-left">{{dict[loop.index-1]['item']}}</td>
+                    <td width="20%" class="text-center">{{dict[loop.index-1]['qty']}}</td>
+                    <td width="20%" class="text-end">{{"$%.2f" % dict[loop.index-1]['price']}}</td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th>{{"$%.2f" % total}}</th>
+                </tr>
+            </tfoot>
+            {% endif %}
+        </table>
+    </div>
+</div>
+{% endblock %}
 
 {% block footer %}{% endblock %}
