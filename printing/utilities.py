@@ -660,3 +660,53 @@ def clean_inventory_uploads(path):
                 os.remove(os.path.join(path, files))
         else:
             os.remove(os.path.join(path, files))
+
+def get_sec(time_str):
+    """Get seconds from time."""
+    h, m, s = time_str.split(':')
+    return int(h) * 3600 + int(m) * 60 + int(s)
+
+def convert_HHH_to_HMS(dec_string):
+    hours = int(dec_string)
+    minutes = (dec_string*60) % 60
+    seconds = (dec_string*3600) % 60
+
+    time = "%d:%02d:%02d" % (hours, minutes, seconds)
+    return get_sec(time)
+
+
+def calculate_est_vs_act_time(projectid, actual_time):
+    """This module will:
+    - Save new data to the database
+    - Calculate the average of all entries for the given machine
+    - save the average to the database in the printer table
+
+    Args:
+        projectid (int): project id
+        actual_time (int): actual time taken to print in seconds
+        est_time (int): estimated time from slicer in seconds
+    """
+    project = db.session.query(Project).filter(Project.id == projectid).first()
+    est_time = convert_HHH_to_HMS(project.object_rel.h_printtime)
+    #Save new data to the database
+    newentry = Estimate_vs_actual_time(
+        printerfk = project.printerfk,
+        estimated_time_in_s = est_time,
+        actual_time_in_s = actual_time
+    )
+    db.session.add(newentry)
+    db.session.commit()
+    
+    #Calculate the average of all entries for the given machine
+    printers = Printer.query.filter(Printer.active == True).all()
+    
+    for printer in printers:
+        est = Estimate_vs_actual_time.query.with_entities(func.sum(Estimate_vs_actual_time.estimated_time_in_s).label('EstTime')).filter(Estimate_vs_actual_time.printerfk == printer.id).first()
+        act = Estimate_vs_actual_time.query.with_entities(func.sum(Estimate_vs_actual_time.actual_time_in_s).label('ActTime')).filter(Estimate_vs_actual_time.printerfk == printer.id).first()
+        
+        avg = (act[0] / est[0])*100
+        print(f"Printer {printer.id}: {avg}")
+        
+        #save the average to the database in the printer table
+        printer.correction_percentage = avg
+        db.session.commit()

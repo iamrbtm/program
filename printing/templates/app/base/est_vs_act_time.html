@@ -1,0 +1,33 @@
+{% extends "app/base/base.html" %}
+
+{% block title %}New Time Calc{% endblock %}
+{% block header %}New Time Calc{% endblock %}
+
+{% block content %}
+<div class="container">
+    <form method="POST">
+        <div class="row">
+            <div class="col">
+                <label for="project" class="form form-label">Select Project</label>
+                <select name="project" id="project" class="form form-select">
+                    {% for project in projects %}
+                    <option value="{{project.id}}">{{project.project_name}} - {{project.customer_rel.fname}}
+                        {{project.customer_rel.lname}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <label for="actual" class="form form-label">Actual Time</label>
+                <input type="text" name="actual" id="actual" class="form form-control" placeholder="h:m:s">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <input type="submit" value="Submit">
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

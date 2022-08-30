@@ -81,3 +81,15 @@ def typeimport():
 def dbmaint():
     db_maintance()
     return redirect(url_for("dashboard.dashboard"))
+
+@base.route("/evat", methods=["GET", "POST"])
+@login_required
+def evat():
+    if request.method == "POST":
+        act = get_sec(request.form.get('actual'))
+        calculate_est_vs_act_time(request.form.get('project'), act)
+        return redirect(url_for('dashboard.dashboard'))
+    
+    projects = Project.query.filter(Project.active == True).all()
+    return render_template("app/base/est_vs_act_time.html", user=User, projects=projects)
+    

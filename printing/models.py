@@ -113,8 +113,8 @@ class Printer(db.Model):
     cost = db.Column(db.Float)
     purchase_date = db.Column(db.Date)
     picture = db.Column(db.Text)
+    correction_percentage = db.Column(db.Float)
     active = db.Column(db.Boolean)
-    
 
 
 class Type(db.Model):
@@ -226,6 +226,7 @@ class Settings(db.Model):
     padding_time = db.Column(db.Float)
     padding_filament = db.Column(db.Float)
 
+
 class Events(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     start_date = db.Column(db.Date)
@@ -236,8 +237,9 @@ class Events(db.Model):
     title = db.Column(db.String(50))
     description = db.Column(db.Text)
     mapsurl = db.Column(db.Text)
-    publish = db.Column(db.Boolean, default = True)
-    
+    publish = db.Column(db.Boolean, default=True)
+
+
 class Testimonials(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
@@ -245,6 +247,7 @@ class Testimonials(db.Model):
     fulltext = db.Column(db.Text)
     active = db.Column(db.Boolean)
     date_created = db.Column(db.Date, default=func.now())
+
 
 class Adjustment_log(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -254,7 +257,8 @@ class Adjustment_log(db.Model):
     time_updated = db.Column(db.DateTime(timezone=True), onupdate=func.now())
     projectfk = db.Column(db.Integer, db.ForeignKey("project.id"))
     project_rel = db.relationship("Project", backref="adjustment_log")
-    
+
+
 class Sales(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     employeefk = db.Column(db.Integer, db.ForeignKey("people.id"))
@@ -263,9 +267,8 @@ class Sales(db.Model):
     date_time_created = db.Column(db.DateTime)
     total = db.Column(db.Float)
     sq_idempotency_key = db.Column(db.String(50))
-    customer_rel = db.relationship(
-        "People", backref="sales", foreign_keys=[customerfk]
-    )    
+    customer_rel = db.relationship("People", backref="sales", foreign_keys=[customerfk])
+
 
 class Sales_lineitems(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -275,11 +278,20 @@ class Sales_lineitems(db.Model):
     ordernumfk = db.Column(db.Integer)
 
     project_rel = db.relationship("Project", backref="sales", foreign_keys=[projectfk])
-    
+
+
 class Contact(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
     phone = db.Column(db.String(20))
     email = db.Column(db.String(100))
     message = db.Column(db.Text)
+    dt_created = db.Column(db.DateTime(timezone=True), default=func.now())
+
+
+class Estimate_vs_actual_time(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    printerfk = db.Column(db.Integer, db.ForeignKey("printer.id"))
+    estimated_time_in_s = db.Column(db.Integer)
+    actual_time_in_s = db.Column(db.Integer)
     dt_created = db.Column(db.DateTime(timezone=True), default=func.now())
