@@ -182,13 +182,11 @@ class Project(db.Model):
     filamentfk = db.Column(
         db.Integer, db.ForeignKey("filament.id", ondelete="CASCADE"), nullable=False
     )
-    objectfk = db.Column(
-        db.Integer, db.ForeignKey("printobject.id", ondelete="CASCADE"), nullable=False
-    )
     shippingfk = db.Column(
         db.Integer, db.ForeignKey("shipping.id", ondelete="CASCADE"), nullable=False
     )
     employeefk = db.Column(db.Integer, db.ForeignKey("people.id"), nullable=False)
+    objectfk = db.Column(db.String(100))
     packaging = db.Column(db.Float)
     advertising = db.Column(db.Float)
     rent = db.Column(db.Float)
@@ -214,7 +212,6 @@ class Project(db.Model):
     )
     printer_rel = db.relationship("Printer", backref="project")
     filament_rel = db.relationship("Filament", backref="project")
-    object_rel = db.relationship("Printobject", backref="project")
     shipping_rel = db.relationship("Shipping", backref="project")
 
 

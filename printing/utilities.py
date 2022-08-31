@@ -426,25 +426,33 @@ def calc_time_length(filename, filamentfk):
     weight_in_g = calc_weight(length_in_mm / 1000, filamentfk)
     return [time_in_h, weight_in_g / 1000]
 
+def calc_total_all_print_objects(id):
+    total_weight = 0.0
+    total_time = 0.0
+    
+    all_files = json.loads(db.session.query(Project).filter(Project.id == id).first().objectfk)
+    
+    for file in all_files:
+        printobj = db.session.query(Printobject).filter(Printobject.id == file).first()
+        total_time = total_time + printobj.h_printtime
+        total_weight = total_weight + printobj.kg_weight
+    
+    return total_weight, total_time
 
-class CalcCost:
-    def __init__(self, id):
-        self.project = db.session.query(Project).filter(Project.id == id).first()
 
-        self.customer_disc = (
-            self.project.customer_rel.discount_factor
-        )  # customer specific discount
-        self.customer_markup = (
-            self.project.customer_rel.markup_factor
-        )  # customer specific markup
-        self.print_time = self.project.object_rel.h_printtime  # in hrs
-        self.length_m = self.project.object_rel.kg_weight  # in KG
-        self.filename = self.project.object_rel.file  # filename of object
+class CalcCostInd:
+    def __init__(self, projectid, objectid):
+        self.project = db.session.query(Project).filter(Project.id == projectid).first()
+        self.object = db.session.query(Printobject).filter(Printobject.id == objectid).first()
+        
+        self.customer_disc = (self.project.customer_rel.discount_factor)
+        self.customer_markup = (self.project.customer_rel.markup_factor)
+        self.print_time = self.object.h_printtime # in hrs
+        self.weight_kg = self.object.kg_weight  # in KG
+        self.filename = self.object.file
         self.filamentid = self.project.filamentfk  # filament id
         self.diameter = self.project.filament_rel.diameter
         self.density = self.project.filament_rel.type_rel.densitygcm3
-        self.kg_weight = self.project.object_rel.kg_weight
-        self.h_printtime = self.project.object_rel.h_printtime
         self.cost_fil_per_g = self.project.filament_rel.priceperroll / 1000
         self.filament_kw_per_hr = self.project.filament_rel.type_rel.kW_hr
 
@@ -452,7 +460,7 @@ class CalcCost:
         import math
 
         # Volume = (length in m * 100) * pi() * ((diam/2)^2)
-        filcm = self.length_m * 100
+        filcm = self.weight_kg * 100
         radius = (self.diameter / 2) / 10
         csarea = math.pi * (radius) ** 2
         volume = filcm * csarea
@@ -461,7 +469,7 @@ class CalcCost:
         return weight
 
     def filcost(self):
-        cost = (self.kg_weight * 1000) * self.cost_fil_per_g
+        cost = (self.weight_kg * 1000) * self.cost_fil_per_g
         if cost < 0.01:
             cost = 0.01
         return cost * (1 + self.customer_markup)
@@ -469,20 +477,28 @@ class CalcCost:
     def timecost(self):
         kw_per_hr = db.session.query(Settings).first().cost_kW
 
-        cost = self.h_printtime * kw_per_hr * self.filament_kw_per_hr
+        cost = self.print_time * kw_per_hr * self.filament_kw_per_hr
         if cost < 0.01:
             cost = 0.01
         return cost * (1 + self.customer_markup)
+
+    def misfees(self):
+            return round(
+                float(
+                    self.project.packaging
+                    + self.project.advertising
+                    + self.project.rent
+                    + self.project.extrafees
+                ),
+                2,
+            )
 
     def subtotal(self):
         return round(
             float(
                 self.timecost()
                 + self.filcost()
-                + self.project.packaging
-                + self.project.advertising
-                + self.project.rent
-                + self.project.extrafees
+                + self.misfees()
             ),
             2,
         )
@@ -620,7 +636,7 @@ def upload_store_gcode_file(gcodefile, path, filamentfk, project_link=0):
 
     # save file to db
     newgcode = Printobject(
-        file=gcodefile, h_printtime=time_in_h, kg_weight=weight_in_kg
+        file=gcodefile, print_time=time_in_h, weight_kg=weight_in_kg
     )
     db.session.add(newgcode)
     db.session.commit()
@@ -687,7 +703,12 @@ def calculate_est_vs_act_time(projectid, actual_time):
         est_time (int): estimated time from slicer in seconds
     """
     project = db.session.query(Project).filter(Project.id == projectid).first()
-    est_time = convert_HHH_to_HMS(project.object_rel.h_printtime)
+    totaltime = 0
+    for obj in json.loads(project.objectfk):
+        hrs = db.session.query(Printobject).filter(Printobject.id == obj).first().h_printtime
+        totaltime = totaltime + hrs
+    est_time = convert_HHH_to_HMS(totaltime)
+    
     #Save new data to the database
     newentry = Estimate_vs_actual_time(
         printerfk = project.printerfk,

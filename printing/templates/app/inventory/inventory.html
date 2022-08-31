@@ -6,11 +6,9 @@
     <thead>
         <tr>
             <th>Project Name</th>
+            <th>Catagory</th>
             <th>Quantity</th>
-            <th>Cost</th>
             <th>Sales Price</th>
-            <th>Profit</th>
-            <th>Margin</th>
         </tr>
     </thead>
     <tbody>
@@ -21,11 +19,9 @@
                     {{inv.project_name}}
                 </a>
             </td>
+            <td>{{inv.catagory}}</td>
             <td>{{inv.current_quantity}}</td>
-            <td>{{"$%.2f"|format(inv.cost)}}</td>
             <td>{{"$%.2f"|format(inv.sale_price)}}</td>
-            <td>{{"$%.2f"|format(inv.sale_price - inv.cost)}}</td>
-            <td>{{"%.2f"|format(((inv.sale_price - inv.cost)/inv.sale_price)*100)}}%</td>
         </tr>
         {% endfor %}
     </tbody>

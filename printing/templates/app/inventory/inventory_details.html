@@ -8,7 +8,7 @@
 
 {% block content %}
 <div class="container-fluid">
-    <span class="display-5"><b>{{inventory.customer_rel.fname.upper()}} ACCOUNT </b></span>
+    <span class="display-5"><b>{{inventory.customer_rel.fname|upper}} ACCOUNT </b></span>
     <div class="row mb-3">
         <div class="col-lg-12">
             <div class="card shadow mb-3" id="OrderDets">
@@ -19,6 +19,7 @@
                     <table class="table table-striped" width="100%" id="orderdetails">
                         <thead>
                             <tr>
+                                <th></th>
                                 <th>Item</th>
                                 <th>Description</th>
                                 <th>Quantity</th>
@@ -26,27 +27,47 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {% for file in files %}
                             <tr>
+                                <th colspan="5" class="table table-success">File {{loop.index}}</th>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>File</td>
+                                <td>
+                                    {{file["filename"]}} - <a href='{{ url_for("inventory.download", filename=file["filename"] ) }}'>Download</a><br>
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
                                 <td>Printer</td>
-                                <td>{{inventory.printer_rel.name}}</td>
+                                <td>{{file["printer"]}}</td>
                                 <td></td>
                                 <td></td>
                             </tr>
                             <tr>
+                                <td></td>
                                 <td>Filament</td>
-                                <td>{{inventory.filament_rel.type_rel.type}} -
-                                    {{inventory.filament_rel.diameter}}</td>
-                                <td>{{"%.1f"|format(materialused / inventory.qtyperprint)}}g</td>
-                                <td>{{"$%.2f"|format(newinventory.filcost() / inventory.qtyperprint)}}</td>
+                                <td>{{file["filament_type"]}} - {{file["filament_diameter"]}}</td>
+                                <td>{{"%.1f"|format((file["weight_kg"] * 1000) / inventory.qtyperprint)}}g</td>
+                                <td>{{"$%.2f"|format(file["filcost"] / inventory.qtyperprint)}}</td>
                             </tr>
                             <tr>
+                                <td></td>
                                 <td>Print Time</td>
                                 <td>Cost of Electricity</td>
-                                <td>{{"%.2f"|format(printtime / inventory.qtyperprint)}} hours</td>
-                                <td>{{"$%.2f"|format(newinventory.timecost() / inventory.qtyperprint)}}</td>
+                                <td>{{"%.2f"|format(file["print_time"] / inventory.qtyperprint)}} hours</td>
+                                <td>{{"$%.2f"|format(file["timecost"] / inventory.qtyperprint)}}</td>
+                            </tr>}
+                            {% endfor %}
+                            <tr>
+                                <th colspan="5" class="table table-success">Misc Fees</th>
                             </tr>
                             {% if 1==2 %}
                             <tr>
+                                <td></td>
                                 <td>Design</td>
                                 <td></td>
                                 <td></td>
@@ -55,6 +76,7 @@
                             {% endif %}
                             {% if inventory.advertising %}
                             <tr>
+                                <td></td>
                                 <td>Advertising</td>
                                 <td></td>
                                 <td></td>
@@ -63,6 +85,7 @@
                             {% endif %}
                             {% if inventory.overhead %}
                             <tr>
+                                <td></td>
                                 <td>Overhead</td>
                                 <td></td>
                                 <td></td>
@@ -71,6 +94,7 @@
                             {% endif %}
                             {% if inventory.rent %}
                             <tr>
+                                <td></td>
                                 <td>Rent</td>
                                 <td></td>
                                 <td></td>
@@ -79,6 +103,7 @@
                             {% endif %}
                             {% if inventory.extrafees %}
                             <tr>
+                                <td></td>
                                 <td>Other</td>
                                 <td></td>
                                 <td></td>
@@ -87,6 +112,7 @@
                             {% endif %}
                             {% if inventory.packaging %}
                             <tr>
+                                <td></td>
                                 <td>Packaging</td>
                                 <td></td>
                                 <td></td>
@@ -94,27 +120,33 @@
                             </tr>
                             {% endif %}
                             <tr>
+                                <th colspan="5" class="table table-success">Information</th>
+                            </tr>
+                            <tr>
                                 <td>Catagory</td>
                                 <td>{{inventory.catagory}}</td>
                                 <td></td>
                                 <td></td>
                             </tr>
                             <tr>
-                                <td>File</td>
-                                <td>{{inventory.object_rel.file}} - <a
-                                        href="{{url_for('inventory.download',filename=filename)}}">Download</a><br>
-                                    <b>Items per print:</b> {{inventory.qtyperprint}}
-                                </td>
+                                <td>Items per print:</td>
+                                <td>{{inventory.qtyperprint}}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                         </tbody>
                         <tfoot class="table table-bordered">
+                            {% set ttl_cost = ((total_cost / inventory.qtyperprint)+miscost) %}
                             <tr>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td class="text-end">Total Cost</td>
-                                <td>{{"$%.2f"|format(newinventory.total() / inventory.qtyperprint)}}</td>
+                                <td>{{"$%.2f"|format(ttl_cost)}}</td>
                             </tr>
                             <tr>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td class="text-end">Recommended Sale Price</td>
@@ -123,21 +155,24 @@
                             <tr>
                                 <td></td>
                                 <td></td>
+                                <td></td>
                                 <td class="text-end">Profit</td>
-                                <td>{{"$%.2f"|format(inventory.sale_price - inventory.cost)}}
+                                <td>{{"$%.2f"|format(inventory.sale_price - ttl_cost)}}
                                 </td>
                             </tr>
                             <tr>
                                 <td></td>
                                 <td></td>
+                                <td></td>
                                 <td class="text-end">Profit Margin</td>
-                                <td>{{"%.2f"|format(((inventory.sale_price - inventory.cost)/inventory.sale_price)*100)}}%
+                                <td>{{"%.2f"|format(((inventory.sale_price - ttl_cost)/inventory.sale_price)*100)}}%
                                 </td>
                             </tr>
                         </tfoot>
                     </table>
                     <div class="text-start">
-                        {{inventory.time_created.strftime('%b %d, %Y')}} {{inventory.time_created.strftime('%-I:%m %p')}} - 
+                        {{inventory.time_created.strftime('%b %d, %Y')}}
+                        {{inventory.time_created.strftime('%-I:%m %p')}} -
                         {{inventory.employee_rel.fname}} {{inventory.employee_rel.lname}}
                     </div>
                 </div>
