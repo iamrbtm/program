@@ -32,7 +32,7 @@
                     </thead>
                     <tbody>
                         {% for catagory, item in items | groupby('catagory') %}
-                            <th colspan="5" style="    background-color: rgba(44, 62, 80); color: white; text-transform: uppercase;
+                            <th colspan="5" style="background-color: rgba(44, 62, 80); color: white; text-transform: uppercase;
                             ">{{catagory}}</th>
                             {% for item in items %}
                             {% if item.catagory == catagory %}

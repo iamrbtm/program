@@ -244,3 +244,11 @@ def low_inventory():
     items = db.session.query(Project).filter((Project.threshold - Project.current_quantity) > 2).all()
     return render_template("app/inventory/low_inventory_pdf.html", items=items)
 
+@inv.route('/threshold', methods=['GET', 'POST'])
+def threshold():
+    if request.method == "POST":
+        data = request.form.to_dict()
+        print(data)
+    catagory = db.session.query(distinct(Project.catagory), Project.catagory).all()
+    inventory = db.session.query(Project).filter(Project.customerfk == 2).filter(Project.active == True).all()
+    return render_template("app/inventory/threshold.html", inventory=inventory, catagory=catagory)

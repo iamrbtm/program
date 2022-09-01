@@ -1,0 +1,59 @@
+{% extends "app/base/base.html" %}
+{% block title %}Threshold{% endblock %}
+{% block header %}Threshold{% endblock %}
+{% block content %}
+<form method="POST">
+    <div><input type="submit" class="btn btn-success" value="Submit"></div>
+    <table id="threshold" class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Current Quantity</th>
+                <th>Threshold</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for catagory, inv in inventory | groupby('catagory') %}
+            <th colspan="4" style="background-color: rgba(44, 62, 80); color: white; text-transform: uppercase;">{{catagory}}</th>
+            {% for inv in inventory %}
+            {% if inv.catagory == catagory %}
+            <tr>
+                <td>{{inv.project_name}}</td>
+                <td><input type="number" class="form form-control" name="qty" id="qty"
+                        value={% if inv.current_quantity %}{{inv.current_quantity}}{%else%}0{%endif%}></td>
+                <td><input type="number" class="form form-control" name="threshold" id="threshold"
+                        value="{{inv.threshold}}"></td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+            {% endfor %}
+        </tbody>
+    </table>
+    <div><input type="submit" class="btn btn-success" value="Submit"></div>
+</form>
+{% endblock %}
+
+{% block js_code %}
+<script>
+    $(document).ready(function () {
+        $('#threshold').DataTable({
+            "fixedHeader": true,
+            "bPaginate": false,
+            "bLengthChange": false,
+            "bFilter": true,
+            "bInfo": false,
+            "bAutoWidth": true,
+            "colReorder": false,
+            "responsive": true,
+            "searchable": true,
+        });
+    });
+</script>
+{% endblock %}
+
+{% block action_items %}
+<a class="dropdown-item" href="{{url_for('inventory.low_inventory')}}">
+    <i class="bi bi-file-plus-fill me-2 text-gray-400"></i>
+    &nbsp;Threshold Report
+</a>
+{% endblock %}
