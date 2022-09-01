@@ -1,12 +1,12 @@
-from flask import Flask, abort
-from flask_sqlalchemy import SQLAlchemy
 import os
-from flask_login import LoginManager
-from flask_migrate import Migrate
-from flask_uploads import UploadSet, configure_uploads, IMAGES, ALL
-from dotenv import load_dotenv
-from flask_mail import Mail
 
+from dotenv import load_dotenv
+from flask import Flask, abort
+from flask_login import LoginManager
+from flask_mail import Mail
+from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
+from flask_uploads import ALL, IMAGES, UploadSet, configure_uploads
 
 load_dotenv()
 
@@ -61,26 +61,26 @@ def create_app():
     
     # Blueprints
     #website
-    from printing.templates.website.website import site 
     from printing.auth import auth
+    from printing.templates.website.website import site
     
     app.register_blueprint(auth, url_prefix='/')
     app.register_blueprint(site, url_prefix='/')
    
     #app
+    from printing.templates.app.address.address import addy
     from printing.templates.app.base.base import base
-    from printing.templates.app.project.project import proj
+    from printing.templates.app.dashboard.dashboard import dash
+    from printing.templates.app.events.events import evt
+    from printing.templates.app.filament.filament import fil
+    from printing.templates.app.inventory.inventory import inv
     from printing.templates.app.people.customer import cust
     from printing.templates.app.people.employee import emp
     from printing.templates.app.people.supplier import vendor
-    from printing.templates.app.dashboard.dashboard import dash
-    from printing.templates.app.settings.settings import stg
-    from printing.templates.app.address.address import addy
-    from printing.templates.app.filament.filament import fil
-    from printing.templates.app.events.events import evt
-    from printing.templates.app.testimonial.testimonial import testimony
-    from printing.templates.app.inventory.inventory import inv
+    from printing.templates.app.project.project import proj
     from printing.templates.app.sales.sales import sale
+    from printing.templates.app.settings.settings import stg
+    from printing.templates.app.testimonial.testimonial import testimony
     
     app.register_blueprint(base, url_prefix='/')
     app.register_blueprint(proj)

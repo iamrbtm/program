@@ -1,9 +1,12 @@
-from printing import db
+import datetime
+import os
+
 from flask_login import UserMixin
-from sqlalchemy.sql import func
-import datetime, os
-from sqlalchemy.orm import backref, relationship
 from sqlalchemy import ForeignKey
+from sqlalchemy.orm import backref, relationship
+from sqlalchemy.sql import func
+
+from printing import db
 
 
 # Users

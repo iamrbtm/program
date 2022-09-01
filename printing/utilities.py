@@ -1,9 +1,14 @@
-import re, os, requests, json
-from printing import db, invgcode
-from printing.models import *
-from printing.gcoder import parse_gcode
-from matplotlib import colors
+import json
+import os
+import re
+
+import requests
 from flask import flash
+from matplotlib import colors
+
+from printing import db, invgcode
+from printing.gcoder import parse_gcode
+from printing.models import *
 
 filename = "temp.log"
 
@@ -389,8 +394,9 @@ def valid_color(color: str):
 
 
 def shorten_url(longurl):
-    import requests
     import json
+
+    import requests
 
     url = "https://api-ssl.bitly.com/v4/shorten"
     dbtoken = db.session.query(apitoken).filter(apitoken.name == "bitley").first().token
