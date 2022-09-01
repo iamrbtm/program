@@ -426,6 +426,7 @@ def calc_time_length(filename, filamentfk):
     weight_in_g = calc_weight(length_in_mm / 1000, filamentfk)
     return [time_in_h, weight_in_g / 1000]
 
+
 def calc_total_all_print_objects(id):
     total_weight = 0.0
     total_time = 0.0
@@ -630,7 +631,12 @@ def upload_store_gcode_file(gcodefile, path, filamentfk, project_link=0):
     gcodefile = invgcode.save(gcodefile)
 
     # process file for time and materials
-    filepath = os.path.join(path, "uploads", gcodefile)
+    basepath = os.path.join(path, "uploads", gcodefile)
+    if project_link == 0:
+        filepath = base
+    else:
+        filepath = os.makedirs(os.path.join(base, project_link))
+        os.rename(os.path.join(bath,gcodefile), os.path.join(filepath,gcodefile))
 
     time_in_h, weight_in_kg = calc_time_length(filepath, filamentfk)
 
@@ -644,7 +650,9 @@ def upload_store_gcode_file(gcodefile, path, filamentfk, project_link=0):
     if project_link != 0:
         db.session.refresh(newgcode)
         project = db.session.query(Project).filter(Project.id == project_link).first()
-        project.objectfk = newgcode.id
+        objectfklist = json.loads(project.objectfk)
+        objectfklist.append(newgcode.id)
+        project.objectfk = objectfklist
         db.session.commit()
 
 
@@ -677,10 +685,12 @@ def clean_inventory_uploads(path):
         else:
             os.remove(os.path.join(path, files))
 
+
 def get_sec(time_str):
     """Get seconds from time."""
     h, m, s = time_str.split(':')
     return int(h) * 3600 + int(m) * 60 + int(s)
+
 
 def convert_HHH_to_HMS(dec_string):
     hours = int(dec_string)
