@@ -1,6 +1,5 @@
 beautifulsoup4
 black
-bundled-pdfkit
 email_validator
 flask
 flask_login
@@ -8,7 +7,6 @@ flask_mail
 flask_migrate
 flask_sqlalchemy
 flask_uploads
-flask_weasyprint
 flask_wtf
 lxml
 matplotlib
@@ -17,6 +15,5 @@ PyMySQL
 python-dotenv
 sqlalchemy
 squareup
-weasyprint
 wtforms
 wtforms_sqlalchemy
