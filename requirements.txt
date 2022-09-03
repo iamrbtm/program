@@ -1,5 +1,6 @@
 beautifulsoup4
 black
+bundled-pdfkit
 email_validator
 flask
 flask_login

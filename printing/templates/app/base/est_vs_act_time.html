@@ -8,11 +8,10 @@
     <form method="POST">
         <div class="row">
             <div class="col">
-                <label for="project" class="form form-label">Select Project</label>
-                <select name="project" id="project" class="form form-select">
-                    {% for project in projects %}
-                    <option value="{{project.id}}">{{project.project_name}} - {{project.customer_rel.fname}}
-                        {{project.customer_rel.lname}}</option>
+                <label for="file" class="form form-label">Select File</label>
+                <select name="file" id="file" class="form form-select">
+                    {% for file in files %}
+                    <option value="{{file.id}}">{{file.file}} - {{file.h_printtime}}</option>
                     {% endfor %}
                 </select>
             </div>

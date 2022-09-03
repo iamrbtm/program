@@ -10,6 +10,7 @@ from flask import (
     request,
     url_for,
     send_from_directory,
+    make_response
 )
 from flask_login import login_required
 from printing import db, invgcode
@@ -28,6 +29,8 @@ from printing.utilities import (
     clean_inventory_uploads,
 )
 from sqlalchemy import distinct
+from sqlalchemy.sql import func
+
 
 inv = Blueprint("inventory", __name__, url_prefix="/inventory")
 
@@ -251,8 +254,14 @@ def clean():
 
 @inv.route("/low_inventory_report")
 def low_inventory():
-    items = db.session.query(Project).filter((Project.threshold - Project.current_quantity) > 2).all()
-    return render_template("app/inventory/low_inventory_pdf.html", items=items)
+    items = db.session.query(Project).all()
+    
+    current_inv_sum = Project.query.with_entities(func.sum(Project.current_quantity).label('CurrentInventory')).first()
+    threshold_sum = Project.query.with_entities(func.sum(Project.threshold).label('Threshold')).first()
+    
+    context = {"items":items,"curinv":int(current_inv_sum[0]),"threshold":int(threshold_sum[0])}
+    
+    return render_template("app/inventory/low_inventory_pdf.html", **context)
 
 
 @inv.route("/threshold", methods=["GET", "POST"])

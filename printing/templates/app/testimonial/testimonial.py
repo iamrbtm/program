@@ -1,10 +1,10 @@
-from flask import Blueprint, render_template, request, url_for, redirect
-from flask_login import login_required, current_user
-from sqlalchemy import distinct
-from printing.models import *
-from printing.utilities import *
-from printing import filamentpics
 from datetime import datetime
+
+from flask import Blueprint, redirect, render_template, request, url_for
+from flask_login import login_required
+from printing.models import Testimonials, User
+from printing import db
+
 
 testimony = Blueprint("testimonial", __name__, url_prefix="/testimonial")
 
@@ -13,7 +13,7 @@ testimony = Blueprint("testimonial", __name__, url_prefix="/testimonial")
 @testimony.route("/")
 @login_required
 def testimonial():
-    testimonials = db.session.query(Testimonials).filter(Testimonials.active == True).all()
+    testimonials = db.session.query(Testimonials).filter(Testimonials.active).all()
     return render_template('app/testimonial/testimonial.html', user=User, testimonials=testimonials, action=1)
 
 @testimony.route("/edit/<id>", methods=['GET','POST'])

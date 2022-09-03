@@ -9,6 +9,8 @@ from matplotlib import colors
 from printing import db, invgcode
 from printing.gcoder import parse_gcode
 from printing.models import *
+from sqlalchemy.sql import func
+
 
 filename = "temp.log"
 
@@ -394,10 +396,6 @@ def valid_color(color: str):
 
 
 def shorten_url(longurl):
-    import json
-
-    import requests
-
     url = "https://api-ssl.bitly.com/v4/shorten"
     dbtoken = db.session.query(apitoken).filter(apitoken.name == "bitley").first().token
 
@@ -707,24 +705,9 @@ def convert_HHH_to_HMS(dec_string):
     return get_sec(time)
 
 
-def calculate_est_vs_act_time(projectid, actual_time):
-    """This module will:
-    - Save new data to the database
-    - Calculate the average of all entries for the given machine
-    - save the average to the database in the printer table
-
-    Args:
-        projectid (int): project id
-        actual_time (int): actual time taken to print in seconds
-        est_time (int): estimated time from slicer in seconds
-    """
-    project = db.session.query(Project).filter(Project.id == projectid).first()
-    totaltime = 0
-    for obj in json.loads(project.objectfk):
-        hrs = db.session.query(Printobject).filter(Printobject.id == obj).first().h_printtime
-        totaltime = totaltime + hrs
-    est_time = convert_HHH_to_HMS(totaltime)
-    
+def calculate_est_vs_act_time(fileid, actual_time):
+    est_time = convert_HHH_to_HMS(Printobject.query.filter(Printobject.id == fileid).first().h_printtime)
+    project = db.session.query(Project).filter(Project.objectfk.contains(fileid)).first()
     #Save new data to the database
     newentry = Estimate_vs_actual_time(
         printerfk = project.printerfk,

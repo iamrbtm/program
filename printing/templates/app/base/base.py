@@ -87,9 +87,9 @@ def dbmaint():
 def evat():
     if request.method == "POST":
         act = get_sec(request.form.get('actual'))
-        calculate_est_vs_act_time(request.form.get('project'), act)
+        calculate_est_vs_act_time(request.form.get('file'), act)
         return redirect(url_for('dashboard.dashboard'))
     
-    projects = Project.query.filter(Project.active == True).all()
-    return render_template("app/base/est_vs_act_time.html", user=User, projects=projects)
+    files = Printobject.query.all()
+    return render_template("app/base/est_vs_act_time.html", user=User, files=files)
     

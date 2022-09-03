@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Open+Sans&display=swap"
@@ -20,14 +20,15 @@
                 Low Inventory Report
             </div>
             <div class="page-body">
+                Percent Complete: {{"%.2f" % ((curinv / threshold)*100)}}%
                 <table class="table table-responsive table-striped">
                     <thead>
                         <tr>
-                            <th>Item</th>
-                            <th>Current Stock</th>
-                            <th>Threshold</th>
-                            <th>To Make</th>
-                            <th>Complete</th>
+                            <th width="40%">Item</th>
+                            <th width="15%">Current Stock</th>
+                            <th width="15%">Threshold</th>
+                            <th width="15%">To Make</th>
+                            <th width="15%">Complete</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -47,6 +48,15 @@
                             {% endfor %}
                             {% endfor %}
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <th></th>
+                            <th>{{curinv}}</th>
+                            <th>{{threshold}}</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>
