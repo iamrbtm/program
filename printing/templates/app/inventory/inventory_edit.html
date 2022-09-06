@@ -139,28 +139,66 @@
                         <tr>
                             <td>New Files</td>
                             <td>
-                                <div class="container">
-                                    <div class="row row-cols-3">
-                                        <div class="col">
-                                            <input type="file" name="gcode1" id="gcode1" class="form form-control-file">
-                                        </div>
-                                        <div class="col">
-                                            <input type="file" name="gcode2" id="gcode2" class="form form-control-file">
-                                        </div>
-                                        <div class="col">
-                                            <input type="file" name="gcode3" id="gcode3" class="form form-control-file">
-                                        </div>
-                                        <div class="col">
-                                            <input type="file" name="gcode4" id="gcode4" class="form form-control-file">
-                                        </div>
-                                        <div class="col">
-                                            <input type="file" name="gcode5" id="gcode5" class="form form-control-file">
-                                        </div>
-                                        <div class="col">
-                                            <input type="file" name="gcode6" id="gcode6" class="form form-control-file">
-                                        </div>
-                                    </div>
-                                </div>
+                                <table class="table table-sm" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Select File</th>
+                                            <th>Quantity in file</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td width="15%">File 1</td>
+                                            <td width="30%"><input type="file" name="gcode1" id="gcode1"
+                                                    class="form form-control-file"></td>
+                                            <td width="55%"><input type="number" name="qty1" id="qty1"
+                                                    class="form form-control"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width="15%">File2</td>
+                                            <td width="30%"><input type="file" name="gcode2" id="gcode2"
+                                                    class="form form-control-file"></td>
+                                            <td width="55%"><input type="number" name="qty2" id="qty2"
+                                                    class="form form-control"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width="15%">File3</td>
+                                            <td width="30%"><input type="file" name="gcode3" id="gcode3"
+                                                    class="form form-control-file"></td>
+                                            <td width="55%"><input type="number" name="qty3" id="qty3"
+                                                    class="form form-control"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width="15%">File4</td>
+                                            <td width="30%"><input type="file" name="gcode4" id="gcode4"
+                                                    class="form form-control-file"></td>
+                                            <td width="55%"><input type="number" name="qty4" id="qty4"
+                                                    class="form form-control"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width="15%">File5</td>
+                                            <td width="30%"><input type="file" name="gcode5" id="gcode5"
+                                                    class="form form-control-file"></td>
+                                            <td width="55%"><input type="number" name="qty5" id="qty5"
+                                                    class="form form-control"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width="15%">File6</td>
+                                            <td width="30%"><input type="file" name="gcode6" id="gcode6"
+                                                    class="form form-control-file"></td>
+                                            <td width="55%"><input type="number" name="qty6" id="qty6"
+                                                    class="form form-control"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width="15%">File7</td>
+                                            <td width="30%"><input type="file" name="gcode7" id="gcode7"
+                                                    class="form form-control-file"></td>
+                                            <td width="55%"><input type="number" name="qty7" id="qty7"
+                                                    class="form form-control"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </td>
                         </tr>
                         <tr>
@@ -185,13 +223,20 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="text-end">Recommended Sale Price</td>
+                            <td>Recommended Sale Price</td>
                             <td>
                                 <div class="input-group">
                                     <span class="input-group-text">$</span>
                                     <input type="number" min="0.00" step="0.01" max="2500" name="sale_price"
                                         id="sale_price" class="form form-control" value="{{inventory.sale_price}}">
                                 </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Inventory Threshold</td>
+                            <td>
+                                <input type="number" min="1" step="1" max="9999" name="threshold" id="threshold"
+                                    class="form form-control" value="{{inventory.threshold}}">
                             </td>
                         </tr>
                     </tbody>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Open+Sans&display=swap"
+        rel="stylesheet">
+    <link href="{{url_for('static', filename='app/css/lowinv.css')}}" rel="stylesheet">
+    <link rel="stylesheet" href="{{url_for('static', filename='app/bootstrap/css/bootstrap.min.css')}}" />
+
+    <title>Print Time Report</title>
+</head>
+
+<body>
+    <div class="page">
+        <div class="page-content">
+            <div class="header header_text">
+                Print Time Report
+            </div>
+            <div class="page-body">
+                <table class="table table-responsive table-striped">
+                    <thead>
+                        <tr>
+                            <th width="40%">Item</th>
+                            <th width="15%">Current Stock</th>
+                            <th width="15%">Threshold</th>
+                            <th width="15%">Print Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for catagory, item in items | groupby('catagory') %}
+                            <th colspan="5" style="background-color: rgba(44, 62, 80); color: white; text-transform: uppercase;
+                            ">{{catagory}}</th>
+                            {% for item in items %}
+                            {% if item.catagory == catagory %}
+                            <tr>
+                                <td>{{item.project_name}}</td>
+                                <td>{{item.current_quantity}}</td>
+                                <td>{{item.threshold}}</td>
+                                {% for printtime in printtimes%}
+                                {% if printtime['id'] == item.id %}
+                                <td>{{printtime['printtime'] | round}}</td>
+                                {% endif %}
+                                {% endfor %}
+                            </tr>
+                            {% endif %}
+                            {% endfor %}
+                            {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th>Total</th>
+                            <th>{{totalprinttime}}</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -13,28 +13,30 @@
                     <p class="text-primary m-0 fw-bold">Order Details</p>
                 </div>
                 <div class="card-body">
-                    <form method="POST" enctype=multipart/form-data>
-                        <div class="row">
-                            <div class="col-6">
-                                Project Name: <input type="text" name="name" id="name" class="form form-control">
-                            </div>
-                            <div class="col-6">
-                                Catagory: <input type='text' class="form form-control" name="catagory" id="catagory" list='catagories'>
-                                <datalist id='catagories'>
-                                    {% for cat in catagory %}
-                                        <option value="{{cat.catagory}}">{{cat.catagory}}</option>
-                                    {% endfor %}
-                               </datalist>
-                            </div>
-                        </div>
+                    <form method="POST" enctype=multipart/form-data> <div class="row">
                         <table class="table table-striped" width="100%" id="orderdetails">
                             <thead>
                                 <tr>
-                                    <th>Item</th>
+                                    <th width="15%">Item</th>
                                     <th>Selection</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                <tr>
+                                    <td>Project Name</td>
+                                    <td><input type="text" name="name" id="name" class="form form-control"></td>
+                                </tr>
+                                <tr>
+                                    <td>Catagory</td>
+                                    <td><input type='text' class="form form-control" name="catagory" id="catagory"
+                                            list='catagories'>
+                                        <datalist id='catagories'>
+                                            {% for cat in catagory %}
+                                            <option value="{{cat.catagory}}">{{cat.catagory}}</option>
+                                            {% endfor %}
+                                        </datalist>
+                                    </td>
+                                </tr>
                                 <tr>
                                     <td>Printer</td>
                                     <td>
@@ -44,8 +46,7 @@
                                             {% endfor %}
                                         </select>
                                     </td>
-                                    <td></td>
-                                    <td></td>
+
                                 </tr>
                                 <tr>
                                     <td>Filament</td>
@@ -57,121 +58,127 @@
                                             {% endfor %}
                                         </select>
                                     </td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>Print Time</td>
-                                    <td><input type="text" name="printtime" id="printtime" disabled
-                                            class="form form-control" value="Calculated on save">
-                                    </td>
-                                    <td></td>
-                                    <td></td>
+
                                 </tr>
                                 <tr>
                                     <td>Design</td>
                                     <td>
-                                        <input type="number" name="design" id="design" class="form form-control" value=0>
+                                        <input type="number" min="0" step=".01" max="9999" name="design" id="design"
+                                            class="form form-control" value=0>
                                     </td>
-                                    <td></td>
-                                    <td></td>
                                 </tr>
                                 <tr>
                                     <td>Advertising</td>
                                     <td>
-                                        <input type="number" name="advertising" id="advertising"
-                                            class="form form-control" value=0>
+                                        <input type="number" min="0" step=".01" max="9999" name="advertising"
+                                            id="advertising" class="form form-control" value=0>
                                     </td>
-                                    <td></td>
-                                    <td></td>
                                 </tr>
                                 <tr>
                                     <td>Overhead</td>
                                     <td>
-                                        <input type="number" name="overhead" id="overhead" class="form form-control" value=0>
+                                        <input type="number" min="0" step=".01" max="9999" name="overhead" id="overhead"
+                                            class="form form-control" value=0>
                                     </td>
-                                    <td></td>
-                                    <td></td>
                                 </tr>
                                 <tr>
                                     <td>Rent</td>
                                     <td>
-                                        <input type="number" name="rent" id="rent" class="form form-control" value=0>
+                                        <input type="number" min="0" step=".01" max="9999" name="rent" id="rent"
+                                            class="form form-control" value=0>
                                     </td>
-                                    <td></td>
-                                    <td></td>
                                 </tr>
                                 <tr>
                                     <td>Other</td>
                                     <td>
-                                        <input type="number" name="other" id="other" class="form form-control" value=0>
+                                        <input type="number" min="0" step=".01" max="9999" name="other" id="other"
+                                            class="form form-control" value=0>
                                     </td>
-                                    <td></td>
-                                    <td></td>
                                 </tr>
                                 <tr>
                                     <td>Packaging</td>
                                     <td>
-                                        <input type="number" name="packaging" id="packaging" class="form form-control" value=0>
+                                        <input type="number" min="0" step=".01" max="9999" name="packaging"
+                                            id="packaging" class="form form-control" value=0>
                                     </td>
-                                    <td></td>
-                                    <td></td>
                                 </tr>
                                 <tr>
-                                    <td>Files:</td>
-                                    <td>
-                                        <input type="file" name="gcode1" id="gcode1" class="form form-control-file">
-                                        <input type="file" name="gcode2" id="gcode2" class="form form-control-file">
-                                        <input type="file" name="gcode3" id="gcode3" class="form form-control-file">
-                                        <input type="file" name="gcode4" id="gcode4" class="form form-control-file">
-                                        <input type="file" name="gcode5" id="gcode5" class="form form-control-file">
+                                    <td>Recommended Sale Price</td>
+                                    <td><input type="number" min="0" step=".01" max="9999"
+                                            name="sale_price" id="sale_price" class="form form-control">
                                     </td>
-                                    <td></td>
-                                    <td></td>
                                 </tr>
                                 <tr>
-                                    <td>Items per print</td>
-                                    <td>
-                                        <input type="number" name="qtyperprint" id="qtyperprint"
-                                            class="form form-control">
+                                    <td>Inventory Threshold</td>
+                                    <td><input type="number" min="0" step="1" max="9999"
+                                            name="threshold" id="threshold" class="form form-control">
                                     </td>
-                                    <td></td>
-                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <table class="table table-sm" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Select File</th>
+                                                <th>Quantity in file</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td width="15%">File 1</td>
+                                                <td width="30%"><input type="file" name="gcode1" id="gcode1"
+                                                        class="form form-control-file"></td>
+                                                <td width="55%"><input type="number" min="0" step=".01" max="9999"
+                                                        name="qty1" id="qty1" class="form form-control"></td>
+                                            </tr>
+                                            <tr>
+                                                <td width="15%">File2</td>
+                                                <td width="30%"><input type="file" name="gcode2" id="gcode2"
+                                                        class="form form-control-file"></td>
+                                                <td width="55%"><input type="number" min="0" step=".01" max="9999"
+                                                        name="qty2" id="qty2" class="form form-control"></td>
+                                            </tr>
+                                            <tr>
+                                                <td width="15%">File3</td>
+                                                <td width="30%"><input type="file" name="gcode3" id="gcode3"
+                                                        class="form form-control-file"></td>
+                                                <td width="55%"><input type="number" min="0" step=".01" max="9999"
+                                                        name="qty3" id="qty3" class="form form-control"></td>
+                                            </tr>
+                                            <tr>
+                                                <td width="15%">File4</td>
+                                                <td width="30%"><input type="file" name="gcode4" id="gcode4"
+                                                        class="form form-control-file"></td>
+                                                <td width="55%"><input type="number" min="0" step=".01" max="9999"
+                                                        name="qty4" id="qty4" class="form form-control"></td>
+                                            </tr>
+                                            <tr>
+                                                <td width="15%">File5</td>
+                                                <td width="30%"><input type="file" name="gcode5" id="gcode5"
+                                                        class="form form-control-file"></td>
+                                                <td width="55%"><input type="number" min="0" step=".01" max="9999"
+                                                        name="qty5" id="qty5" class="form form-control"></td>
+                                            </tr>
+                                            <tr>
+                                                <td width="15%">File6</td>
+                                                <td width="30%"><input type="file" name="gcode6" id="gcode6"
+                                                        class="form form-control-file"></td>
+                                                <td width="55%"><input type="number" min="0" step=".01" max="9999"
+                                                        name="qty6" id="qty6" class="form form-control"></td>
+                                            </tr>
+                                            <tr>
+                                                <td width="15%">File7</td>
+                                                <td width="30%"><input type="file" name="gcode7" id="gcode7"
+                                                        class="form form-control-file"></td>
+                                                <td width="55%"><input type="number" min="0" step=".01" max="9999"
+                                                        name="qty7" id="qty7" class="form form-control"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </tr>
                             </tbody>
-                            <tfoot class="table table-bordered">
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td class="text-end">Total Cost</td>
-                                    <td><input type="text" name="cost" id="cost" disabled class="form form-control"
-                                            value="Calculated on save"></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td class="text-end">Recommended Sale Price</td>
-                                    <td><input type="text" name="sale_price" id="sale_price" class="form form-control">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td class="text-end">Profit</td>
-                                    <td><input type="text" name="profit" id="profit" disabled class="form form-control"
-                                            value="Calculated on save"></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td class="text-end">Profit Margin</td>
-                                    <td><input type="text" name="margin" id="margin" disabled class="form form-control"
-                                            value="Calculated on save">
-                                    </td>
-                                </tr>
-                            </tfoot>
                         </table>
-                        <input type="submit" value="Submit" class="btn btn-success btn-lg">
+                        <input type="submit" value="Submit" class="btn btn-success btn-lg" style="width: 30%;">
                     </form>
                 </div>
             </div>

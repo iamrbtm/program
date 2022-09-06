@@ -164,6 +164,9 @@ class Printobject(db.Model):
     file = db.Column(db.String(250))
     h_printtime = db.Column(db.Float)
     kg_weight = db.Column(db.Float)
+    qtyperprint = db.Column(db.Integer)
+    projectid = db.Column(db.Integer, db.ForeignKey("project.id"))
+    project_rel = db.relationship("Project", backref="printobject", foreign_keys=[projectid])
 
 
 class Shipping(db.Model):
@@ -189,7 +192,7 @@ class Project(db.Model):
         db.Integer, db.ForeignKey("shipping.id", ondelete="CASCADE"), nullable=False
     )
     employeefk = db.Column(db.Integer, db.ForeignKey("people.id"), nullable=False)
-    objectfk = db.Column(db.String(100))
+    objectfk = db.Column(db.JSON)
     packaging = db.Column(db.Float)
     advertising = db.Column(db.Float)
     rent = db.Column(db.Float)

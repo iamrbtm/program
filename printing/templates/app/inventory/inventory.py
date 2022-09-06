@@ -49,9 +49,10 @@ def inventory_edit(id):
     inventory = db.session.query(Project).filter(Project.id == id).first()
 
     if request.method == "POST":
-        objectids = json.loads(inventory.objectfk)
-        for i in range(1, 7):
+        objectids = inventory.objectfk
+        for i in range(1, 8):
             gcodename = f"gcode{i}"
+            qtyname = f"qty{i}"
             if request.files[gcodename].filename != "":
                 # Save uploaded file
                 gcodefile = invgcode.save(request.files[gcodename])
@@ -62,8 +63,16 @@ def inventory_edit(id):
 
                 time_in_h, weight_in_kg = calc_time_length(filepath, request.form.get("filament"))
 
+                qty = request.form.get(qtyname)
+                
                 # save file to db
-                newgcode = Printobject(file=gcodefile, h_printtime=time_in_h, kg_weight=weight_in_kg)
+                newgcode = Printobject(
+                    file=gcodefile,
+                    h_printtime=time_in_h, 
+                    kg_weight=weight_in_kg,
+                    qtyperprint = qty,
+                    projectid = invrentory.id,
+                    )
                 db.session.add(newgcode)
                 db.session.commit()
                 db.session.refresh(newgcode)
@@ -74,7 +83,7 @@ def inventory_edit(id):
         inventory.customerfk = 2
         inventory.printerfk = int(newval["printer"])
         inventory.filamentfk = int(newval["filament"])
-        inventory.objectfk = json.dumps(objectids)
+        inventory.objectfk = objectids
         inventory.shippingfk = 3
         inventory.employeefk = 1
         inventory.packaging = float(newval["packaging"])
@@ -82,8 +91,8 @@ def inventory_edit(id):
         inventory.rent = float(newval["rent"])
         inventory.extrafees = float(newval["other"])
         inventory.active = 1
+        inventory.threshold = int(newval["threshold"])
         inventory.sale_price = float(newval["sale_price"])
-        inventory.qtyperprint = int(newval["qtyperprint"])
         inventory.catagory = str(newval["catagory"])
         db.session.commit()
 
@@ -91,7 +100,7 @@ def inventory_edit(id):
 
     printers = db.session.query(Printer).filter(Printer.active).all()
     filaments = db.session.query(Filament).filter(Filament.active).all()
-    objfks = json.loads(inventory.objectfk)
+    objfks = inventory.objectfk
     objects = db.session.query(Printobject).filter(Printobject.id.in_(objfks)).all()
 
     context = {
@@ -131,8 +140,32 @@ def inventory_adjust():
 def inventory_new():
     if request.method == "POST":
         objectids = []
-        for i in range(1, 6):
+        
+        newinv = Project(
+            project_name=request.form.get("name"),
+            customerfk=2,
+            printerfk=request.form.get("printer"),
+            filamentfk=request.form.get("filament"),
+            shippingfk=3,
+            employeefk=1,
+            packaging=request.form.get("packaging"),
+            advertising=request.form.get("advertising"),
+            rent=request.form.get("rent"),
+            extrafees=request.form.get("other"),
+            ordernum=int(str("22" + str(random.randint(1000, 9999)))),
+            active=1,
+            threshold = request.form.get('threshold'),
+            sale_price=request.form.get("sale_price"),
+            current_quantity=0,
+            catagory=request.form.get("catagory"),
+        )
+        db.session.add(newinv)
+        db.session.commit()
+        db.session.refresh(newinv)
+        
+        for i in range(1, 8):
             gcodename = f"gcode{i}"
+            qtyname = f"qty{i}"
             if request.files[gcodename].filename != "":
                 # Save uploaded file
                 gcodefile = invgcode.save(request.files[gcodename])
@@ -144,34 +177,22 @@ def inventory_new():
                 time_in_h, weight_in_kg = calc_time_length(filepath, request.form.get("filament"))
 
                 # save file to db
-                newgcode = Printobject(file=gcodefile, h_printtime=time_in_h, kg_weight=weight_in_kg)
+                newgcode = Printobject(
+                    file=gcodefile, 
+                    h_printtime=time_in_h, 
+                    kg_weight=weight_in_kg,
+                    qtyperprint = request.form.get(qtyname),
+                    projectid = newinv.id
+                    )
                 db.session.add(newgcode)
                 db.session.commit()
                 db.session.refresh(newgcode)
                 objectids.append(newgcode.id)
 
-        newinv = Project(
-            project_name=request.form.get("name"),
-            customerfk=2,
-            printerfk=request.form.get("printer"),
-            filamentfk=request.form.get("filament"),
-            objectfk=json.dumps(objectids),
-            shippingfk=3,
-            employeefk=1,
-            packaging=request.form.get("packaging"),
-            advertising=request.form.get("advertising"),
-            rent=request.form.get("rent"),
-            extrafees=request.form.get("other"),
-            ordernum=int(str("22" + str(random.randint(1000, 9999)))),
-            active=1,
-            sale_price=request.form.get("sale_price"),
-            current_quantity=0,
-            qtyperprint=request.form.get("qtyperprint"),
-            catagory=request.form.get("catagory"),
-        )
-        db.session.add(newinv)
+        newinv.objectfk = objectids
         db.session.commit()
-        db.session.refresh(newinv)
+
+        
 
         return redirect(url_for("inventory.inventory_details", id=newinv.id))
 
@@ -192,42 +213,40 @@ def inventory_new():
 @login_required
 def inventory_details(id):
     inventory = db.session.query(Project).filter(Project.id == id).first()
+    objects = db.session.query(Printobject).filter(Printobject.projectid == id).all()
+
     files = []
-    total_cost = 0.00
-    i = 1
-    for objectid in json.loads(inventory.objectfk):
-        objclassname = f"inv{objectid}"
-        objclassname = CalcCostInd(id, objectid)
+    totalcost = 0
+    for obj in objects:
+        printobj = CalcCostInd(id, obj.id)
+        
+        filcost = printobj.filcost()
+        timecost = printobj.timecost()
+        miscost = printobj.misfees()
+        
+        thing = {}
+        thing['weight_kg'] = obj.kg_weight
+        thing['print_time'] = obj.h_printtime
+        thing['filename'] = obj.file
+        thing['qtyperprint'] = obj.qtyperprint
+        thing['filcost'] = filcost
+        thing['timecost'] = timecost
+        thing['printer'] = inventory.printer_rel.name
+        thing['filament_diameter'] = inventory.filament_rel.diameter
+        thing['filament_type'] = inventory.filament_rel.type_rel.type
+        files.append(thing)
 
-        timecost = objclassname.timecost()
-        filcost = objclassname.filcost()
-        miscost = objclassname.misfees()
-
-        printer = Printer.query.filter(Printer.id == objclassname.project.printerfk).first().name
-        filtype = inventory.filament_rel.type_rel.type
-        diameter = inventory.filament_rel.diameter
-
-        file = {}
-        file["filename"] = objclassname.filename
-        file["print_time"] = objclassname.print_time
-        file["weight_kg"] = objclassname.weight_kg
-        file["timecost"] = timecost
-        file["filcost"] = filcost
-        file["printer"] = printer
-        file["filament_type"] = filtype
-        file["filament_diameter"] = diameter
-        files.append(file)
-
-        total_cost = total_cost + timecost + filcost
-
-        i = i + 1
-
+        if obj == objects[-1]:
+            totalcost = totalcost + filcost + timecost + miscost
+        else:
+            totalcost = totalcost + filcost + timecost
+    
     context = {
         "user": User,
         "action": 1,
         "inventory": inventory,
         "files": files,
-        "total_cost": total_cost,
+        "total_cost": totalcost,
         "miscost": miscost,
     }
     return render_template("app/inventory/inventory_details.html", **context)
@@ -272,3 +291,27 @@ def threshold():
     catagory = db.session.query(distinct(Project.catagory), Project.catagory).all()
     inventory = db.session.query(Project).filter(Project.customerfk == 2).filter(Project.active).all()
     return render_template("app/inventory/threshold.html", inventory=inventory, catagory=catagory)
+
+
+@inv.route("/print_time_report")
+def print_time_report():
+    items = db.session.query(Project).all()
+    
+    printtimes = []
+    totalprinttime = 0
+    for item in items:
+        printtime = 0
+        for obj in item.objectfk:
+            ptime = Printobject.query.filter(Printobject.id == obj).first().h_printtime
+            totaltime = printtime + ptime
+        printtime = ((item.threshold - item.current_quantity)/ item.qtyperprint)* totaltime
+        this = {}
+        this['printtime'] = printtime
+        this["id"] = item.id
+        printtimes.append(this)
+        totalprinttime = totalprinttime + printtime
+    
+    
+    context = {"printtimes":printtimes, "items":items, "totalprinttime":totalprinttime}
+    
+    return render_template("app/inventory/print_time_report.html", **context)

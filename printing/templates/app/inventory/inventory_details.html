@@ -12,9 +12,6 @@
     <div class="row mb-3">
         <div class="col-lg-12">
             <div class="card shadow mb-3" id="OrderDets">
-                <div class="card-header py-3">
-                    <p class="text-primary m-0 fw-bold">Order Details</p>
-                </div>
                 <div class="card-body">
                     <table class="table table-striped" width="100%" id="orderdetails">
                         <thead>
@@ -35,8 +32,17 @@
                                 <td></td>
                                 <td>File</td>
                                 <td>
-                                    {{file["filename"]}} - <a href='{{ url_for("inventory.download", filename=file["filename"] ) }}'>Download</a><br>
+                                    {{file["filename"]}} - <a
+                                        href='{{ url_for("inventory.download", filename=file["filename"] ) }}'>Download</a><br>
                                 </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>Items per print</td>
+                                <td></td>
+                                <td>{{file["qtyperprint"]}}</td>
                                 <td></td>
                                 <td></td>
                             </tr>
@@ -51,16 +57,16 @@
                                 <td></td>
                                 <td>Filament</td>
                                 <td>{{file["filament_type"]}} - {{file["filament_diameter"]}}</td>
-                                <td>{{"%.1f"|format((file["weight_kg"] * 1000) / inventory.qtyperprint)}}g</td>
-                                <td>{{"$%.2f"|format(file["filcost"] / inventory.qtyperprint)}}</td>
+                                <td>{{"%.1f"|format((file["weight_kg"] * 1000) / file["qtyperprint"])}}g</td>
+                                <td>{{"$%.2f"|format(file["filcost"] / file["qtyperprint"])}}</td>
                             </tr>
                             <tr>
                                 <td></td>
                                 <td>Print Time</td>
                                 <td>Cost of Electricity</td>
-                                <td>{{"%.2f"|format(file["print_time"] / inventory.qtyperprint)}} hours</td>
-                                <td>{{"$%.2f"|format(file["timecost"] / inventory.qtyperprint)}}</td>
-                            </tr>}
+                                <td>{{"%.2f"|format(file["print_time"] / file["qtyperprint"])}} hours</td>
+                                <td>{{"$%.2f"|format(file["timecost"] / file["qtyperprint"])}}</td>
+                            </tr>
                             {% endfor %}
                             <tr>
                                 <th colspan="5" class="table table-success">Misc Fees</th>
@@ -129,21 +135,25 @@
                                 <td></td>
                             </tr>
                             <tr>
-                                <td>Items per print:</td>
-                                <td>{{inventory.qtyperprint}}</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td>Inventory Threshold</td>
+                                <td>{{inventory.threshold}}</td>
+                            </tr>
+                            <tr>
+                                <td>Current Stock Onhand</td>
+                                <td>{{inventory.current_quantity}}</td>
+                            </tr>
+                            <tr>
+                                <td>Need To Make</td>
+                                <td>{{inventory.threshold - inventory.current_quantity}}</td>
                             </tr>
                         </tbody>
                         <tfoot class="table table-bordered">
-                            {% set ttl_cost = ((total_cost / inventory.qtyperprint)+miscost) %}
                             <tr>
                                 <td></td>
                                 <td></td>
                                 <td></td>
                                 <td class="text-end">Total Cost</td>
-                                <td>{{"$%.2f"|format(ttl_cost)}}</td>
+                                <td>{{"$%.2f"|format(total_cost)}}</td>
                             </tr>
                             <tr>
                                 <td></td>
@@ -157,7 +167,7 @@
                                 <td></td>
                                 <td></td>
                                 <td class="text-end">Profit</td>
-                                <td>{{"$%.2f"|format(inventory.sale_price - ttl_cost)}}
+                                <td>{{"$%.2f"|format(inventory.sale_price - total_cost)}}
                                 </td>
                             </tr>
                             <tr>
@@ -165,7 +175,7 @@
                                 <td></td>
                                 <td></td>
                                 <td class="text-end">Profit Margin</td>
-                                <td>{{"%.2f"|format(((inventory.sale_price - ttl_cost)/inventory.sale_price)*100)}}%
+                                <td>{{"%.2f"|format(((inventory.sale_price - total_cost)/inventory.sale_price)*100)}}%
                                 </td>
                             </tr>
                         </tfoot>
