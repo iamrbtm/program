@@ -119,16 +119,22 @@ def inventory_adjust():
     inventory = db.session.query(Project).filter(Project.customerfk == 2).filter(Project.active).all()
 
     if request.method == "POST":
+        projectid = request.form.get("item")
         newadj = Adjustment_log(
-            projectfk=request.form.get("item"),
+            projectfk=projectid,
             adjustment=request.form.get("adjustment"),
             description=request.form.get("desc"),
             time_created=datetime.datetime.now(),
         )
         db.session.add(newadj)
+        
+        for inv in inventory:
+            if inv.id == int(projectid):
+                qty = int(inv.current_quantity)
+                inv.current_quantity = int(qty) + int(request.form.get("adjustment"))
+        
         db.session.commit()
 
-        Update_Inventory_Qty()
         return redirect(url_for("inventory.inventory"))
 
     context = {"user": User, "inventory": inventory}
@@ -315,3 +321,8 @@ def print_time_report():
     context = {"printtimes":printtimes, "items":items, "totalprinttime":totalprinttime}
     
     return render_template("app/inventory/print_time_report.html", **context)
+
+@inv.route("/update")
+def update():
+    Update_Inventory_Qty()
+    return redirect(url_for("inventory.inventory"))

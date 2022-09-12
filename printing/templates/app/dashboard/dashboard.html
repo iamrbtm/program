@@ -1,7 +1,59 @@
 {% extends "app/base/base.html" %}
-
+{% block header %}Dashboard{% endblock %}
 {% block title %}Dashboard{% endblock %}
-
 {% block content %}
-    <h2>This is the dashboard</h2>
+<div class="container">
+    <div class="row row-cols-sm-1 row-cols-lg-2">
+        <div class="col">
+            <div class="card">
+                <div class="card-header bg-warning bg-opacity-50">
+                    <div class="display-5 text-capitalize">Inventory</div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Top 3 Best Sellers</h5>
+                    <div class="card-text">
+                        <table class="table table-sm table-responsive">
+                            {% for inv in topinv %}
+                            <tr>
+                                <td>{{inv[1]}}</td>
+                                <td>{{inv[2]}}</td>
+                                <td>{{"$%.2f" % inv[3]}}</td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm">
+            <div class="card">
+                <div class="card-header bg-warning bg-opacity-50">
+                    <div class="display-5 text-capitalize">Sales</div>
+                </div>
+                <div class="card-body">
+                    <div class="container">
+                        <div class="row row-cols-sm-1 row-cols-md-3">
+                            <div class="col">
+                                <h5 class="card-title">This Week</h5>
+                                <span class="small">{{weekly[0].strftime('%m-%d')}} thru
+                                    {{weekly[1].strftime('%m-%d')}}</span>
+                                <p class="card-text h4"><b>{{"$%.0f" % weekly[2]}}</b></p>
+                            </div>
+                            <div class="col">
+                                <h5 class="card-title">This Month</h5>
+                                <span class="small">{{monthly[0].strftime('%m-%d')}} thru {{monthly[1].strftime('%m-%d')}}</span>
+                                <p class="card-text h4"><b>{{"$%.0f" % monthly[2]}}</b></p>
+                            </div>
+                            <div class="col">
+                                <h5 class="card-title">This Year</h5>
+                                <span class="small">{{yearly[0].strftime('%m-%d')}} thru {{yearly[1].strftime('%m-%d')}}</span>
+                                <p class="card-text h4"><b>{{"$%.0f" % yearly[2]}}</b></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -1,13 +1,18 @@
-from flask import Blueprint, render_template, redirect, url_for, request
-from flask_login import login_required, current_user
+import datetime
+import json
+import os
+import random
+import secrets
+
 import flask_login
+from flask import Blueprint, redirect, render_template, request, url_for
+from flask_login import current_user, login_required
 from flask_mail import Mail, Message
+from printing import db, gcode, mail
+from printing.models import *
+from printing.utilities import *
 from sqlalchemy import distinct
 from sqlalchemy.orm import session
-from printing.models import *
-from printing import db, gcode, mail
-from printing.utilities import *
-import datetime, random, json, secrets, os
 
 sale = Blueprint("sales", __name__, url_prefix="/sales")
 

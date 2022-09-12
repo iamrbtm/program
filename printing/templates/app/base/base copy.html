@@ -41,6 +41,54 @@
             </a>
           </li>
 
+          <li class="nav-item">
+            <a class="nav-link" href="{{url_for('inventory.inventory')}}">
+              <i class="bi bi-basket-fill" style="color: #3a3b45"></i>
+              <span style="color: var(--bs-gray-900)">Inventory</span>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{{url_for('sales.sales')}}">
+              <i class="bi bi-receipt" style="color: #3a3b45"></i>
+              <span style="color: var(--bs-gray-900)">POS</span>
+            </a>  
+          </li>
+
+          <li class="nav-item dropdown">
+            <div class="nav-item dropdown">
+              <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
+                <i class="bi bi-kanban-fill" style="color: #3a3b45"></i>
+                <span style="color: var(--bs-gray-900)">Projects</span>
+              </a>
+              <div class="dropdown-menu dropdown-menu-dark shadow dropdown-menu-end animated--grow-in">
+                <a class="dropdown-item" href="{{url_for('project.open_orders')}}">
+                  <i class="bi bi-box-seam-fill"></i>
+                  &nbsp;Open Orders
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li class="nav-item dropdown">
+            <div class="nav-item dropdown">
+              <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
+                <i class="bi bi-basket-fill" style="color: #3a3b45"></i>
+                <span style="color: var(--bs-gray-900)">Reports</span>
+              </a>
+              <div class="dropdown-menu dropdown-menu-dark shadow dropdown-menu-end animated--grow-in">
+                <a class="dropdown-item" href="{{url_for('inventory.low_inventory')}}">
+                  <i class="bi bi-basket-fill"></i>
+                  &nbsp;Low Inventory
+                </a>
+                <a class="dropdown-item" href="{{url_for('inventory.print_time_report')}}">
+                  <i class="bi bi-basket-fill"></i>
+                  &nbsp;Print Time Report
+                </a>
+              </div>
+            </div>
+          </li>
+
           <li class="nav-item dropdown">
             <div class="nav-item dropdown">
               <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
@@ -66,27 +114,12 @@
             </div>
           </li>
 
-          <li class="nav-item dropdown">
-            <div class="nav-item dropdown">
-              <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
-                <i class="bi bi-kanban-fill" style="color: #3a3b45"></i>
-                <span style="color: var(--bs-gray-900)">Projects</span>
-              </a>
-              <div class="dropdown-menu dropdown-menu-dark shadow dropdown-menu-end animated--grow-in">
-                <a class="dropdown-item" href="{{url_for('project.open_orders')}}">
-                  <i class="bi bi-box-seam-fill"></i>
-                  &nbsp;Open Orders
-                </a>
-
-              </div>
-            </div>
-          </li>
 
           <li class="nav-item dropdown">
             <div class="nav-item dropdown">
               <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
                 <i class="bi bi-disc-fill" style="color: #3a3b45"></i>
-                <span style="color: var(--bs-gray-900)">Filament</span>
+                <span style="color: var(--bs-gray-900)">Setup</span>
               </a>
               <div class="dropdown-menu dropdown-menu-dark shadow dropdown-menu-end animated--grow-in">
                 <a class="dropdown-item" href="{{url_for('filament.filament')}}">
@@ -98,39 +131,6 @@
                   <i class="bi bi-file-plus-fill"></i>
                   &nbsp;Types
                 </a>
-
-              </div>
-            </div>
-          </li>
-
-          <li class="nav-item dropdown">
-            <div class="nav-item dropdown">
-              <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
-                <i class="bi bi-basket-fill" style="color: #3a3b45"></i>
-                <span style="color: var(--bs-gray-900)">Inventory</span>
-              </a>
-              <div class="dropdown-menu dropdown-menu-dark shadow dropdown-menu-end animated--grow-in">
-                <a class="dropdown-item" href="{{url_for('inventory.inventory')}}">
-                  <i class="bi bi-basket-fill"></i>
-                  &nbsp;Inventory
-                </a>
-
-              </div>
-            </div>
-          </li>
-
-          <li class="nav-item dropdown">
-            <div class="nav-item dropdown">
-              <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
-                <i class="bi bi-basket-fill" style="color: #3a3b45"></i>
-                <span style="color: var(--bs-gray-900)">Reports</span>
-              </a>
-              <div class="dropdown-menu dropdown-menu-dark shadow dropdown-menu-end animated--grow-in">
-                <a class="dropdown-item" href="{{url_for('inventory.low_inventory')}}">
-                  <i class="bi bi-basket-fill"></i>
-                  &nbsp;Low Inventory
-                </a>
-
               </div>
             </div>
           </li>
@@ -178,7 +178,7 @@
                     <img class="border rounded-circle img-profile"
                       src="{{url_for('static', filename=current_user.avatar_url)}}" width="32" height="32" /></a>
 
-                  <div class="dropdown-menu dropdown-menu-dark shadow dropdown-menu-end animated--grow-in">
+                  <div class="dropdown-menu dropdown-menu-light shadow dropdown-menu-end animated--grow-in">
                     <a class="dropdown-item" href="{{url_for('base.profile')}}">
                       <i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>
                       &nbsp;Profile

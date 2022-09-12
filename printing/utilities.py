@@ -18,10 +18,7 @@ filename = "temp.log"
 def format_tel(phone):
     if phone != "":
         clean_phone = re.sub("[^0-9]+", "", phone)
-        formatted_phone = (
-            re.sub("(\d)(?=(\d{3})+(?!\d))", r"\1-", "%d" % int(clean_phone[:-1]))
-            + clean_phone[-1]
-        )
+        formatted_phone = re.sub("(\d)(?=(\d{3})+(?!\d))", r"\1-", "%d" % int(clean_phone[:-1])) + clean_phone[-1]
         return formatted_phone
     else:
         return ""
@@ -434,14 +431,14 @@ def calc_time_length(filename, filamentfk):
 def calc_total_all_print_objects(id):
     total_weight = 0.0
     total_time = 0.0
-    
+
     all_files = json.loads(db.session.query(Project).filter(Project.id == id).first().objectfk)
-    
+
     for file in all_files:
         printobj = db.session.query(Printobject).filter(Printobject.id == file).first()
         total_time = total_time + printobj.h_printtime
         total_weight = total_weight + printobj.kg_weight
-    
+
     return total_weight, total_time
 
 
@@ -449,10 +446,10 @@ class CalcCostInd:
     def __init__(self, projectid, objectid):
         self.project = db.session.query(Project).filter(Project.id == projectid).first()
         self.object = db.session.query(Printobject).filter(Printobject.id == objectid).first()
-        
-        self.customer_disc = (self.project.customer_rel.discount_factor)
-        self.customer_markup = (self.project.customer_rel.markup_factor)
-        self.print_time = self.object.h_printtime # in hrs
+
+        self.customer_disc = self.project.customer_rel.discount_factor
+        self.customer_markup = self.project.customer_rel.markup_factor
+        self.print_time = self.object.h_printtime  # in hrs
         self.weight_kg = self.object.kg_weight  # in KG
         self.filename = self.object.file
         self.filamentid = self.project.filamentfk  # filament id
@@ -488,31 +485,19 @@ class CalcCostInd:
         return cost
 
     def misfees(self):
-            return round(
-                float(
-                    self.project.packaging
-                    + self.project.advertising
-                    + self.project.rent
-                    + self.project.extrafees
-                ),
-                2,
-            )
+        return round(
+            float(self.project.packaging + self.project.advertising + self.project.rent + self.project.extrafees),
+            2,
+        )
 
     def subtotal(self):
         return round(
-            float(
-                self.timecost()
-                + self.filcost()
-                + self.misfees()
-            ),
+            float(self.timecost() + self.filcost() + self.misfees()),
             2,
         )
 
     def total(self):
-        return (
-            round(self.subtotal() * (1 - self.customer_disc), 2)
-            + self.project.shipping_rel.cost
-        )
+        return round(self.subtotal() * (1 - self.customer_disc), 2) + self.project.shipping_rel.cost
 
 
 # Temp Data
@@ -602,23 +587,29 @@ def db_maintance():
 
 
 def Update_Inventory_Qty():
-    inventory = (
-        db.session.query(Project)
-        .filter(Project.customerfk == 2)
-        .filter(Project.active == True)
-        .all()
-    )
+    inventory = db.session.query(Project).filter(Project.customerfk == 2).filter(Project.active == True).all()
 
     for item in inventory:
-        current_qty = (
-            Adjustment_log.query.with_entities(
-                func.sum(Adjustment_log.adjustment).label("inv")
-            )
+        adjustments = (
+            Adjustment_log.query.with_entities(func.sum(Adjustment_log.adjustment).label("inv"))
             .filter(Adjustment_log.projectfk == item.id)
             .first()
             .inv
         )
-        item.current_quantity = current_qty
+        salesqty = (
+            Sales_lineitems.query.with_entities(func.sum(Sales_lineitems.qty).label("salessum"))
+            .filter(Sales_lineitems.projectfk == item.id)
+            .first()
+            .salessum
+        )
+        if adjustments == None and salesqty == None:
+            item.current_quantity = 0
+        elif adjustments == None and salesqty != None:
+            item.current_quantity = salesqty * -1
+        elif adjustments != None and salesqty == None:
+            item.current_quantity = adjustments
+        else:
+            item.current_quantity = adjustments - salesqty
         db.session.commit()
 
 
@@ -640,14 +631,12 @@ def upload_store_gcode_file(gcodefile, path, filamentfk, project_link=0):
         filepath = base
     else:
         filepath = os.makedirs(os.path.join(base, project_link))
-        os.rename(os.path.join(bath,gcodefile), os.path.join(filepath,gcodefile))
+        os.rename(os.path.join(bath, gcodefile), os.path.join(filepath, gcodefile))
 
     time_in_h, weight_in_kg = calc_time_length(filepath, filamentfk)
 
     # save file to db
-    newgcode = Printobject(
-        file=gcodefile, print_time=time_in_h, weight_kg=weight_in_kg
-    )
+    newgcode = Printobject(file=gcodefile, print_time=time_in_h, weight_kg=weight_in_kg)
     db.session.add(newgcode)
     db.session.commit()
 
@@ -692,14 +681,14 @@ def clean_inventory_uploads(path):
 
 def get_sec(time_str):
     """Get seconds from time."""
-    h, m, s = time_str.split(':')
+    h, m, s = time_str.split(":")
     return int(h) * 3600 + int(m) * 60 + int(s)
 
 
 def convert_HHH_to_HMS(dec_string):
     hours = int(dec_string)
-    minutes = (dec_string*60) % 60
-    seconds = (dec_string*3600) % 60
+    minutes = (dec_string * 60) % 60
+    seconds = (dec_string * 3600) % 60
 
     time = "%d:%02d:%02d" % (hours, minutes, seconds)
     return get_sec(time)
@@ -708,25 +697,35 @@ def convert_HHH_to_HMS(dec_string):
 def calculate_est_vs_act_time(fileid, actual_time):
     est_time = convert_HHH_to_HMS(Printobject.query.filter(Printobject.id == fileid).first().h_printtime)
     project = db.session.query(Project).filter(Project.objectfk.contains(fileid)).first()
-    #Save new data to the database
+    # Save new data to the database
     newentry = Estimate_vs_actual_time(
-        printerfk = project.printerfk,
-        estimated_time_in_s = est_time,
-        actual_time_in_s = actual_time
+        printerfk=project.printerfk, estimated_time_in_s=est_time, actual_time_in_s=actual_time
     )
     db.session.add(newentry)
     db.session.commit()
-    
-    #Calculate the average of all entries for the given machine
+
+    # Calculate the average of all entries for the given machine
     printers = Printer.query.filter(Printer.active == True).all()
-    
+
     for printer in printers:
-        est = Estimate_vs_actual_time.query.with_entities(func.sum(Estimate_vs_actual_time.estimated_time_in_s).label('EstTime')).filter(Estimate_vs_actual_time.printerfk == printer.id).first()
-        act = Estimate_vs_actual_time.query.with_entities(func.sum(Estimate_vs_actual_time.actual_time_in_s).label('ActTime')).filter(Estimate_vs_actual_time.printerfk == printer.id).first()
-        
-        avg = (act[0] / est[0])*100
+        est = (
+            Estimate_vs_actual_time.query.with_entities(
+                func.sum(Estimate_vs_actual_time.estimated_time_in_s).label("EstTime")
+            )
+            .filter(Estimate_vs_actual_time.printerfk == printer.id)
+            .first()
+        )
+        act = (
+            Estimate_vs_actual_time.query.with_entities(
+                func.sum(Estimate_vs_actual_time.actual_time_in_s).label("ActTime")
+            )
+            .filter(Estimate_vs_actual_time.printerfk == printer.id)
+            .first()
+        )
+
+        avg = (act[0] / est[0]) * 100
         print(f"Printer {printer.id}: {avg}")
-        
-        #save the average to the database in the printer table
+
+        # save the average to the database in the printer table
         printer.correction_percentage = avg
         db.session.commit()
