@@ -1,0 +1,67 @@
+{% extends "app/base/base.html" %}
+
+{% block title %}Profit Split{% endblock %}
+{% block header %}Profit Split{% endblock %}
+{% block action_items %}{% endblock %}
+
+{% block content %}
+<!--  Modal trigger button  -->
+<button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#pre_split">
+    Launch
+</button>
+
+<!-- Modal Body-->
+<form method="post" action="{{url_for('report.split_profit')}}">
+    <div class="modal fade" id="pre_split" tabindex="-1" role="dialog" aria-labelledby="modalTitleId"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitleId">Split Profit Report</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="form-text">
+                                Enter Start and End Date for the Split Profit Report
+                            </div>
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="start" class="form-label">Start Date:</label>
+                                    <input type="date" class="form-control" name="start" id="start"
+                                        aria-describedby="StartDate" placeholder="Date">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="end" class="form-label">End Date:</label>
+                                    <input type="date" class="form-control" name="end" id="end"
+                                        aria-describedby="EndDate" placeholder="Date">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Process Report</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+
+
+{% endblock %}
+
+{% block payment_script %}
+<script>
+    $(document).ready(function () {
+        $("#pre_split").modal('show');
+    });
+</script>{% endblock %}
+{% block js_code %}{% endblock %}

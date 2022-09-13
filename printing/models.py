@@ -279,6 +279,7 @@ class Sales_lineitems(db.Model):
     qty = db.Column(db.Integer)
     price = db.Column(db.Float)
     ordernumfk = db.Column(db.Integer)
+    date_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
     project_rel = db.relationship("Project", backref="sales", foreign_keys=[projectfk])
 

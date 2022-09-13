@@ -276,52 +276,6 @@ def clean():
         clean_inventory_uploads(filepath)
     return redirect(url_for("inventory.inventory"))
 
-
-@inv.route("/low_inventory_report")
-def low_inventory():
-    items = db.session.query(Project).all()
-    
-    current_inv_sum = Project.query.with_entities(func.sum(Project.current_quantity).label('CurrentInventory')).first()
-    threshold_sum = Project.query.with_entities(func.sum(Project.threshold).label('Threshold')).first()
-    
-    context = {"items":items,"curinv":int(current_inv_sum[0]),"threshold":int(threshold_sum[0])}
-    
-    return render_template("app/inventory/low_inventory_pdf.html", **context)
-
-
-@inv.route("/threshold", methods=["GET", "POST"])
-def threshold():
-    if request.method == "POST":
-        data = request.form.to_dict()
-        print(data)
-    catagory = db.session.query(distinct(Project.catagory), Project.catagory).all()
-    inventory = db.session.query(Project).filter(Project.customerfk == 2).filter(Project.active).all()
-    return render_template("app/inventory/threshold.html", inventory=inventory, catagory=catagory)
-
-
-@inv.route("/print_time_report")
-def print_time_report():
-    items = db.session.query(Project).all()
-    
-    printtimes = []
-    totalprinttime = 0
-    for item in items:
-        printtime = 0
-        for obj in item.objectfk:
-            ptime = Printobject.query.filter(Printobject.id == obj).first().h_printtime
-            totaltime = printtime + ptime
-        printtime = ((item.threshold - item.current_quantity)/ item.qtyperprint)* totaltime
-        this = {}
-        this['printtime'] = printtime
-        this["id"] = item.id
-        printtimes.append(this)
-        totalprinttime = totalprinttime + printtime
-    
-    
-    context = {"printtimes":printtimes, "items":items, "totalprinttime":totalprinttime}
-    
-    return render_template("app/inventory/print_time_report.html", **context)
-
 @inv.route("/update")
 def update():
     Update_Inventory_Qty()

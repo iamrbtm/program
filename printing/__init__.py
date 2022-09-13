@@ -81,6 +81,7 @@ def create_app():
     from printing.templates.app.sales.sales import sale
     from printing.templates.app.settings.settings import stg
     from printing.templates.app.testimonial.testimonial import testimony
+    from printing.templates.app.reports.reports import rep
     
     app.register_blueprint(base, url_prefix='/')
     app.register_blueprint(proj)
@@ -95,6 +96,7 @@ def create_app():
     app.register_blueprint(testimony)
     app.register_blueprint(inv)
     app.register_blueprint(sale)
+    app.register_blueprint(rep)
 
     from printing.models import User
 

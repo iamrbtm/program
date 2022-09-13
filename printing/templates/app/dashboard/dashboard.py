@@ -63,6 +63,9 @@ def dashboard():
         .all()
     )
     
+    if monthly_sales[0][0] == None:
+        monthly_sales = [(0,0)]
+    
     monthly = [start_month_date,end_month_date,monthly_sales[0][0]]
     
     #yearly    
@@ -75,6 +78,9 @@ def dashboard():
         .filter(Sales.date_time_created.between(start_year_date, end_year_date))
         .all()
     )
+    
+    if yearly_sales[0][0] == None:
+        yearly_sales = [(0,0)]
     
     yearly = [start_year_date,end_year_date,yearly_sales[0][0]]
     content = {
