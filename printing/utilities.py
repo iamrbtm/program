@@ -451,6 +451,7 @@ class CalcCostInd:
         self.customer_markup = self.project.customer_rel.markup_factor
         self.print_time = self.object.h_printtime  # in hrs
         self.weight_kg = self.object.kg_weight  # in KG
+        self.qtyperprint = self.object.qtyperprint
         self.filename = self.object.file
         self.filamentid = self.project.filamentfk  # filament id
         self.diameter = self.project.filament_rel.diameter
@@ -474,7 +475,7 @@ class CalcCostInd:
         cost = (self.weight_kg * 1000) * self.cost_fil_per_g
         if cost < 0.01:
             cost = 0.01
-        return cost
+        return cost / self.qtyperprint
 
     def timecost(self):
         kw_per_hr = db.session.query(Settings).first().cost_kW
@@ -482,7 +483,7 @@ class CalcCostInd:
         cost = self.print_time * kw_per_hr * self.filament_kw_per_hr
         if cost < 0.01:
             cost = 0.01
-        return cost
+        return cost / self.qtyperprint
 
     def misfees(self):
         return round(

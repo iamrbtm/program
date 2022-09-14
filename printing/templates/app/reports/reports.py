@@ -5,7 +5,8 @@ from flask_login import login_required
 from printing.models import *
 from printing import db
 from sqlalchemy import extract, func
-from datetime import datetime
+import datetime
+from printing.utilities import *
 
 
 rep = Blueprint("report", __name__, url_prefix="/report")
@@ -76,14 +77,46 @@ def split_profit_pre():
 @login_required
 def split_profit():
     if request.method == "POST":
-        start = datetime.strptime(request.form.get("start"),"%Y-%m-%d")
-        end = datetime.strptime(request.form.get("end"),"%Y-%m-%d")
-        start_date = datetime(start.year, start.month, start.day)
-        end_date = datetime(end.year, end.month, end.day)
+        start = datetime.datetime.strptime(request.form.get("start"),"%Y-%m-%d")
+        end = datetime.datetime.strptime(request.form.get("end"),"%Y-%m-%d")
+        start_date = datetime.datetime(start.year, start.month, start.day)
+        end_date = datetime.datetime(end.year, end.month, end.day)
 
         list_of_items_sold = (
             db.session.query(Sales_lineitems)
             .filter(Sales_lineitems.date_created.between(start_date, end_date))
             .all()
         )
-    return 1
+        
+        calc_items_sold = (
+            db.session.query(Project.project_name, func.sum(Sales_lineitems.price).label("pricesum"), func.sum(Sales_lineitems.qty).label("sumqty"))
+            .join(Project, Sales_lineitems.projectfk == Project.id)
+            .filter(Sales_lineitems.date_created.between(start_date, end_date))
+            .group_by(Sales_lineitems.projectfk)
+            .order_by(Project.project_name)
+            .all()
+        )
+        
+        totalcost = 0
+        totalprice = 0
+        totalprofit = 0
+        totalqty = 0
+        
+        for item in list_of_items_sold:
+            for obj in item.project_rel.objectfk:
+                item1 = CalcCostInd(item.projectfk, obj)
+                totalcost = totalcost + (item1.subtotal() * item.qty)
+            totalqty = totalqty + item.qty
+            totalprice = totalprice + item.price
+            totalprofit = totalprice - totalcost
+                
+    context = {
+        "user":User,
+        "totalcost":totalcost,
+        "totalprice":totalprice,
+        "totalprofit":totalprofit,
+        "totalqty":totalqty,
+        "list_of_items_sold":list_of_items_sold,
+        "calc_items_sold":calc_items_sold,
+    }
+    return render_template("app/reports/profit_split.html", **context)

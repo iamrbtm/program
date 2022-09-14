@@ -1,0 +1,102 @@
+{% extends "app/base/base.html" %}
+
+{% block title %}Profit Split{% endblock %}
+{% block header %}Profit Split{% endblock %}
+{% block action_items %}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex flex-row">
+        <div class="col" id="transactions">
+            <div class="card">
+                <div class="card-header bg-success opacity-75 text-black display-6 text-uppercase">
+                    Items Sold
+                </div>
+                <div class="card-body"></div>
+                <table class="table table-sm" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Qty</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in calc_items_sold%}
+                        <tr>
+                            <td>{{item[0] }}</td>
+                            <td>{{item[2] }}</td>
+                            <td>{{"$%.2f" % (item[1] | float / item[2] | float )}}</td>
+                            <td>{{"$%.2f" % item[1] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th></th>
+                            <th>{{totalqty}}</th>
+                            <th></th>
+                            <th>{{"$%.2f" % totalprice}}</th>
+                        </tr>
+                        <tr>
+                            <th colspan="3">Total Cost</th>
+                            <th>{{"$%.2f" % totalcost}}</th>
+                        </tr>
+                        <tr>
+                            <th colspan="3">Total Profit</th>
+                            <th>{{"$%.2f" % totalprofit}}</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex flex-row">
+        <div class="col" id="jeremy">
+            <div class="card">
+                <div class="card-header bg-success opacity-75 text-black display-6 text-uppercase">
+                    Jeremy
+                </div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm" width="100%">
+                        <tr>
+                            <th>50% of profit</th>
+                            <td>{{"$%.2f" % (totalprofit |float / 2) }}</td>
+                        </tr>
+                        <tr>
+                            <th>Reimbursment of Costs</th>
+                            <td>{{"$%.2f" % totalcost}}</td>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <td>{{"$%.2f" % ((totalprofit |float / 2)+totalcost |float)}}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col" id="damian">
+            <div class="card">
+                <div class="card-header bg-success opacity-75 text-black display-6 text-uppercase">
+                    Damian
+                </div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm" width="100%">
+                        <tr>
+                            <th>50% of profit</th>
+                            <td>{{"$%.2f" % (totalprofit |float / 2) }}</td>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <td>{{"$%.2f" % (totalprofit |float / 2)}}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block payment_script %}{% endblock %}
+{% block js_code %}{% endblock %}
