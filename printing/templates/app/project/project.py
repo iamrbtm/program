@@ -24,23 +24,49 @@ def project():
 @proj.route("/details/<int:id>")
 @login_required
 def projectdetails(id):
-    project1 = CalcCost(id)
     project = db.session.query(Project).filter(Project.id == id).first()
+    objects = db.session.query(Printobject).filter(Printobject.projectid == id).all()
 
-    # timelength = calc_time_length(2,id)
-    histrecs = (
-        db.session.query(Project).filter(Project.customerfk == project.customerfk).all()
-    )
+    files = []
+    totalcost = 0
+    subtotal = 0
+    for obj in objects:
+        printobj = CalcCostInd(id, obj.id)
+        
+        filcost = printobj.filcost()
+        timecost = printobj.timecost()
+        miscost = printobj.misfees()
+        
+        thing = {}
+        thing['weight_kg'] = obj.kg_weight
+        thing['print_time'] = obj.h_printtime
+        thing['filename'] = obj.file
+        thing['qtyperprint'] = obj.qtyperprint
+        thing['filcost'] = filcost
+        thing['timecost'] = timecost
+        thing['printer'] = project.printer_rel.name
+        thing['filament_diameter'] = project.filament_rel.diameter
+        thing['filament_type'] = project.filament_rel.type_rel.type
+        files.append(thing)
 
-    content = {
+        subtotal = round((subtotal + filcost + timecost),2)
+
+        if obj == objects[-1]:
+            totalcost = round(((project.threshold * subtotal) + miscost + project.shipping_rel.cost),2)
+    
+    histrecs = (db.session.query(Project).filter(Project.customerfk == project.customerfk).all())
+
+    context = {
         "user": User,
-        "projects": project,
-        "newproject": project1,
-        "materialused": project1.kg_weight * 1000,
-        "printtime": project1.h_printtime,
+        "action": 1,
+        "project": project,
+        "files": files,
+        "subtotal": subtotal,
+        "totalcost": totalcost,
+        "misfees": miscost,
         "history": histrecs,
     }
-    return render_template("app/project/project_details.html", **content)
+    return render_template("app/project/project_details.html", **context)
 
 
 @proj.route("/open_orders")
@@ -71,47 +97,57 @@ def new_project():
     printers = db.session.query(Printer).filter(Printer.active == True).all()
     
     if request.method == "POST":
-        if request.files['gcode'].filename != '':
-            #Save uploaded file
-            gcodefile = gcode.save(request.files['gcode'])
-            
-            #process file for time and materials
-            basedir = os.path.abspath(os.path.dirname(__file__))
-            filepath = os.path.join(basedir, 'uploads', gcodefile)
-
-            time_in_h, weight_in_kg = calc_time_length(filepath,request.form.get('filamentfk'))
-            
-            #save file to db
-            newgcode = Printobject(
-                file = gcodefile,
-                h_printtime = time_in_h,
-                kg_weight = weight_in_kg
-            )
-            db.session.add(newgcode)
-            db.session.commit()
-            db.session.refresh(newgcode)
-            
-        #save project details to db
+        objectids = []
+        
         newproj = Project(
-            project_name = request.form.get('projectname'),
-            customerfk = request.form.get('customer'),
-            printerfk = request.form.get('printer'),
-            filamentfk = request.form.get('filamentfk'),
-            objectfk = newgcode.id,
-            shippingfk = request.form.get('shippingcost'),
-            employeefk = request.form.get('employee'),
-            packaging = 0,
-            advertising = 0,
-            rent = 0,
-            overhead = 0,
-            extrafees = 0,
-            ordernum = ordernumber,
-            active = 1,
-            
+            project_name=request.form.get("projectname"),
+            customerfk= request.form.get("customer"),
+            printerfk=request.form.get("printer"),
+            filamentfk=request.form.get("filamentfk"),
+            shippingfk=request.form.get("shippingcost"),
+            employeefk=request.form.get("employee"),
+            packaging=request.form.get("packaging"),
+            advertising=request.form.get("advertising"),
+            rent=request.form.get("rent"),
+            extrafees=request.form.get("other"),
+            ordernum=int(str("22" + str(random.randint(1000, 9999)))),
+            active=1,
+            threshold = request.form.get("qty"),
+            priority = request.form.get("priority"),
+            current_quantity=0
         )
         db.session.add(newproj)
         db.session.commit()
         db.session.refresh(newproj)
+        
+        for i in range(1, 8):
+            gcodename = f"gcode{i}"
+            qtyname = f"qty{i}"
+            if request.files[gcodename].filename != "":
+                # Save uploaded file
+                gcodefile = gcode.save(request.files[gcodename])
+
+                # process file for time and materials
+                basedir = os.path.abspath(os.path.dirname(__file__))
+                filepath = os.path.join(basedir, "uploads", gcodefile)
+
+                time_in_h, weight_in_kg = calc_time_length(filepath, request.form.get("filamentfk"))
+
+                # save file to db
+                newgcode = Printobject(
+                    file=gcodefile, 
+                    h_printtime=time_in_h, 
+                    kg_weight=weight_in_kg,
+                    qtyperprint = request.form.get(qtyname),
+                    projectid = newproj.id
+                    )
+                db.session.add(newgcode)
+                db.session.commit()
+                db.session.refresh(newgcode)
+                objectids.append(newgcode.id)
+
+        newproj.objectfk = objectids
+        db.session.commit()
         
         #redirect to project details
         return redirect(url_for('project.projectdetails', id=newproj.id))

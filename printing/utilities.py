@@ -472,7 +472,7 @@ class CalcCostInd:
         return weight
 
     def filcost(self):
-        cost = (self.weight_kg * 1000) * self.cost_fil_per_g
+        cost = ((self.weight_kg * 1000) * self.cost_fil_per_g) * self.customer_markup 
         if cost < 0.01:
             cost = 0.01
         return cost / self.qtyperprint
@@ -480,25 +480,24 @@ class CalcCostInd:
     def timecost(self):
         kw_per_hr = db.session.query(Settings).first().cost_kW
 
-        cost = self.print_time * kw_per_hr * self.filament_kw_per_hr
+        cost = (self.print_time * kw_per_hr * self.filament_kw_per_hr) * self.customer_markup 
         if cost < 0.01:
             cost = 0.01
         return cost / self.qtyperprint
 
     def misfees(self):
-        return round(
-            float(self.project.packaging + self.project.advertising + self.project.rent + self.project.extrafees),
-            2,
-        )
+        mis = float(self.project.packaging + self.project.advertising + self.project.rent + self.project.extrafees)
+        return round(mis,2)
 
     def subtotal(self):
-        return round(
-            float(self.timecost() + self.filcost() + self.misfees()),
-            2,
-        )
+        sub = float(self.timecost() + self.filcost() + self.misfees())
+        return round(sub,2)
 
     def total(self):
-        return round(self.subtotal() * (1 - self.customer_disc), 2) + self.project.shipping_rel.cost
+        if self.customer_disc == 1:
+            discount = 1
+        else: discount = 1 - self.customer_disc
+        return round(self.subtotal() * discount, 2) + self.project.shipping_rel.cost
 
 
 # Temp Data

@@ -1,0 +1,247 @@
+{% extends "app/base/base.html" %}
+
+{% block title %}Details for {{projects.project_name}} {% endblock %}
+
+{% block header %}
+{{projects.project_name.upper()}} - <span class="display-6">{{projects.ordernum}}</span>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-3">
+        <div class="col-lg-4">
+            <div class="card mb-3" id="CustInfo">
+                <div class="card shadow mb-3">
+                    <div class="card-header py-3">
+                        <p class="text-primary m-0 fw-bold">Customer Info</p>
+                    </div>
+                    <div class="card-body shadow">
+                        {{projects.customer_rel.fname}} {{projects.customer_rel.lname}}</br>
+                        {{projects.customer_rel.mainaddress_rel.address}}</br>
+                        {{projects.customer_rel.mainaddress_rel.city}}, {{projects.customer_rel.mainaddress_rel.state}}
+                        {{projects.customer_rel.mainaddress_rel.postalcode}}</br>
+                        {{projects.customer_rel.phone}}</br>
+                        {{projects.customer_rel.email}}</br>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card mb-3" id="ShippingInfo">
+                <div class="card shadow mb-3">
+                    <div class="card-header py-3">
+                        <p class="text-primary m-0 fw-bold">Shipping Address</p>
+                    </div>
+                    <div class="card-body shadow">
+                        {{projects.customer_rel.shippingaddress_rel.fname}} {{projects.customer_rel.shippingaddress_rel.lname}}</br>
+                        {{projects.customer_rel.shippingaddress_rel.address}}</br>
+                        {{projects.customer_rel.shippingaddress_rel.city}}, {{projects.customer_rel.shippingaddress_rel.state}}
+                        {{projects.customer_rel.shippingaddress_rel.postalcode}}</br>
+                        </br>
+                        </br>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card mb-3" id="OrderInfo">
+                <div class="card shadow mb-3">
+                    <div class="card-header py-3">
+                        <p class="text-primary m-0 fw-bold">Order Info</p>
+                    </div>
+                    <div class="card-body shadow">
+                        <b>Order Number:</b> {{projects.ordernum}}</br>
+                        <b>Date Created:</b> {{projects.time_created.strftime('%b %d, %Y')}}</br>
+                        <b>Time Created:</b> {{projects.time_created.strftime('%-I:%m %p')}}</br>
+                        <b>Employee:</b> {{projects.employee_rel.fname}} {{projects.employee_rel.lname}}</br>
+                        <b>Shipping:</b> {{projects.shipping_rel.company}} - {{projects.shipping_rel.service}}</br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-lg-12">
+            <div class="card shadow mb-3" id="OrderDets">
+                <div class="card-header py-3">
+                    <p class="text-primary m-0 fw-bold">Order Details</p>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped" width="100%" id="orderdetails">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Description</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Printer</td>
+                                <td>{{projects.printer_rel.name}}</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Filament</td>
+                                <td>{{projects.filament_rel.name}} - ({{projects.filament_rel.color}}
+                                    {{projects.filament_rel.type_rel.type}}
+                                    {{projects.filament_rel.diameter}})</td>
+                                <td>{{"%.1f"|format(materialused)}}g</td>
+                                <td>{{"$%.2f"|format(newproject.filcost())}}</td>
+                            </tr>
+                            <tr>
+                                <td>Print Time</td>
+                                <td>Cost of Electricity</td>
+                                <td>{{"%.2f"|format(printtime)}} hours</td>
+                                <td>{{"$%.2f"|format(newproject.timecost())}}</td>
+                            </tr>
+                            {% if 1==2 %}
+                            <tr>
+                                <td>Design</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            {% endif %}
+                            {% if projects.advertising %}
+                            <tr>
+                                <td>Advertising</td>
+                                <td></td>
+                                <td></td>
+                                <td>{{"$%.2f"|format(projects.advertising)}}</td>
+                            </tr>
+                            {% endif %}
+                            {% if projects.overhead %}
+                            <tr>
+                                <td>Overhead</td>
+                                <td></td>
+                                <td></td>
+                                <td>{{"$%.2f"|format(projects.overhead)}}</td>
+                            </tr>
+                            {% endif %}
+                            {% if projects.rent %}
+                            <tr>
+                                <td>Rent</td>
+                                <td></td>
+                                <td></td>
+                                <td>{{"$%.2f"|format(projects.rent)}}</td>
+                            </tr>
+                            {% endif %}
+                            {% if projects.extrafees %}
+                            <tr>
+                                <td>Other</td>
+                                <td></td>
+                                <td></td>
+                                <td>{{"$%.2f"|format(projects.extrafees)}}</td>
+                            </tr>
+                            {% endif %}
+                            {% if projects.packaging %}
+                            <tr>
+                                <td>Packaging</td>
+                                <td></td>
+                                <td></td>
+                                <td>{{"$%.2f"|format(projects.packaging)}}</td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                        <tfoot class="table table-bordered">
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td class="text-end">Subtotal</td>
+                                <td>{{"$%.2f"|format(newproject.subtotal())}}</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td class="text-end">Discount - {{"%.0f"|format(projects.customer_rel.discount_factor*100|round)}}%</td>
+                                <td style="color: red">{{"$%.2f"|format(newproject.subtotal()*projects.customer_rel.discount_factor|float)}}</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td class="text-end">Shipping - {{projects.shipping_rel.company}}</td>
+                                <td>{{"$%.2f"|format(projects.shipping_rel.cost)}}</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td class="text-end">Total</td>
+                                <td>{{"$%.2f"|format(newproject.total())}}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="card mb-3" id="Order History">
+                <div class="card shadow mb-3">
+                    <div class="card-header py-3">
+                        <p class="text-primary m-0 fw-bold">Order History</p>
+                    </div>
+                    <div class="card-body shadow">
+                        <!-- DONE: place order history here -->
+                        <!-- DONE: place link for order history to detail page -->
+                        <table class="table table-striped" width="100%" id="orderhistory">
+                            <thead>
+                                <tr>
+                                    <th>Order#</th>
+                                    <th>ProjectName</th>
+                                    <th>Date</th>
+                                    <th>Active</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for hist in history %}
+                                <tr>
+                                    <td>
+                                        <a href="{{url_for('project.projectdetails', id=hist.id)}}">
+                                            {{hist.ordernum}}
+                                        </a></td>
+                                    <td>{{hist.project_name}}</td>
+                                    <td>{{hist.time_created}}</td>
+                                    <td>{{hist.active}}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js_code %}
+<script>
+    $(document).ready(function () {
+        $('#orderdetails').DataTable({
+            "bPaginate": false,
+            "bLengthChange": false,
+            "bFilter": false,
+            "bInfo": true,
+            "bAutoWidth": true,
+            colReorder: false,
+            responsive: true,
+            searchable: false,
+            columns: [{
+                    orderable: true,
+                },
+                {
+                    orderable: false,
+                },
+                {
+                    orderable: false,
+                },
+                {
+                    orderable: true,
+                },
+            ],
+        });
+    });
+</script>
+{% endblock %}

@@ -16,6 +16,7 @@ from printing.forms import *
 from printing.utilities import *
 from werkzeug.security import generate_password_hash, check_password_hash
 import datetime
+from printing.time_estimate import *
 
 base = Blueprint("base", __name__)
 
@@ -93,3 +94,10 @@ def evat():
     files = Printobject.query.all()
     return render_template("app/base/est_vs_act_time.html", user=User, files=files)
     
+@base.route("/test")
+@login_required
+def test():
+    t = timeEstimate()
+    t.EstimatePrintTime()
+    print(t.estimatedCompletionDate)
+    return redirect(url_for("dashboard.dashboard"))

@@ -208,6 +208,7 @@ class Project(db.Model):
     threshold = db.Column(db.Integer)
     qtyperprint = db.Column(db.Integer)
     catagory = db.Column(db.String(50))
+    priority = db.Column(db.Integer)
     time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
     time_updated = db.Column(db.DateTime(timezone=True), onupdate=func.now())
     employee_rel = db.relationship(
@@ -228,6 +229,8 @@ class Settings(db.Model):
     default_discount = db.Column(db.Float)
     padding_time = db.Column(db.Float)
     padding_filament = db.Column(db.Float)
+    bizstarttime = db.Column(db.Time)
+    bizendtime = db.Column(db.Time)
 
 
 class Events(db.Model):
