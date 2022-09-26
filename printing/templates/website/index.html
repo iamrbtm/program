@@ -75,21 +75,17 @@
                     <h6 class="text-primary mb-3">{{ test.date_created.strftime('%B %Y') }}</h6>
                     <!-- FIXME: figure out the rating star system -->
                     <ul class="list-unstyled d-flex justify-content-center mb-0">
+                        {% for _ in range(test.stars|int) %}
                         <li>
-                            <i class="fas fa-star fa-sm text-warning"></i>
+                            <i style="font-size:larger" class="fas fa-star fa-sm text-warning"></i>
                         </li>
+                        {% endfor %}
+                        {% set decimal_part = (test.stars|string).split('.')[1] %}
+                        {% if decimal_part == '5' %}
                         <li>
-                            <i class="fas fa-star fa-sm text-warning"></i>
+                            <i style="font-size:larger" class="fas fa-star-half-alt fa-sm text-warning"></i>
                         </li>
-                        <li>
-                            <i class="fas fa-star fa-sm text-warning"></i>
-                        </li>
-                        <li>
-                            <i class="fas fa-star fa-sm text-warning"></i>
-                        </li>
-                        <li>
-                            <i class="fas fa-star-half-alt fa-sm text-warning"></i>
-                        </li>
+                        {% endif %}
                     </ul>
                 </div>
                 {% endfor %}
@@ -147,7 +143,8 @@
             <hr class="star-dark mb-5">
             <div class="row">
                 <div class="col-lg-8 mx-auto">
-                    <form action="{{url_for('website.contactform')}}" method="post" id="contactForm" name="sentMessage" novalidate="novalidate">
+                    <form action="{{url_for('website.contactform')}}" method="post" id="contactForm" name="sentMessage"
+                        novalidate="novalidate">
                         <div class="control-group">
                             <div class="mb-0 form-floating controls pb-2">
                                 <input class="form-control" type="text" name="name" required="" placeholder="Name">

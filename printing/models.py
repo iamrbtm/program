@@ -251,6 +251,7 @@ class Testimonials(db.Model):
     name = db.Column(db.String(50))
     testimonial = db.Column(db.String(200))
     fulltext = db.Column(db.Text)
+    stars = db.Column(db.Float)
     active = db.Column(db.Boolean)
     date_created = db.Column(db.Date, default=func.now())
 
