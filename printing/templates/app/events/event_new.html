@@ -1,0 +1,71 @@
+{% extends "app/base/base.html" %}
+{% block title %}Events{% endblock %}
+{% block header %}EVENTS{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col">
+        <div class="card shadow mb-3">
+            <div class="card-header py-3">
+                <p class="text-primary m-0 fw-bold">Events</p>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="row">
+                        <div class="col-10">
+                            <label for="title" class="form col-form-label-lg">Event Name</label>
+                            <input type="text" class="form form-control" name="title" id="title">
+                        </div>
+                        <div class="col-2">
+                            <label for="publish" class="form col-form-label-lg">Publish</label>
+                            <select class="form form-select" name="publish" id="publish">
+                                <option value=1>True</option>
+                                <option value=0>False</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label for="start_date" class="form col-form-label-lg">Start Date</label>
+                            <input type="date" class="form form-control" name="start_date" id="start_date">
+                        </div>
+                        <div class="col-6">
+                            <label for="start_time" class="form col-form-label-lg">Start Time</label>
+                            <input type="time" class="form form-control" name="start_time" id="start_time">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label for="end_date" class="form col-form-label-lg">End Date</label>
+                            <input type="date" class="form form-control" name="end_date" id="end_date">
+                        </div>
+                        <div class="col-6">
+                            <label for="end_time" class="form col-form-label-lg">End Time</label>
+                            <input type="time" class="form form-control" name="end_time" id="end_time">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label for="mapsurl" class="form col-form-label-lg">Map URL</label>
+                            <input type="text" name="mapsurl" id="mapsurl" class="form form-control">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label for="desc" class="form col-form-label-lg">Description</label>
+                            <textarea class="form form-control" name="desc" id="desc" cols="100%"
+                                rows="10"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <input type="submit" value="Submit" class="btn btn-success">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

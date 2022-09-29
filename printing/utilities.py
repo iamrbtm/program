@@ -568,7 +568,6 @@ def db_maintance():
     Date: 8/14/22
     Summary: Various tasks for maintaining the database for the printing program
     List of Tasks: Search for Inactive Users
-                   #IDEA: Check on other db's
     """
     # No customer no employee and no supplier, set active to 0
     inactives = (

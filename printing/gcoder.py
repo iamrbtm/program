@@ -371,7 +371,6 @@ class GCode:
             ymax_e = float("-inf")
 
             # Duration estimation
-            # TODO:
             # get device caps from firmware: max speed, acceleration/axis
             # (including extruder)
             # calculate the maximum move duration accounting for above ;)
@@ -593,7 +592,7 @@ class GCode:
                         # then calculate the time taken to complete the remaining
                         # distance
 
-                        # FIXME: this code has been proven to be super wrong when 2
+                        # this code has been proven to be super wrong when 2
                         # subsquent moves are in opposite directions, as requested
                         # speed is constant but printer has to fully decellerate
                         # and reaccelerate
@@ -615,7 +614,7 @@ class GCode:
                         if f == lastf:
                             moveduration = currenttravel / f if f != 0 else 0.
                         else:
-                            # FIXME: review this better
+                            # DONE: review this better
                             # this looks wrong : there's little chance that the feedrate we'll decelerate to is the previous feedrate
                             # shouldn't we instead look at three consecutive moves ?
                             distance = 2 * abs(((lastf + f) * (f - lastf) * 0.5) / acceleration)  # multiply by 2 because we have to accelerate and decelerate
@@ -624,7 +623,7 @@ class GCode:
                                 moveduration += (currenttravel - distance) / f
                             else:
                                 moveduration = 2 * currenttravel / (lastf + f)  # This is currenttravel / mean(lastf, f)
-                                # FIXME: probably a little bit optimistic, but probably a much better estimate than the previous one:
+                                # probably a little bit optimistic, but probably a much better estimate than the previous one:
                                 # moveduration = math.sqrt(2 * distance / acceleration) # probably buggy : not taking actual travel into account
 
                         lastdx = dx
@@ -643,7 +642,7 @@ class GCode:
                             moveduration /= 1000.0
                             totalduration += moveduration
 
-                    # FIXME : looks like this needs to be tested with "lift Z on move"
+                    # looks like this needs to be tested with "lift Z on move"
                     if line.z is not None:
                         if line.command == "G92":
                             cur_z = line.z

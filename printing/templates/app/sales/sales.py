@@ -48,7 +48,7 @@ def add_to_list(receipt, itemid):
     inventoryitem = db.session.query(Project).filter(Project.id == itemid).first()
     receipt = list(eval(receipt))
     cnt = len([ele for ele in receipt if isinstance(ele, dict)])
-    # WORKING: change quantity and price if item is already in list, ie: the customer purchases more than one of the same item.
+    # DONE: change quantity and price if item is already in list, ie: the customer purchases more than one of the same item.
 
     i = 1
     receipt_new = {}

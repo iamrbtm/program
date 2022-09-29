@@ -303,3 +303,10 @@ class Estimate_vs_actual_time(db.Model):
     estimated_time_in_s = db.Column(db.Integer)
     actual_time_in_s = db.Column(db.Integer)
     dt_created = db.Column(db.DateTime(timezone=True), default=func.now())
+
+class Socials(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    social_name = db.Column(db.String(50))
+    profileURL = db.Column(db.String(300))
+    icon = db.Column(db.String(50))
+    active = db.Column(db.Boolean)

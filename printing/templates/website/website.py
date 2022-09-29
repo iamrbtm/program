@@ -9,7 +9,7 @@ from flask import (
 )
 from datetime import datetime
 from printing import db, mail
-from printing.models import Events, Testimonials, Contact
+from printing.models import Events, Testimonials, Contact, Socials
 from printing.utilities import format_tel
 from sqlalchemy.sql.expression import func
 from flask_mail import Message
@@ -20,7 +20,8 @@ site = Blueprint("website", __name__)
 def home():
     events = db.session.query(Events).filter(Events.start_date >= datetime.now()).filter(Events.publish == 1).order_by(Events.start_date).limit(5)
     testimony = db.session.query(Testimonials).filter(Testimonials.active == True).order_by(func.random()).limit(3).all()
-    return render_template("/website/index.html", events=events, testimony=testimony)
+    socials = db.session.query(Socials).filter(Socials.active == 1).order_by(func.random()).limit(4).all()
+    return render_template("/website/index.html", events=events, testimony=testimony, socials=socials)
 
 @site.route("/contactform", methods=['POST'])
 def contactform():

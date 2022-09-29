@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css"
         integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{{url_for('static', filename='website/css/styles.min.css')}}">
 </head>
 
@@ -73,7 +74,7 @@
                         {{test.testimonial}}
                     </p>
                     <h6 class="text-primary mb-3">{{ test.date_created.strftime('%B %Y') }}</h6>
-                    <!-- FIXME: figure out the rating star system -->
+                    <!-- DONE: figure out the rating star system -->
                     <ul class="list-unstyled d-flex justify-content-center mb-0">
                         {% for _ in range(test.stars|int) %}
                         <li>
@@ -191,18 +192,14 @@
                 <div class="col-md-4 mb-5 mb-lg-0">
                     <h4 class="text-uppercase">Around the Web</h4>
                     <ul class="list-inline">
-                        <li class="list-inline-item"><a
-                                class="btn btn-outline-light text-center btn-social rounded-circle" role="button"
-                                href="#"><i class="fa fa-facebook fa-fw"></i></a></li>
-                        <li class="list-inline-item"><a
-                                class="btn btn-outline-light text-center btn-social rounded-circle" role="button"
-                                href="#"><i class="fa fa-google-plus fa-fw"></i></a></li>
-                        <li class="list-inline-item"><a
-                                class="btn btn-outline-light text-center btn-social rounded-circle" role="button"
-                                href="#"><i class="fa fa-twitter fa-fw"></i></a></li>
-                        <li class="list-inline-item"><a
-                                class="btn btn-outline-light text-center btn-social rounded-circle" role="button"
-                                href="#"><i class="fa fa-dribbble fa-fw"></i></a></li>
+                        {% for social in socials %}
+                        <li class="list-inline-item">
+                            <a class="btn btn-outline-light text-center btn-social rounded-circle" role="button"
+                                href="{{social.profileURL}}">
+                                <i class="{{social.icon}}"></i>
+                            </a>
+                        </li> 
+                        {% endfor %}
                     </ul>
                 </div>
                 <div class="col-md-4">
