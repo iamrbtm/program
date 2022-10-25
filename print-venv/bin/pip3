@@ -1,4 +1,6 @@
-#!/Volumes/PTS/program/print-venv/bin/python
+#!/bin/sh
+'''exec' "/Users/rbtm2006/Documents/Dudefish Printing/program/program/print-venv/bin/python3.10" "$0" "$@"
+' '''
 # -*- coding: utf-8 -*-
 import re
 import sys
