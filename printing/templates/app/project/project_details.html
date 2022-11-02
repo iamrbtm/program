@@ -117,13 +117,13 @@
                             <tr>
                                 <th colspan="5" class="table table-success">Misc Fees</th>
                             </tr>
-                            {% if 1==2 %}
+                            {% if project.designhours %}
                             <tr>
                                 <td></td>
                                 <td>Design</td>
                                 <td></td>
                                 <td></td>
-                                <td></td>
+                                <td class="text-end">{{"$%.2f"|format(project.designhours * 50)}}</td>
                             </tr>
                             {% endif %}
                             {% if project.advertising %}
@@ -197,7 +197,8 @@
                                 <td class="text-end">$0.00</td>
                             </tr>
                             <tr>
-                                <td colspan="4" class="text-end">Shipping - ({{project.shipping_rel.company}}:{{project.shipping_rel.service}})</td>
+                                <td colspan="4" class="text-end">Shipping -
+                                    ({{project.shipping_rel.company}}:{{project.shipping_rel.service}})</td>
                                 <td class="text-end">{{"$%.2f" % project.shipping_rel.cost}}</td>
                             </tr>
                             <tr>
@@ -220,5 +221,13 @@
 <a class="dropdown-item" href="{{url_for('project.projectdetails', id=project.id)}}">
     <i class="bi bi-file-plus-fill me-2 text-gray-400"></i>
     &nbsp;Edit project
+</a>
+<a class="dropdown-item" href="{{url_for('report.estimate', id=project.id)}}">
+    <i class="bi bi-file-plus-fill me-2 text-gray-400"></i>
+    &nbsp;View Estimate
+</a>
+<a class="dropdown-item" href="{{url_for('report.invoice', id=project.id)}}">
+    <i class="bi bi-file-plus-fill me-2 text-gray-400"></i>
+    &nbsp;View Invoice
 </a>
 {% endblock %}

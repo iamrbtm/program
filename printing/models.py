@@ -107,6 +107,9 @@ class Address(db.Model):
         "People", back_populates="address", foreign_keys=[peoplefk]
     )
 
+    def fulladdress_one_line(self):
+        return f"{self.address} {self.city} {self.state} {self.postalcode}"
+
 
 class Printer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -200,6 +203,7 @@ class Project(db.Model):
     extrafees = db.Column(db.Float)
     discount = db.Column(db.Float)
     tracking = db.Column(db.Text)
+    designhours = db.Column(db.Integer)
     ordernum = db.Column(db.Integer)
     active = db.Column(db.Boolean)
     sale_price = db.Column(db.Float)

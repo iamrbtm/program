@@ -486,7 +486,7 @@ class CalcCostInd:
         return cost / self.qtyperprint
 
     def misfees(self):
-        mis = float(self.project.packaging + self.project.advertising + self.project.rent + self.project.extrafees)
+        mis = float(self.project.packaging + self.project.advertising + self.project.rent + self.project.extrafees + (self.project.designhours * 50))
         return round(mis,2)
 
     def subtotal(self):

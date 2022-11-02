@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Invoice# {{project.ordernum}}</title>
+	<link rel="stylesheet" href="{{url_for('static', filename='app/css/est_inv_style.css')}}" />
+  </head>
+  <body>
+    <header class="clearfix">
+      <div id="logo">
+        <img src="{{url_for('static', filename='app/img/logo.png')}}">
+      </div>
+      <div id="company">
+        <h2 class="name">Dudefish Printing</h2>
+        <div>2408 SW Oakwood Drive, Dallas, OR 97338, US</div>
+        <div>(503)990-4832</div>
+        <div><a href="mailto:jeremy@dudefishprinting.com">jeremy@dudefishprinting.com</a></div>
+      </div>
+      </div>
+    </header>
+    <main>
+      <div id="details" class="clearfix">
+        <div id="client">
+          <div class="to">INVOICE TO:</div>
+		  {% if project.customer_rel.company_name != "None" %}
+		  <h2 class="name">{{project.customer_rel.company_name}}</h2>
+		  <h2 class="name">{{project.customer_rel.fname}} {{project.customer_rel.lname}}</h2>
+          {% else %}
+		  <h2 class="name">{{project.customer_rel.fname}} {{project.customer_rel.lname}}</h2>
+		  {% endif %}
+          <div class="address">{{project.customer_rel.mainaddress_rel.fulladdress_one_line()}}</div>
+          <div class="email"><a href="mailto:{{project.customer_rel.email}}">{{project.customer_rel.email}}</a></div>
+          <div class="address">{{project.customer_rel.phone}}</div>
+        </div>
+        <div id="invoice">
+          <h1>ESTIMATE # {{project.ordernum}}</h1>
+          <div class="date">Date: {{ now }}</div>
+        </div>
+      </div>
+      <table border="0" cellspacing="0" cellpadding="0">
+        <thead>
+          <tr>
+            <th class="desc">Item</th>
+            <th class="unit">Description</th>
+            <th class="qty">Quantity</th>
+            <th class="total">Price</th>
+          </tr>
+        </thead>
+      <tbody>
+          {% for file in files %}
+          <tr>
+              <td class="desc"><h3>File {{loop.index}}</h3></td>
+              <td class="unit">{{file["filename"]}}</td>
+              <td class="qty"></td>
+              <td class="total"></td>
+          </tr>
+          <tr>
+              <td class="desc"><h3>Filament</h3></td>
+              <td class="unit">{{file["filament_type"]}} - {{file["filament_diameter"]}}</td>
+              <td class="qty">{{"%.1f"|format((file["weight_kg"] * 1000) / file["qtyperprint"])}}g</td>
+              <td class="total">{{"$%.2f"|format(file["filcost"])}}</td>
+          </tr>
+          <tr>
+              <td class="desc"><h3>Printer</h3></td>
+              <td class="unit"><h3>{{file["printer"]}}</h3> - <small>Cost of Electricity, Machine Upkeep, etc</small></td>
+              <td class="qty">{{"%.2f"|format(file["print_time"] / file["qtyperprint"])}} hours</td>
+              <td class="total">{{"$%.2f"|format(file["timecost"])}}</td>
+          </tr>
+          {% endfor %}
+          {% if project.designhours %}
+          <tr>
+            <td class="desc"><h3>Design Fee</h3></td>
+            <td class="unit"></td>
+            <td class="qty">
+              {% if project.designhours == 1 %}
+              {{project.designhours}} hour
+              {% else %}
+              {{project.designhours}} hours
+              {% endif %}
+              </td>
+            <td class="total">{{"$%.2f"|format(project.designhours * 50) }}</td>
+          </tr>
+          {% endif %}
+          {% if project.advertising %}
+          <tr>
+            <td class="desc"><h3>Advertising</h3></td>
+            <td class="unit"></td>
+            <td class="qty"></td>
+            <td class="total">{{"$%.2f"|format(project.advertising)}}</td>
+          </tr>
+          {% endif %}
+          {% if project.overhead %}
+          <tr>
+            <td class="desc"><h3>Overhead</h3></td>
+            <td class="unit"></td>
+            <td class="qty"></td>
+            <td class="total">{{"$%.2f"|format(project.overhead)}}</td>
+          </tr>
+          {% endif %}
+          {% if project.rent %}
+          <tr>
+            <td class="desc"><h3>Rent</h3></td>
+            <td class="unit"></td>
+            <td class="qty"></td>
+            <td class="total">{{"$%.2f"|format(project.rent)}}</td>
+          </tr>
+          {% endif %}
+          {% if project.extrafees %}
+          <tr>
+            <td class="desc"><h3>Other</h3></td>
+            <td class="unit"></td>
+            <td class="qty"></td>
+            <td class="total">{{"$%.2f"|format(project.extrafees)}}</td>
+          </tr>
+          {% endif %}
+          {% if project.packaging %}
+          <tr>
+            <td class="desc"><h3>Packaging</h3></td>
+            <td class="unit"></td>
+            <td class="qty"></td>
+            <td class="total">{{"$%.2f"|format(project.packaging)}}</td>
+          </tr>
+          {% endif %}
+      </tbody>
+      <tfoot class="table table-bordered">
+          <tr>
+              <td colspan="3" class="text-end">Cost Per Item</td>
+              <td class="text-end">{{"$%.2f" % subtotal}}</td>
+          </tr>
+          <tr>
+              <td colspan="3" class="text-end">Quantity</td>
+              <td class="text-end">{{project.threshold}}</td>
+          </tr>
+          <tr>
+              <td colspan="3" class="text-end">Subtotal</td>
+              <td class="text-end">{{"$%.2f" % (subtotal * project.threshold)}}</td>
+          </tr>
+          <tr>
+              <td colspan="3" class="text-end">Misc Fees</td>
+              <td class="text-end">{{"$%.2f" % misfees}}</td>
+          </tr>
+          {% if project.shipping_rel.id != 2 %}
+          <tr>
+            <td colspan="3" class="text-end">Shipping - ({{project.shipping_rel.company}}:{{project.shipping_rel.service}})</td>
+            <td class="text-end">{{"$%.2f" % project.shipping_rel.cost}}</td>
+          </tr>
+          {% endif %}
+          <tr>
+              <td colspan="3" class="text-end">Total</td>
+              <td class="text-end">{{"$%.2f" % totalcost}}</td>
+          </tr>
+      </tfoot>
+      </table>
+      <div id="thanks">Thank you!</div>
+      <!-- <div id="notices">
+        <div>NOTICE:</div>
+        <div class="notice">A finance charge of 1.5% will be made on unpaid balances after 30 days.</div>
+      </div> -->
+    </main>
+    <footer>
+      This estimate was created on a computer and is valid without the signature and seal.
+    </footer>
+  </body>
+</html>

@@ -1,6 +1,7 @@
 beautifulsoup4
 black
 email_validator
+geopy
 flask
 flask_login
 flask_mail
