@@ -58,6 +58,7 @@ class People(db.Model):
     employee_wage = db.Column(db.Float)
     employee_design = db.Column(db.Float)
     supplier = db.Column(db.Boolean)
+    bazaar = db.Column(db.Boolean, default=False)
     company_name = db.Column(db.String(50))
     url = db.Column(db.String(250))
     active = db.Column(db.Boolean)
@@ -78,6 +79,9 @@ class People(db.Model):
     )
     filament = db.relationship(
         "Filament", foreign_keys="Filament.supplierfk", back_populates="supplier_rel"
+    )
+    dosContact = db.relationship(
+        "Events", foreign_keys="Events.dos_contact_person", back_populates="dos_contact_rel"
     )
 
 
@@ -248,7 +252,19 @@ class Events(db.Model):
     description = db.Column(db.Text)
     mapsurl = db.Column(db.Text)
     publish = db.Column(db.Boolean, default=True)
+    handbook = db.Column(db.String(300))
+    
+    dos_contact_person = db.Column(
+        db.Integer, db.ForeignKey("people.id", ondelete="CASCADE"), nullable=False)
 
+    dos_contact_rel = db.relationship(
+        "People", back_populates="dosContact", foreign_keys=[dos_contact_person])
+
+class Notes(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    fk = db.Column(db.Integer)
+    date_created = db.Column(db.Date, default=func.now())
+    notes = db.Column(db.Text)
 
 class Testimonials(db.Model):
     id = db.Column(db.Integer, primary_key=True)

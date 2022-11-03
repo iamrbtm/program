@@ -13,9 +13,8 @@
                     <thead>
                         <tr>
                             <th>Event Name</th>
-                            <th>Start Date</th>
-                            <th>Start Time</th>
-                            <th>Description</th>
+                            <th>Start Date/Time</th>
+                            <th>Location</th>
                             <th>Publish</th>
                         </tr>
                     </thead>
@@ -23,9 +22,8 @@
                         {% for event in events %}
                             <tr>
                                 <td><a href="{{url_for('event.event_edit',id=event.id)}}">{{event.title}}</a></td>
-                                <td>{{event.start_date}}</td>
-                                <td>{{event.start_time}}</td>
-                                <td>{{event.description}}</td>
+                                <td>{{event.start_date}} {{event.start_time}}  </td>
+                                <td>{{event.location}}</td>
                                 <td>{{event.publish}}</td>
                             </tr>
                         {% endfor %}

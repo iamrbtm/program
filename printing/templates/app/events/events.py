@@ -35,6 +35,7 @@ def event_edit(id):
         events.title = request.form.get('title')
         events.start_date = request.form.get('start_date')
         events.start_time = request.form.get('start_time')
+        events.location = request.form.get('location')
         events.end_time = request.form.get('end_time')
         events.end_date = request.form.get('end_date')
         events.publish = int(request.form.get('publish'))
@@ -52,6 +53,7 @@ def event_new():
             title = request.form.get('title'),
             start_date = request.form.get('start_date'),
             start_time = request.form.get('start_time'),
+            location = request.form.get('location'),
             end_time = request.form.get('end_time'),
             end_date = request.form.get('end_date'),
             publish = int(request.form.get('publish')),
