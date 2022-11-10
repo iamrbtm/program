@@ -67,3 +67,10 @@
     });
 </script>
 {% endblock %}
+
+{% block action_items %}
+<a class="dropdown-item" href="{{url_for('filament.type_new')}}">
+    <i class="fa-solid fa-file-circle-plus me-2 text-gray-400"></i>
+    &nbsp;Add New Type
+</a>
+{% endblock %}

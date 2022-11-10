@@ -19,7 +19,7 @@
                         <div class="col">
                             <div>
                                 <form method="post"
-                                    action="{{url_for('sales.add_item', receipt=receipt, itemid=item.id)}}">
+                                    action="{{url_for('sales.add_item', itemid=item.id, ordernum = sales.ordernum)}}">
                                     <button class="btn btn-lg btn-success" style="width: 100%; height:95px;">
                                         <b>{{item.project_name|truncate(25)|replace(catagory, "")}}</b><br>
                                         <small>{{"$%.2f"%item.sale_price}}</small>
@@ -38,16 +38,12 @@
     <div class="col-lg-5 col">
         <div class="card shadow mb-3">
             <div class="card-body">
-                <form action="{{url_for('sales.finalize_transaction', receipt=receipt)}}" method="POST">
+                <form method="POST">
                     <div class="row">
                         <div class="col">
-                            {% for dic in receipt %}
-                            {% if loop.first %}
-                            Receipt Number: {{dic['data']['receiptnum']}}<br>
-                            Date/Time: {{dic['data']['dt']}}<br>
-                            Employee: {{dic['data']['employee']}}<br>
-                            {% endif %}
-                            {% endfor %}
+                            Receipt Number: {{sales.ordernum}}<br>
+                            Date/Time: {{sales.date_time_created}}<br>
+                            Employee: {{sales.employeefk}}<br>
                             <hr>
                             <table width="100%" class="table table-striped table-hover table-success">
                                 <thead>
@@ -73,7 +69,7 @@
                                     <tr>
                                         <th></th>
                                         <th></th>
-                                        <th>{{"$%.2f" % total}}</th>
+                                        <th>{{"$%.2f" % sales.total}}</th>
                                     </tr>
                                 </tfoot>
                                 {% endif %}

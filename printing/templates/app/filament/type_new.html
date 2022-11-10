@@ -1,0 +1,26 @@
+{% extends "app/base/base.html" %}
+{% block title %}Filament Types{% endblock %}
+{% block header %}FILAMENT TYPE{% endblock %}
+
+{% block content %}
+
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-8">
+                <label class="form col-form-label-lg" for="type">Type</label>
+                <input class="form form-control" type="text" name="type" id="type" placeholder="Type">
+            </div>
+            <div class="col-4">
+                <label class="form col-form-label-lg" for="densityccm3">Density</label>
+                <input class="form-control" type="text" name="densitygcm3" id="densitygcm3" placeholder="Density">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

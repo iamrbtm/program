@@ -83,7 +83,13 @@ class People(db.Model):
     dosContact = db.relationship(
         "Events", foreign_keys="Events.dos_contact_person", back_populates="dos_contact_rel"
     )
-
+    
+    def full_name(self):
+        if self.company_name:
+            company = f" ({self.company_name})"
+        else:
+            company = ""
+        return f"{self.fname} {self.lname}{company}"
 
 class Address(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -229,7 +235,6 @@ class Project(db.Model):
     filament_rel = db.relationship("Filament", backref="project")
     shipping_rel = db.relationship("Shipping", backref="project")
 
-
 class Settings(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     cost_kW = db.Column(db.Float)
@@ -253,12 +258,29 @@ class Events(db.Model):
     mapsurl = db.Column(db.Text)
     publish = db.Column(db.Boolean, default=True)
     handbook = db.Column(db.String(300))
+    file1 = db.Column(db.String(300))
+    file2 = db.Column(db.String(300))
+    file3 = db.Column(db.String(300))
+    file4 = db.Column(db.String(300))
     
     dos_contact_person = db.Column(
         db.Integer, db.ForeignKey("people.id", ondelete="CASCADE"), nullable=False)
 
     dos_contact_rel = db.relationship(
         "People", back_populates="dosContact", foreign_keys=[dos_contact_person])
+    
+    event_inventory_rel = db.relationship(
+        "Event_inventory", foreign_keys="Event_inventory.eventid", back_populates="event_rel"
+    )
+
+class Event_inventory(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    eventid = db.Column(db.Integer, db.ForeignKey("events.id"))
+    projectid = db.Column(db.Integer, db.ForeignKey("project.id"))
+    quantity = db.Column(db.Integer)
+    event_rel = db.relationship(
+        "Events", back_populates="event_inventory_rel", foreign_keys=[eventid])
+    project_rel = db.relationship("Project", backref="event_inventory", foreign_keys=[projectid])
 
 class Notes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
