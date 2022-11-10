@@ -316,6 +316,13 @@ class Sales(db.Model):
     date_time_created = db.Column(db.DateTime)
     total = db.Column(db.Float)
     sq_idempotency_key = db.Column(db.String(50))
+    
+    cash = db.Column(db.Float)
+    check = db.Column(db.Float)
+    checknum = db.Column(db.Integer)
+    card = db.Column(db.Float)
+    account = db.Column(db.Float)
+    other = db.Column(db.Float)
     customer_rel = db.relationship("People", backref="sales", foreign_keys=[customerfk])
 
 
@@ -327,7 +334,7 @@ class Sales_lineitems(db.Model):
     ordernumfk = db.Column(db.Integer)
     date_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
-    project_rel = db.relationship("Project", backref="sales", foreign_keys=[projectfk])
+    project_rel = db.relationship("Project", backref="sales_lineitems", foreign_keys=[projectfk])
 
 
 class Contact(db.Model):

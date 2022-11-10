@@ -8,11 +8,12 @@ import flask_login
 from flask import Blueprint, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 from flask_mail import Mail, Message
+from sqlalchemy import distinct
+from sqlalchemy.orm import session
+
 from printing import db, gcode, mail
 from printing.models import *
 from printing.utilities import *
-from sqlalchemy import distinct
-from sqlalchemy.orm import session
 
 sale = Blueprint("sales", __name__, url_prefix="/sales")
 
@@ -68,12 +69,8 @@ def sales_active(ordernum):
         .group_by(Project.catagory, Project.project_name)
         .all()
     )
-    sales = db.session.query(Sales).filter(Sales.)
-    items = 
-
-    
-
-
+    sales = db.session.query(Sales).filter(Sales.ordernum == ordernum).first()
+    items = db.session.query(Sales_lineitems).filter(Sales_lineitems.ordernumfk == ordernum).all()
 
     
     context = {"user": User, "inventory": inventory, "sales": sales, "new":False, "items":items}
@@ -84,15 +81,15 @@ def sales_active(ordernum):
 @login_required
 def add_item(ordernum, itemid):
     def get_price(projectfk):
-        price = db.session.query(Project),filter(Project.id == projectfk).first().sale_price
-        return price
+        proj = db.session.query(Project).filter(Project.id == projectfk).first()
+        return float(proj.sale_price)
     
     def getqty(ordernum,itemid):
         item = db.session.query(Sales_lineitems).filter(Sales_lineitems.ordernumfk == ordernum).filter(Sales_lineitems.projectfk == itemid).first()
-        if len(item) == 0:
+        if item == None:
             qty = 1
         else:
-            qty = len(item) + 1
+            qty = item.qty + 1
         return qty
     
     def add_to_db(ordernum, itemid, qty):
@@ -120,7 +117,7 @@ def add_item(ordernum, itemid):
         db.session.commit()
     
     
-    qty = getqty(ordernum, itemid),
+    qty = getqty(ordernum, itemid)
 
     
     if qty == 1:
@@ -128,6 +125,49 @@ def add_item(ordernum, itemid):
     else:
         update_db(ordernum, itemid, qty)
     
-    update_total()
+    update_total(ordernum)
     
-    return redirect(url_for("sales.sales", ordernum = ordernum))
+    return redirect(url_for("sales.sales_active", ordernum = ordernum))
+
+
+@sale.route("/finalize/cash", methods=["GET","POST"])
+@login_required
+def cash(ordernum):
+    sale = db.session.query(Sales).filter(Sales.ordernum == ordernum).first()
+    
+
+    
+
+@sale.route("/finalize/<ordernum>/<initial>", methods=["POST"])
+@login_required
+def sales_finalize(ordernum, initial):
+    def cash(sale):
+        pass
+    
+    def account():
+        pass
+    
+    def card():
+        pass
+    
+    def check():
+        pass
+    
+    def other():
+        pass
+    
+    
+    if request.method == "POST":
+        if initial == True:
+            sale = db.session.query(Sales).filter(Sales.ordernum == ordernum).first()
+        
+            if request.form['submitbtn'] == 'Cash':
+                cash(sale)
+            elif request.form['submitbtn'] == 'Account':
+                account(sale)
+            elif request.form['submitbtn'] == 'Check':
+                check(sale)
+            elif request.form['submitbtn'] == 'Card':
+                card(sale)
+            elif request.form['submitbtn'] == 'Other':
+                other(sale)
