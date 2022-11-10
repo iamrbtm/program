@@ -54,15 +54,13 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% if numdic != 0 %}
-                                    {% for dict in receipt %}
-                                    {% if loop.index > 1 %}
+                                    {% if new == False %}
+                                    {% for item in items %}
                                     <tr>
-                                        <td width="90%" class="text-start">{{dict[loop.index-1]['item']}}</td>
-                                        <td width="20%" class="text-start">{{dict[loop.index-1]['qty']}}</td>
-                                        <td width="20%" class="text-end">{{"$%.2f" % dict[loop.index-1]['price']}}</td>
+                                        <td width="90%" class="text-start">{{item.project_rel.project_name}}</td>
+                                        <td width="20%" class="text-start">{{item.qty}}</td>
+                                        <td width="20%" class="text-end">{{"$%.2f" % item.price}}</td>
                                     </tr>
-                                    {% endif %}
                                     {% endfor %}
                                 </tbody>
                                 <tfoot>

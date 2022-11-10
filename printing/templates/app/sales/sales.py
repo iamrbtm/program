@@ -54,21 +54,80 @@ def sales_new():
     db.session.commit()
     db.session.refresh(newsale)
 
-    context = {"user": User, "inventory": inventory, "sales": newsale}
+    context = {"user": User, "inventory": inventory, "sales": newsale, "new":True}
     return render_template("app/sales/sales.html", **context)
 
+@sale.route("/active/<ordernum>", methods=["GET","POST"])
+@login_required
+def sales_active(ordernum):
+    #Get all inventory
+    inventory = (
+        db.session.query(Project)
+        .filter(Project.customerfk == 2)
+        .filter(Project.active == True)
+        .group_by(Project.catagory, Project.project_name)
+        .all()
+    )
+    sales = db.session.query(Sales).filter(Sales.)
+    items = 
+
+    
+
+
+
+    
+    context = {"user": User, "inventory": inventory, "sales": sales, "new":False, "items":items}
+    return render_template("app/sales/sales.html", **context)
+    
 
 @sale.route("/add/<ordernum>/<itemid>", methods=["POST"])
 @login_required
 def add_item(ordernum, itemid):
-    
-    
     def get_price(projectfk):
-        pass
+        price = db.session.query(Project),filter(Project.id == projectfk).first().sale_price
+        return price
     
-    projectfk = itemid,
-    qty = 1,
-    price = get_price(itemid)
-    ordernumfk = ordernum
+    def getqty(ordernum,itemid):
+        item = db.session.query(Sales_lineitems).filter(Sales_lineitems.ordernumfk == ordernum).filter(Sales_lineitems.projectfk == itemid).first()
+        if len(item) == 0:
+            qty = 1
+        else:
+            qty = len(item) + 1
+        return qty
     
-    return redirect(url_for("sales.sales"))
+    def add_to_db(ordernum, itemid, qty):
+        newitem = Sales_lineitems(
+            projectfk = itemid,
+            price = get_price(itemid),
+            ordernumfk = ordernum,
+            qty = qty
+        )
+        db.session.add(newitem)
+        db.session.commit()
+        
+    def update_db(ordernum, itemid, qty):
+        item = db.session.query(Sales_lineitems).filter(Sales_lineitems.ordernumfk == ordernum).filter(Sales_lineitems.projectfk == itemid).first()
+        item.qty = qty
+        item.price = get_price(itemid) * qty
+        db.session.commit()
+    
+    def update_total(ordernum):
+        total = db.session.query(func.sum(Sales_lineitems.price)).filter(Sales_lineitems.ordernumfk == ordernum).scalar()
+        
+        sale = db.session.query(Sales).filter(Sales.ordernum == ordernum).first()
+        
+        sale.total = total
+        db.session.commit()
+    
+    
+    qty = getqty(ordernum, itemid),
+
+    
+    if qty == 1:
+        add_to_db(ordernum, itemid, qty)
+    else:
+        update_db(ordernum, itemid, qty)
+    
+    update_total()
+    
+    return redirect(url_for("sales.sales", ordernum = ordernum))
