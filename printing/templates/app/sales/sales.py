@@ -172,7 +172,8 @@ def split(ordernum):
     if request.method == "POST":
         sale.cash = float(request.form.get('cashamount'))
         sale.check = float(request.form.get('checkamount'))
-        sale.checknum = int(request.form.get('checknum'))
+        if sale.check != 0:
+            sale.checknum = int(request.form.get('checknum'))
         sale.account = float(request.form.get('accountamount'))
         sale.card = float(request.form.get('cardamount'))
         sale.other = float(request.form.get('otheramount'))
@@ -187,19 +188,32 @@ def split(ordernum):
 @login_required
 def sales_finalize(ordernum):
     def cash(sale):
-        pass
+        if sale.cash == 0:
+            sale.cash = float(sale.balance)
+        else:
+            sale.cash = sale.cash + float(sale.balance)
+        db.session.commit()
 
-    def account():
-        pass
+    def account(sale):
+        if sale.account == 0:
+            sale.account = float(sale.balance)
+        else:
+            sale.account = sale.account + float(sale.balance)
+        db.session.commit()
 
-    def card():
-        pass
+    def card(sale):
+        if sale.card == 0:
+            sale.card = float(sale.balance)
+        else:
+            sale.card = sale.card + float(sale.balance)
+        db.session.commit()
 
-    def check():
-        pass
-
-    def other():
-        pass
+    def other(sale):
+        if sale.other == 0:
+            sale.other = float(sale.balance)
+        else:
+            sale.other = sale.other + float(sale.balance)
+        db.session.commit()
 
     if request.method == "POST":
         sale = db.session.query(Sales).filter(Sales.ordernum == ordernum).first()
@@ -209,7 +223,7 @@ def sales_finalize(ordernum):
         elif request.form["submitbtn"] == "Account":
             account(sale)
         elif request.form["submitbtn"] == "Check":
-            check(sale)
+            return redirect(url_for("sales.split", ordernum=ordernum))
         elif request.form["submitbtn"] == "Card":
             card(sale)
         elif request.form["submitbtn"] == "Other":

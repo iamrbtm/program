@@ -1,26 +1,69 @@
 {% extends "app/base/base.html" %}
-{% block title %}Split Transaction Order # {{sale.ordernum}} {% endblock %}
-{% block header %}Split Transaction Order # {{sale.ordernum}}{% endblock %}
+{% block title %}Split# {{sale.ordernum}} {% endblock %}
+{% block header %}Split# {{sale.ordernum}}{% endblock %}
 {% block content %}
 <div class="card">
     <div class="card-body">
         <form method='POST'>
             <div class="row">
-                <h3 class="display-3">Amount Due: {{sale.total}}</h3>
+                <h3 class="display-3">Amount Due: {{"$%.2f"%sale.total}}</h3>
             </div>
             <div class="row">
-                <div class="col-1">
-                    <h4 class="display-4">Cash</h4>
+                <div class="col-3">
+                    <h6 class="display-6">Cash</h6>
                 </div>
-                <div class="col-4">
-                <input type="number" min="0.01" max="999999.99" step=".01" name="cashamount" id="cashamount"
-                    value="{{sale.total}}">
-                </div>
-                <div class="col-2">
-                    <input type="submit" value="Submit">
+                <div class="col-3">
+                    <input class="form-control" type="number" min="0.00" max="999999.99" step=".01" name="cashamount"
+                           id="cashamount"
+                    value="{{sale.cash}}">
                 </div>
             </div>
-        </form>
+            <div class="row">
+                <div class="col-3">
+                    <h6 class="display-6">Check</h6>
+                </div>
+                <div class="col-3">
+                    <input class="form-control" type="number" min="0.00" max="999999.99" step=".01" name="checkamount"
+                           id="checkamount" value="{{sale.check}}">
+                </div>
+                <div class="col-2">
+                    <input class="form-control" type="number" name="checknum" id="checknum">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-3">
+                    <h6 class="display-6">Card</h6>
+                </div>
+                <div class="col-3">
+                    <input class="form-control" type="number" min="0.00" max="999999.99" step=".01" name="cardamount"
+                           id="cardamount"  value="{{sale.card}}">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-3">
+                    <h6 class="display-6">Account</h6>
+                </div>
+                <div class="col-3">
+                    <input class="form-control" type="number" min="0.00" max="999999.99" step=".01" name="accountamount"
+                           id="accountamount" value="{{sale.account}}">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-3">
+                    <h6 class="display-6">Other</h6>
+                </div>
+                <div class="col-3">
+                    <input class="form-control" type="number" min="0.00" max="999999.99" step=".01" name="otheramount"
+                           id="otheramount" value="{{sale.other}}">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-2">
+                    <input class="btn btn-success btn-lg" type="submit" value="Submit">
+                </div>
+            </div>
     </div>
+    </form>
+</div>
 </div>
 {% endblock %}
