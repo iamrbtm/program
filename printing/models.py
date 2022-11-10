@@ -317,12 +317,13 @@ class Sales(db.Model):
     total = db.Column(db.Float)
     sq_idempotency_key = db.Column(db.String(50))
     
-    cash = db.Column(db.Float)
-    check = db.Column(db.Float)
+    cash = db.Column(db.Float, default=0)
+    check = db.Column(db.Float, default=0)
     checknum = db.Column(db.Integer)
-    card = db.Column(db.Float)
-    account = db.Column(db.Float)
-    other = db.Column(db.Float)
+    card = db.Column(db.Float, default=0)
+    account = db.Column(db.Float, default=0)
+    other = db.Column(db.Float, default=0)
+    balance = db.Column(db.Float)
     customer_rel = db.relationship("People", backref="sales", foreign_keys=[customerfk])
 
 

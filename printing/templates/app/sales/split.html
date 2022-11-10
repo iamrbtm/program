@@ -1,0 +1,26 @@
+{% extends "app/base/base.html" %}
+{% block title %}Split Transaction Order # {{sale.ordernum}} {% endblock %}
+{% block header %}Split Transaction Order # {{sale.ordernum}}{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <form method='POST'>
+            <div class="row">
+                <h3 class="display-3">Amount Due: {{sale.total}}</h3>
+            </div>
+            <div class="row">
+                <div class="col-1">
+                    <h4 class="display-4">Cash</h4>
+                </div>
+                <div class="col-4">
+                <input type="number" min="0.01" max="999999.99" step=".01" name="cashamount" id="cashamount"
+                    value="{{sale.total}}">
+                </div>
+                <div class="col-2">
+                    <input type="submit" value="Submit">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
