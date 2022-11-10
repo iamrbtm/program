@@ -130,11 +130,14 @@ def add_item(ordernum, itemid):
     return redirect(url_for("sales.sales_active", ordernum = ordernum))
 
 
-@sale.route("/finalize/cash", methods=["GET","POST"])
+@sale.route("/finalize/cash/<ordernum>", methods=["GET","POST"])
 @login_required
 def cash(ordernum):
     sale = db.session.query(Sales).filter(Sales.ordernum == ordernum).first()
     
+    
+    context = {"user": User, "sale": sale}
+    return render_template("app/sales/cash.html", **context)
 
     
 
@@ -162,7 +165,7 @@ def sales_finalize(ordernum, initial):
             sale = db.session.query(Sales).filter(Sales.ordernum == ordernum).first()
         
             if request.form['submitbtn'] == 'Cash':
-                cash(sale)
+                return redirect(url_for("sales.cash", ordernum=ordernum))
             elif request.form['submitbtn'] == 'Account':
                 account(sale)
             elif request.form['submitbtn'] == 'Check':
