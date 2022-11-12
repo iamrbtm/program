@@ -1,50 +1,47 @@
-import datetime
-import json
-import os
 import random
-import secrets
 
-import flask_login
 from flask import Blueprint, redirect, render_template, request, url_for
-from flask_login import current_user, login_required
-from flask_mail import Mail, Message
-from sqlalchemy import distinct
-from sqlalchemy.orm import session
+from flask_login import login_required
+from flask_mail import Message
 
-from printing import db, gcode, mail
-from printing.models import *
+from printing import mail
 from printing.utilities import *
 
 sale = Blueprint("sales", __name__, url_prefix="/sales")
 
+
+# IDEA: use picture of the object rather than buttons on the pos system
 # TODO: working on the emails that go to customers and admin when an order is placed
 # TODO: working on setting up the square button to make purchases - NEED HELP
 
+
 def update_total(ordernum):
-        total = (
-            db.session.query(func.sum(Sales_lineitems.price))
-            .filter(Sales_lineitems.ordernumfk == ordernum)
-            .scalar()
-        )
+    total = (
+        db.session.query(func.sum(Sales_lineitems.price))
+        .filter(Sales_lineitems.ordernumfk == ordernum)
+        .scalar()
+    )
 
-        sale = db.session.query(Sales).filter(Sales.ordernum == ordernum).first()
+    sale = db.session.query(Sales).filter(Sales.ordernum == ordernum).first()
 
-        sale.total = total
-        db.session.commit()
-        
+    sale.total = total
+    db.session.commit()
+
+
 def update_balance(ordernum):
     total = (
-            db.session.query(func.sum(Sales_lineitems.price))
-            .filter(Sales_lineitems.ordernumfk == ordernum)
-            .scalar()
-        )
-    
+        db.session.query(func.sum(Sales_lineitems.price))
+        .filter(Sales_lineitems.ordernumfk == ordernum)
+        .scalar()
+    )
+
     sale = db.session.query(Sales).filter(Sales.ordernum == ordernum).first()
-    
+
     pmts = sale.cash + sale.check + sale.card + sale.other
 
     sale.balance = total - pmts
     db.session.commit()
+
 
 @sale.route("/", methods=["GET", "POST"])
 @login_required
@@ -65,7 +62,7 @@ def sales_new():
     )
     # Generate a new order number and see if it is already in the database
     exists = True
-    while exists == True:
+    while exists:
         ordernumber = int(str("2022" + str(random.randint(100, 9999))))
         exists = db.session.query(
             db.exists().where(Sales.ordernum == ordernumber)
@@ -179,7 +176,7 @@ def split(ordernum):
         sale.other = float(request.form.get('otheramount'))
         db.session.commit()
         return redirect(url_for("sales.sales_active", ordernum=ordernum))
-    
+
     context = {"user": User, "sale": sale}
     return render_template("app/sales/split.html", **context)
 
@@ -215,6 +212,20 @@ def sales_finalize(ordernum):
             sale.other = sale.other + float(sale.balance)
         db.session.commit()
 
+    def send_email(sale, subject, template_name='receipt_customer.html'):
+        items = db.session.query(Sales_lineitems).filter(Sales_lineitems.ordernumfk == sale.ordernum).all()
+        total = sale.total
+
+        ordernum = sale.ordernum
+
+        msg = Message(
+            subject,
+            sender=("Dudefish Printing", "customer_service@dudefishprinting.com"),
+            recipients=sale.customer_rel.email,
+        )
+        msg.html = render_template(f"emails/sales/{template_name}", items=items, total=total)
+        mail.send(msg)
+
     if request.method == "POST":
         sale = db.session.query(Sales).filter(Sales.ordernum == ordernum).first()
 
@@ -230,5 +241,11 @@ def sales_finalize(ordernum):
             other(sale)
         elif request.form["submitbtn"] == "Split":
             return redirect(url_for("sales.split", ordernum=ordernum))
-        
-        
+
+    update_balance(ordernum)
+
+    if sale.balance == 0:
+        # FIXME: SEND EMAIL RECEIPT ~ send_email(sale, "Receipt from Dudefish Printing")
+        return redirect(url_for("sales.sales"))
+    else:
+        return redirect(url_for("sales.sales_active", ordernum=ordernum))

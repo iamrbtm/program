@@ -48,12 +48,12 @@ def create_app():
     Migrate(app, db)
 
     # Mail Setup
-    app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER')
-    app.config['MAIL_PORT'] = os.environ.get('MAIL_PORT')
-    app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
-    app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
-    app.config['MAIL_USE_SSL'] = os.environ.get('MAIL_USE_SSL')
-    app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER')
+    app.config['MAIL_SERVER'] = 'mail.dudefishprinting.com'
+    app.config['MAIL_PORT'] = 465
+    app.config['MAIL_USERNAME'] = "customer_service@dudefishprinting.com"
+    app.config['MAIL_PASSWORD'] = "braces4me"
+    app.config['MAIL_USE_TLS'] = True
+    app.config['MAIL_DEFAULT_SENDER'] = ('Dudefish Printing', 'customer_service@dudefishprinting.com')
 
     mail.init_app(app)
 

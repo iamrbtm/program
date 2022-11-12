@@ -20,7 +20,7 @@
                             <div>
                                 <form method="post"
                                     action="{{url_for('sales.add_item', itemid=item.id, ordernum = sales.ordernum)}}">
-                                    <button class="btn btn-lg btn-success" style="width: 100%; height:95px;">
+                                    <button class="btn btn-success" style="width: 100%; height:65px;">
                                         <b>{{item.project_name|truncate(25)|replace(catagory, "")}}</b><br>
                                         <small>{{"$%.2f"%item.sale_price}}</small>
                                     </button>
@@ -115,6 +115,7 @@
 
                             </table>
                             {% if sales.balance != 0 %}
+<!--                            FIXME: Fix the spacing of these buttons-->
                             <div class="row row-cols-2">
                                 <div class="col">
                                     <input type="submit" class="btn-lg btn-block btn-success btn-hover" name="submitbtn"

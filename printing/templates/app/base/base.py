@@ -4,19 +4,15 @@ from flask import (
     request,
     redirect,
     url_for,
-    after_this_request,
-    flash,
 )
 from flask_login import login_required, current_user
-import flask_login
-from sqlalchemy.orm import session
-from printing.models import *
-from printing import db, photos, avatar
+
+from printing import avatar, mail
 from printing.forms import *
-from printing.utilities import *
-from werkzeug.security import generate_password_hash, check_password_hash
-import datetime
 from printing.time_estimate import *
+from printing.utilities import *
+from flask_mail import Message
+
 
 base = Blueprint("base", __name__)
 
@@ -27,6 +23,18 @@ base = Blueprint("base", __name__)
 def home():
     return render_template("app/base/base.html", user=User)
 
+
+@base.route("/mailtest")
+@login_required
+def mailtest():
+    msg = Message(
+        "this is a test",
+        sender=("Dudefish Printing", "customer_service@dudefishprinting.com"),
+        recipients="rbtm2006@me.com",
+    )
+    msg.html = "<h1>This is a test</h1>"
+    mail.send(msg)
+    return redirect(url_for("base.home", user=User))
 
 @base.route("/profile", methods=["GET", "POST"])
 @login_required

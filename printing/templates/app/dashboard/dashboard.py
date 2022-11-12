@@ -7,6 +7,7 @@ from sqlalchemy import func, extract
 
 dash = Blueprint("dashboard", __name__, url_prefix='/dashboard')
 
+#TODO: figure out why the prices are off when looking at the dashboard
 @dash.route("/")
 @login_required
 def dashboard():
