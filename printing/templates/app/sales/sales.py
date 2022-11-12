@@ -14,7 +14,8 @@ sale = Blueprint("sales", __name__, url_prefix="/sales")
 # IDEA: use picture of the object rather than buttons on the pos system
 # TODO: working on the emails that go to customers and admin when an order is placed
 # TODO: working on setting up the square button to make purchases - NEED HELP
-
+# FIXME: when using account or other, make sure to finalize the transaction and move to a new POS
+# FIXME: delete the record if the sale has no items associated with the order.
 
 def update_total(ordernum):
     total = (

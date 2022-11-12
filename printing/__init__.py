@@ -100,7 +100,8 @@ def create_app():
 
     from printing.models import User
 
-    db.create_all(app=app)
+    with app.app_context():
+        db.create_all()
 
     # User Manager
     login_manager = LoginManager()

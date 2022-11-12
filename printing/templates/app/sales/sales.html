@@ -125,53 +125,54 @@
 
 #Customer and Payment Model
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Customer and Payment</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col">
-                        <h5>Customer</h5>
-                        <select class="form-select" id="customer" name="customer">
-                            {% for customer in customers %}
-                            <option value="{{customer.id}}" {% if customer.id== 23 %} selected {% endif %}>
-                                {{customer.full_name()}}
-                            </option>
-                            {% endfor %}
-                        </select>
+<form action="{{url_for('sales.sales_finalize', ordernum = sales.ordernum)}}" method="POST">
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Customer and Payment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col">
+                            <h5>Customer</h5>
+                            <select class="form-select" id="customer" name="customer">
+                                {% for customer in customers %}
+                                <option value="{{customer.id}}" {% if customer.id== 23 %} selected {% endif %}>
+                                    {{customer.full_name()}}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <h5><b>New Customer</b></h5>
+                        <div class="col-12">
+                            <input class="form-control" type="text" name="name" id="name"
+                                   placeholder="First and Last Name">
+                        </div>
+                        <div class="col-12">
+                            <input class="form-control" type="text" name="address" id="address" placeholder="Address">
+                        </div>
+                        <div class="col-5">
+                            <input class="form-control" type="text" name="city" id="city" placeholder="City">
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" type="text" name="state" id="state" placeholder="State">
+                        </div>
+                        <div class="col-4">
+                            <input class="form-control" type="text" name="zip" id="zip" placeholder="Postal Code">
+                        </div>
+                        <div class="col-12">
+                            <input class="form-control" type="email" name="email" id="email" placeholder="Email">
+                        </div>
+                        <div class="col-12">
+                            <input class="form-control" type="tel" name="phone" id="phone" placeholder="Phone">
+                        </div>
                     </div>
                 </div>
-                <div class="row">
-                    <h5><b>New Customer</b></h5>
-                    <div class="col-12">
-                        <input class="form-control" type="text" name="name" id="name" placeholder="First and Last Name">
-                    </div>
-                    <div class="col-12">
-                        <input class="form-control" type="text" name="address" id="address" placeholder="Address">
-                    </div>
-                    <div class="col-5">
-                        <input class="form-control" type="text" name="city" id="city" placeholder="City">
-                    </div>
-                    <div class="col-3">
-                        <input class="form-control" type="text" name="state" id="state" placeholder="State">
-                    </div>
-                    <div class="col-4">
-                        <input class="form-control" type="text" name="zip" id="zip" placeholder="Postal Code">
-                    </div>
-                    <div class="col-12">
-                        <input class="form-control" type="email" name="email" id="email" placeholder="Email">
-                    </div>
-                    <div class="col-12">
-                        <input class="form-control" type="tel" name="phone" id="phone" placeholder="Phone">
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <form action="{{url_for('sales.sales_finalize', ordernum = sales.ordernum)}}" method="POST">
+                <div class="modal-footer">
                     {% if sales.balance != 0 %}
                     <!--FIXME: Fix the spacing of these buttons-->
                     <div class="row gt-3 row-col-1">
@@ -197,12 +198,13 @@
                         </div>
                     </div>
                     {% endif %}
-                </form>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+</form>
+<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
 
 {% endblock %}
 
@@ -221,6 +223,8 @@
     window.locationId = 'LFW60HSSTRBJ5';
     window.currency = 'USD';
     window.country = 'US';
+
+
 
 
 

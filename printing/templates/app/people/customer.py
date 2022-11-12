@@ -9,6 +9,7 @@ from sqlalchemy import distinct, and_, or_
 
 cust = Blueprint("customer", __name__, url_prefix="/customer")
 
+#TODO: Under order history, make sure the POS transactions are showing up here as well.
 
 @cust.route("/")
 @login_required
