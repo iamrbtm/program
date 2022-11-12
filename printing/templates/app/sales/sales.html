@@ -19,7 +19,7 @@
                         <div class="col">
                             <div>
                                 <form method="post"
-                                    action="{{url_for('sales.add_item', itemid=item.id, ordernum = sales.ordernum)}}">
+                                      action="{{url_for('sales.add_item', itemid=item.id, ordernum = sales.ordernum)}}">
                                     <button class="btn btn-success" style="width: 100%; height:65px;">
                                         <b>{{item.project_name|truncate(25)|replace(catagory, "")}}</b><br>
                                         <small>{{"$%.2f"%item.sale_price}}</small>
@@ -38,116 +38,172 @@
     <div class="col-lg-5 col">
         <div class="card shadow mb-3">
             <div class="card-body">
-                <form action="{{url_for('sales.sales_finalize', ordernum = sales.ordernum)}}" method="POST">
-                    <div class="row">
-                        <div class="col">
-                            Receipt Number: {{sales.ordernum}}<br>
-                            Date/Time: {{sales.date_time_created}}<br>
-                            Employee: {{sales.employeefk}}<br>
-                            <hr>
-                            <table width="100%" class="table table-striped table-hover table-success">
-                                <thead>
-                                    <tr>
-                                        <th width="10%" class="text-start">#</th>
-                                        <th width="50%" class="text-start">Item</th>
-                                        <th width="20%" class="text-start">Quantity</th>
-                                        <th width="20%" class="text-end">Price</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% if new == False %}
-                                    {% for item in items %}
-                                    <tr>
-                                        <td width="10%" class="text-start">{{loop.index}}</td>
-                                        <td width="50%" class="text-start">{{item.project_rel.project_name}}</td>
-                                        <td width="20%" class="text-start">{{item.qty}}</td>
-                                        <td width="20%" class="text-end">{{"$%.2f" % item.price}}</td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th></th>
-                                        <th></th>
-                                        <th>Total</th>
-                                        <th>{{"$%.2f" % sales.total}}</th>
-                                    </tr>
-                                    {% if sales.cash %}
-                                    <tr>
-                                        <th></th>
-                                        <th></th>
-                                        <th>Cash</th>
-                                        <th>-{{"$%.2f" % sales.cash}}</th>
-                                    </tr>
-                                    {% endif %}
-                                    {% if sales.check %}
-                                    <tr>
-                                        <th></th>
-                                        <th></th>
-                                        <th>Check</th>
-                                        <th>-{{"$%.2f" % sales.check}}</th>
-                                    </tr>
-                                    {% endif %}
-                                    {% if sales.card %}
-                                    <tr>
-                                        <th></th>
-                                        <th></th>
-                                        <th>Card</th>
-                                        <th>-{{"$%.2f" % sales.card}}</th>
-                                    </tr>
-                                    {% endif %}
-                                    {% if sales.account %}
-                                    <tr>
-                                        <th></th>
-                                        <th></th>
-                                        <th>Account</th>
-                                        <th>-{{"$%.2f" % sales.account}}</th>
-                                    </tr>
-                                    {% endif %}
-                                    <tr>
-                                        <th></th>
-                                        <th></th>
-                                        <th>Balance</th>
-                                        <th>{{"$%.2f" % sales.balance}}</th>
-                                    </tr>
-                                </tfoot>
-                                {% endif %}
-
-                            </table>
-                            {% if sales.balance != 0 %}
-<!--                            FIXME: Fix the spacing of these buttons-->
-                            <div class="row row-cols-2">
-                                <div class="col">
-                                    <input type="submit" class="btn-lg btn-block btn-success btn-hover" name="submitbtn"
-                                        id="cashbtn" value="Cash">
-                                </div>
-                                <div class="col">
-                                    <input type="submit" class="btn-lg btn-block btn-success btn-hover" name="cardbtn"
-                                        id="cardbtn" value="Card">
-                                </div>
-                                <div class="col">
-                                    <input type="submit" class="btn-lg btn-block btn-success btn-hover" name="submitbtn"
-                                        id="accountbtn" value="Account">
-                                </div>
-                                <div class="col">
-                                    <input type="submit" class="btn-lg btn-block btn-success btn-hover" name="otherbtn"
-                                        id="otherbtn" value="Other">
-                                </div>
-                                <div class="col-12">
-                                    <input type="submit" class="btn-lg btn-block btn-success btn-hover" name="submitbtn"
-                                        id="splitbtn" value="Split">
-                                </div>
-                            </div>
+                <div class="row">
+                    <div class="col">
+                        Receipt Number: {{sales.ordernum}}<br>
+                        Date/Time: {{sales.date_time_created}}<br>
+                        Employee: {{sales.employeefk}}<br>
+                        <hr>
+                        <table width="100%" class="table table-striped table-hover table-success">
+                            <thead>
+                            <tr>
+                                <th width="10%" class="text-start">#</th>
+                                <th width="50%" class="text-start">Item</th>
+                                <th width="20%" class="text-start">Quantity</th>
+                                <th width="20%" class="text-end">Price</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% if new == False %}
+                            {% for item in items %}
+                            <tr>
+                                <td width="10%" class="text-start">{{loop.index}}</td>
+                                <td width="50%" class="text-start">{{item.project_rel.project_name}}</td>
+                                <td width="20%" class="text-start">{{item.qty}}</td>
+                                <td width="20%" class="text-end">{{"$%.2f" % item.price}}</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th>Total</th>
+                                <th>{{"$%.2f" % sales.total}}</th>
+                            </tr>
+                            {% if sales.cash %}
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th>Cash</th>
+                                <th>-{{"$%.2f" % sales.cash}}</th>
+                            </tr>
                             {% endif %}
-                        </div>
+                            {% if sales.check %}
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th>Check</th>
+                                <th>-{{"$%.2f" % sales.check}}</th>
+                            </tr>
+                            {% endif %}
+                            {% if sales.card %}
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th>Card</th>
+                                <th>-{{"$%.2f" % sales.card}}</th>
+                            </tr>
+                            {% endif %}
+                            {% if sales.account %}
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th>Account</th>
+                                <th>-{{"$%.2f" % sales.account}}</th>
+                            </tr>
+                            {% endif %}
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th>Balance</th>
+                                <th>{{"$%.2f" % sales.balance}}</th>
+                            </tr>
+                            </tfoot>
+                            {% endif %}
+                        </table>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#exampleModal">
+                            Check Out
+                        </button>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+#Customer and Payment Model
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Customer and Payment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col">
+                        <h5>Customer</h5>
+                        <select class="form-select" id="customer" name="customer">
+                            {% for customer in customers %}
+                            <option value="{{customer.id}}" {% if customer.id== 23 %} selected {% endif %}>
+                                {{customer.full_name()}}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <h5><b>New Customer</b></h5>
+                    <div class="col-12">
+                        <input class="form-control" type="text" name="name" id="name" placeholder="First and Last Name">
+                    </div>
+                    <div class="col-12">
+                        <input class="form-control" type="text" name="address" id="address" placeholder="Address">
+                    </div>
+                    <div class="col-5">
+                        <input class="form-control" type="text" name="city" id="city" placeholder="City">
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control" type="text" name="state" id="state" placeholder="State">
+                    </div>
+                    <div class="col-4">
+                        <input class="form-control" type="text" name="zip" id="zip" placeholder="Postal Code">
+                    </div>
+                    <div class="col-12">
+                        <input class="form-control" type="email" name="email" id="email" placeholder="Email">
+                    </div>
+                    <div class="col-12">
+                        <input class="form-control" type="tel" name="phone" id="phone" placeholder="Phone">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <form action="{{url_for('sales.sales_finalize', ordernum = sales.ordernum)}}" method="POST">
+                    {% if sales.balance != 0 %}
+                    <!--FIXME: Fix the spacing of these buttons-->
+                    <div class="row gt-3 row-col-1">
+                        <div class="col">
+                            <input type="submit" class="btn-lg btn-block btn-success btn-hover" name="submitbtn"
+                                   id="cashbtn" value="Cash">
+                        </div>
+                        <div class="col">
+                            <input type="submit" class="btn-lg btn-block btn-success btn-hover" name="cardbtn"
+                                   id="cardbtn" value="Card">
+                        </div>
+                        <div class="col">
+                            <input type="submit" class="btn-lg btn-block btn-success btn-hover" name="submitbtn"
+                                   id="accountbtn" value="Account">
+                        </div>
+                        <div class="col">
+                            <input type="submit" class="btn-lg btn-block btn-success btn-hover" name="otherbtn"
+                                   id="otherbtn" value="Other">
+                        </div>
+                        <div class="col">
+                            <input type="submit" class="btn-lg btn-block btn-success btn-hover" name="submitbtn"
+                                   id="splitbtn" value="Split">
+                        </div>
+                    </div>
+                    {% endif %}
+                </form>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
-</div>
+
 {% endblock %}
 
 {% block js_code %}
@@ -165,8 +221,18 @@
     window.locationId = 'LFW60HSSTRBJ5';
     window.currency = 'USD';
     window.country = 'US';
+
+
+
+
+
+
+
+
+
+
 </script>
 <!-- link to the custom styles for Web SDK -->
-<link rel='stylesheet' , href="{{url_for('static', filename='/app/css/sq-payment.css')}}" />
-<link rel='stylesheet' , href="{{url_for('static', filename='/app/css/style.css')}}" />
+<link rel='stylesheet' , href="{{url_for('static', filename='/app/css/sq-payment.css')}}"/>
+<link rel='stylesheet' , href="{{url_for('static', filename='/app/css/style.css')}}"/>
 {% endblock %}

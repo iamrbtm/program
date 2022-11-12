@@ -11,6 +11,7 @@ flask_uploads
 flask_wtf
 lxml
 matplotlib
+nameparser
 pyclean
 PyMySQL
 python-dotenv

@@ -6,6 +6,7 @@ from flask_mail import Message
 
 from printing import mail
 from printing.utilities import *
+from nameparser import HumanName
 
 sale = Blueprint("sales", __name__, url_prefix="/sales")
 
@@ -60,6 +61,9 @@ def sales_new():
         .group_by(Project.catagory, Project.project_name)
         .all()
     )
+
+    customers = db.session.query(People).filter(People.customer == True).all()
+
     # Generate a new order number and see if it is already in the database
     exists = True
     while exists:
@@ -79,7 +83,7 @@ def sales_new():
     db.session.commit()
     db.session.refresh(newsale)
 
-    context = {"user": User, "inventory": inventory, "sales": newsale, "new": True}
+    context = {"user": User, "inventory": inventory, "sales": newsale, "new": True, "customers": customers}
     return render_template("app/sales/sales.html", **context)
 
 
@@ -94,6 +98,9 @@ def sales_active(ordernum):
         .group_by(Project.catagory, Project.project_name)
         .all()
     )
+
+    customers = db.session.query(People).filter(People.customer == True).all()
+
     sales = db.session.query(Sales).filter(Sales.ordernum == ordernum).first()
     items = (
         db.session.query(Sales_lineitems)
@@ -108,6 +115,7 @@ def sales_active(ordernum):
         "sales": sales,
         "new": False,
         "items": items,
+        "customers": customers
     }
     return render_template("app/sales/sales.html", **context)
 
@@ -228,6 +236,41 @@ def sales_finalize(ordernum):
 
     if request.method == "POST":
         sale = db.session.query(Sales).filter(Sales.ordernum == ordernum).first()
+
+        if request.form.get('name'):
+            name = HumanName(request.form.get("name"))
+            new_person = People(
+                customer=True,
+                active=1,
+                fname=name.first,
+                lname=name.last,
+                phone=format_tel(request.form.get("phone")),
+                email=request.form.get("email")
+            )
+            db.session.add(new_person)
+            db.session.commit()
+            db.session.refresh(new_person)
+
+            new_address = Address(
+                fname=name.first,
+                lname=name.last,
+                address=request.form.get('address'),
+                city=request.form.get('city'),
+                state=request.form.get('state'),
+                postalcode=request.form.get('zip'),
+                peoplefk=new_person.id
+            )
+            db.session.add(new_address)
+            db.session.commit()
+            db.session.refresh(new_address)
+
+            new_person.main_addressfk = new_address.id
+            new_person.ship_addressfk = new_address.id
+            sale.customerfk = new_person.id
+            db.session.commit()
+        else:
+            sale.customerfk = request.form.get('customer')
+            db.session.commit()
 
         if request.form["submitbtn"] == "Cash":
             cash(sale)
