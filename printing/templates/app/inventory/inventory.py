@@ -1,6 +1,3 @@
-import json
-import os
-import datetime
 import random
 
 from flask import (
@@ -9,28 +6,12 @@ from flask import (
     render_template,
     request,
     url_for,
-    send_from_directory,
-    make_response
+    send_from_directory
 )
 from flask_login import login_required
-from printing import db, invgcode
-from printing.models import (
-    Adjustment_log,
-    Project,
-    User,
-    Printobject,
-    Filament,
-    Printer,
-)
-from printing.utilities import (
-    calc_time_length,
-    Update_Inventory_Qty,
-    CalcCostInd,
-    clean_inventory_uploads,
-)
 from sqlalchemy import distinct
-from sqlalchemy.sql import func
 
+from printing.utilities import *
 
 inv = Blueprint("inventory", __name__, url_prefix="/inventory")
 
@@ -116,7 +97,14 @@ def inventory_edit(id):
 @inv.route("/adjust", methods=["GET", "POST"])
 @login_required
 def inventory_adjust():
-    inventory = db.session.query(Project).filter(Project.customerfk == 2).filter(Project.active).all()
+    inventory = db.session.query(Project.id,
+                                 Project.project_name,
+                                 Project.threshold,
+                                 Project.current_quantity,
+                                 Printobject.qtyperprint,
+                                 Printobject.h_printtime,
+                                 Printobject.file
+                                 )  .join(Printobject).filter(Project.customerfk == 2).all()
 
     if request.method == "POST":
         projectid = request.form.get("item")

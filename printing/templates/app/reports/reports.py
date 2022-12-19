@@ -8,7 +8,6 @@ from sqlalchemy import extract, func
 import datetime
 from printing.utilities import *
 
-
 rep = Blueprint("report", __name__, url_prefix="/report")
 
 
@@ -21,11 +20,16 @@ def report():
 @rep.route("/low_inventory_report")
 @login_required
 def low_inventory():
-    items = db.session.query(Project).all()
+    items = db.session.query(Project) \
+        .join(Printobject) \
+        .filter(Project.customerfk == 2) \
+        .filter((Project.threshold - Project.current_quantity) >= 1) \
+        .all()
 
     current_inv_sum = Project.query.with_entities(
         func.sum(Project.current_quantity).label("CurrentInventory")
     ).first()
+
     threshold_sum = Project.query.with_entities(
         func.sum(Project.threshold).label("Threshold")
     ).first()
@@ -36,7 +40,7 @@ def low_inventory():
         "threshold": int(threshold_sum[0]),
     }
 
-    return render_template("app/reports/low_inventory_pdf.html", **context)
+    return render_template("app/reports/low_inventory.html", **context)
 
 
 @rep.route("/threshold", methods=["GET", "POST"])
@@ -70,8 +74,8 @@ def print_time_report():
             ptime = Printobject.query.filter(Printobject.id == obj).first().h_printtime
             totaltime = printtime + ptime
         printtime = (
-            (item.threshold - item.current_quantity) / item.qtyperprint
-        ) * totaltime
+                            (item.threshold - item.current_quantity) / item.qtyperprint
+                    ) * totaltime
         this = {}
         this["printtime"] = printtime
         this["id"] = item.id
@@ -173,7 +177,7 @@ def PDF_low_inventory_report():
         "threshold": int(threshold_sum[0]),
     }
 
-    HTML(render_template("app/reports/low_inventory_pdf.html", **context)).write_pdf(
+    HTML(render_template("app/reports/low_inventory.html", **context)).write_pdf(
         "low_inventory.pdf", stylesheets=[css]
     )
 

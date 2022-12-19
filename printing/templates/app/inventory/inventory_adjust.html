@@ -14,26 +14,34 @@
                 <div class="card-body">
                     <form method="POST">
                         <table class="table table-striped" width="100%" id="adjust">
-                        <thead>
+                            <thead>
                             <tr>
                                 <th>Item</th>
-                                <th>Adjustment</th>
-                                <th>Description</th>
+                                <th>Pieces per Print</th>
+                                <th>Current Quantity</th>
+                                <th>Threshold</th>
                             </tr>
-                        </thead>
-                        <tbody>
+                            </thead>
+                            <tbody>
+                            {% for item in inventory %}
                             <tr>
                                 <td>
-                                    <select name="item" id="item" class="form form-select">
-                                        {% for item in inventory %}
-                                            <option value="{{item.id}}">{{item.project_name}} ({{item.current_quantity}})</option>
-                                        {% endfor %}
-                                    </select>
+                                    {{item.project_name}}
+                                    <br>
+                                    <small>{{item.file}}</small>
                                 </td>
-                                <td><input type="number" class="form form-control" id="adjustment" name="adjustment"></td>
-                                <td><input type="text" name="desc" id="desc" class="form form-control"></td>
+                                <td><input type="number" class="form form-control" id="threshold" name="threshold"
+                                           value="{{item.qtyperprint }}"></td>
+                                <td><input type="number" class="form form-control" id="onhand" name="onhand"
+                                           value="{{item.current_quantity }}"></td>
+                                <td><input type="number" class="form form-control" id="threshold" name="threshold"
+                                           value="{{item.threshold }}"></td>
+
+                                <td></td>
                             </tr>
-                        </tbody>
+                            {% endfor %}
+
+                            </tbody>
                         </table>
                         <input type="submit" value="Submit" class="btn btn-success btn-lg">
                     </form>
